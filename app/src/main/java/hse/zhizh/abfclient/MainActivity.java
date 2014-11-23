@@ -1,9 +1,13 @@
 package hse.zhizh.abfclient;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -12,6 +16,8 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        onLoginButtonClick(null);
     }
 
 
@@ -20,6 +26,11 @@ public class MainActivity extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    public void onLoginButtonClick(View v) {
+        Intent login_intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivityForResult(login_intent, 1);
     }
 
     @Override
@@ -36,4 +47,18 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onActivityResult(int rcode, int rescode, Intent res_intent) {
+        if (res_intent != null) {
+            String usr = res_intent.getStringExtra("Username");
+            String pwd = res_intent.getStringExtra("Password");
+            TextView usr_lab = (TextView)findViewById(R.id.username_label);
+            TextView pass_lab = (TextView)findViewById(R.id.password_label);
+            usr_lab.setText(usr);
+            pass_lab.setText(pwd);
+        }
+
+    }
+
 }
