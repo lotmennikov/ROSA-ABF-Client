@@ -18,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -41,6 +42,8 @@ import hse.zhizh.abfclient.Session.SessionImpl;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends Activity {
+
+    private UserLoginTask mAuthTask = null;
 
     EditText mUsernameView;
     EditText mPasswordView;
@@ -70,30 +73,82 @@ public class LoginActivity extends Activity {
     }
 
     public void attemptLogin() {
-        Intent login_result = new Intent();
-        login_result.putExtra("Username", mUsernameView.getText().toString());
-        login_result.putExtra("Password", mPasswordView.getText().toString());
-        System.out.println("test");
-        int code=0;
-        try {
-            //создание сессии и получение кода ответа при попытке создать соединение
-          SessionImpl s = new SessionImpl("creepycheese","ewqforce1");
-            //код ответа, если 200 то ОК
-          code = s.createConnection().getResponseCode();
-          s.requestContent(s.createConnection());
-        } catch(Exception e){
-            e.printStackTrace();
+        String username = mUsernameView.getText().toString();
+        String password = mPasswordView.getText().toString();
+
+        Log.d("ABF Client LoginActivity", "Login Attempt");
+
+        mAuthTask = new UserLoginTask(username, password);
+        mAuthTask.execute((Void) null);
+    }
+
+
+    /**
+     * Asynchronous login task.
+     */
+    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+
+        private final String mUsername;
+        private final String mPassword;
+
+        private int f_code;
+
+        UserLoginTask(String username, String password) {
+            mUsername = username;
+            mPassword = password;
+            f_code = -1;
         }
-        int res = (code == 200) ? RESULT_OK : RESULT_CANCELED;
-        //show toast======
-        Context context = getApplicationContext();
-        CharSequence text = "Hello toast!";
-        int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(context, "code:" + res, duration);
-        toast.show();
-        //show toast end ====
-        setResult(res, login_result);
-        finish();
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            int code=0;
+            try {
+                //создание сессии и получение кода ответа при попытке создать соединение
+                SessionImpl s = new SessionImpl(mUsername, mPassword);//"creepycheese","ewqforce1");
+                //код ответа, если 200 то ОК
+                code = s.createConnection().getResponseCode();
+                s.requestContent(s.createConnection());
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+            f_code = code;
+
+            return (code == 200);
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            mAuthTask = null;
+            Context context = getApplicationContext();
+            CharSequence text = "Hello toast!";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, "code:" + f_code, duration);
+            toast.show();
+            if (success) {
+                //show toast======
+
+                //show toast end ====
+                Log.d("ABF Client LoginActivity", "Login Success");
+
+                Intent login_result = new Intent();
+                login_result.putExtra("Username", mUsername);
+                login_result.putExtra("Password", mPassword);
+
+                setResult(RESULT_OK, login_result);
+                finish();
+            } else {
+                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.requestFocus();
+
+                Log.d("ABF Client LoginActivity", "Login Fail");
+            }
+
+        }
+
+        @Override
+        protected void onCancelled() {
+            mAuthTask = null;
+        }
     }
 
 }

@@ -54,7 +54,7 @@ public class SessionImpl {
     }
 
     /*
-    Создание Https соединения и получения груп пользователя(используется для подтверждения логина)
+    Создание Https соединения и получения группы пользователя(используется для подтверждения логина)
      */
     public HttpsURLConnection createConnection() throws Exception {
         String https_url = "https://abf.rosalinux.ru/api/v1/groups.json";

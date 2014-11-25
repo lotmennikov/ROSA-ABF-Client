@@ -33,6 +33,11 @@ public class MainActivity extends ActionBarActivity {
         startActivityForResult(login_intent, 1);
     }
 
+    public void onSettingsButtonClick(View v) {
+        Intent settings_intent = new Intent(MainActivity.this, SettingsActivity.class);
+        startActivityForResult(settings_intent, 1);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
