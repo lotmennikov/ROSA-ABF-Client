@@ -1,4 +1,4 @@
-package hse.zhizh.abfclient;
+package hse.zhizh.abfclient.Activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -34,6 +34,7 @@ import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import hse.zhizh.abfclient.R;
 import hse.zhizh.abfclient.Session.Session;
 import hse.zhizh.abfclient.Session.SessionImpl;
 

@@ -1,6 +1,5 @@
-package hse.zhizh.abfclient;
+package hse.zhizh.abfclient.Activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -8,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import hse.zhizh.abfclient.R;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -36,6 +37,11 @@ public class MainActivity extends ActionBarActivity {
     public void onSettingsButtonClick(View v) {
         Intent settings_intent = new Intent(MainActivity.this, SettingsActivity.class);
         startActivityForResult(settings_intent, 1);
+    }
+
+    public void onProjectInfoButtonClick(View v) {
+        Intent project_intent = new Intent(MainActivity.this, ProjectInfoActivity.class);
+        startActivityForResult(project_intent, 1);
     }
 
     @Override

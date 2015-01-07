@@ -6,5 +6,9 @@
     <string name="action_settings">Settings</string>
     <string name="prompt_username">Username</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_project_contents">ProjectContentsActivity</string>
+    <string name="title_activity_project_info">ProjectInfoActivity</string>
+    <string name="title_activity_builds">BuildsActivity</string>
+    <string name="title_activity_build_info">BuildInfoActivity</string>
 
 </resources>
