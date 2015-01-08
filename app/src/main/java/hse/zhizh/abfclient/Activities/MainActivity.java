@@ -1,10 +1,9 @@
 package hse.zhizh.abfclient.Activities;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,7 +20,6 @@ public class MainActivity extends ActionBarActivity {
         onLoginButtonClick(null);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -36,27 +34,37 @@ public class MainActivity extends ActionBarActivity {
 
     public void onSettingsButtonClick(View v) {
         Intent settings_intent = new Intent(MainActivity.this, SettingsActivity.class);
-        startActivityForResult(settings_intent, 1);
+        startActivity(settings_intent);
     }
 
     public void onProjectInfoButtonClick(View v) {
         Intent project_intent = new Intent(MainActivity.this, ProjectInfoActivity.class);
-        startActivityForResult(project_intent, 1);
+        startActivity(project_intent);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    public void onProjectContentsButtonClick(View v) {
+        Intent projectcontent_intent = new Intent(MainActivity.this, ProjectContentsActivity.class);
+        startActivity(projectcontent_intent);
+    }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+    public void onProjectsButtonClick(View v) {
+        Intent projects_intent = new Intent(MainActivity.this, ProjectsActivity.class);
+        startActivity(projects_intent);
+    }
 
-        return super.onOptionsItemSelected(item);
+    public void onCommitsButtonClick(View v) {
+        Intent commits_intent = new Intent(MainActivity.this, CommitsActivity.class);
+        startActivity(commits_intent);
+    }
+
+    public void onBuildInfoButtonClick(View v) {
+        Intent buildinfo_intent = new Intent(MainActivity.this, BuildInfoActivity.class);
+        startActivity(buildinfo_intent);
+    }
+
+    public void onBuildsButtonClick(View v) {
+        Intent builds_intent = new Intent(MainActivity.this, BuildsActivity.class);
+        startActivity(builds_intent);
     }
 
     @Override

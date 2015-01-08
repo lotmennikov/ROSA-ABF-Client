@@ -10,5 +10,7 @@
     <string name="title_activity_project_info">ProjectInfoActivity</string>
     <string name="title_activity_builds">BuildsActivity</string>
     <string name="title_activity_build_info">BuildInfoActivity</string>
+    <string name="title_activity_commits">CommitsActivity</string>
+    <string name="title_activity_projects">ProjectsActivity</string>
 
 </resources>

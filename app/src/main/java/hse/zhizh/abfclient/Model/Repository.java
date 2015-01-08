@@ -16,6 +16,12 @@ public class Repository {
     public Repository(Context cntxt) {
         name = "0ad";
         path = cntxt.getFilesDir();
+        File projdir = new File(path.getAbsolutePath() + "/" + name + "/");
+//       TODO Надо сделать что-то с удалением папки, джигиту непустые папки не нравятся
+//       if (projdir.exists()) {
+//            projdir.delete();
+//        }
+        path = projdir;
         url = "https://abf.io/lotmen/0ad.git";
     }
 

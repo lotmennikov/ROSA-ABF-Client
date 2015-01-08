@@ -41,6 +41,9 @@ import hse.zhizh.abfclient.Session.SessionImpl;
 
 /**
  * A login screen that offers login via email/password.
+ *
+ *
+ * TODO Нужно приделать Account Manager
  */
 public class LoginActivity extends Activity {
 

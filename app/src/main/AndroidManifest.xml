@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -48,6 +49,14 @@
         <activity
             android:name=".Activities.BuildInfoActivity"
             android:label="@string/title_activity_build_info" >
+        </activity>
+        <activity
+            android:name=".Activities.CommitsActivity"
+            android:label="@string/title_activity_commits" >
+        </activity>
+        <activity
+            android:name=".Activities.ProjectsActivity"
+            android:label="@string/title_activity_projects" >
         </activity>
     </application>
 
