@@ -79,7 +79,7 @@ public class SessionImpl implements Session {
     Устанавливает свойства для https соединения con
     @con-соединение
      */
-    public void setConnectionProperties(HttpsURLConnection con) throws  Exception{
+    public static void setConnectionProperties(HttpsURLConnection con) throws  Exception{
         con.setAllowUserInteraction(true);
         con.setRequestMethod("GET");
         con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
@@ -97,7 +97,7 @@ public class SessionImpl implements Session {
     Функция для строкового представления ответа от сервера
     @con - соединение по которому был отправлен запрос
      */
-    public String requestContent(HttpsURLConnection con){
+    public static String requestContent(HttpsURLConnection con){
         String content="";
         if(con!=null){
 
