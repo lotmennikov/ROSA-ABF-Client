@@ -61,12 +61,9 @@ public class SessionImpl implements Session {
         URL url;
         HttpsURLConnection con=null;
         try {
-
             url = new URL(https_url);
             con = (HttpsURLConnection)url.openConnection();
-            con.setAllowUserInteraction(true);
-            con.setRequestMethod("GET");
-            con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
+            setConnectionProperties(con);
             con.connect();
             int code = con.getResponseCode();
             System.out.println("code:" + code);
@@ -78,6 +75,15 @@ public class SessionImpl implements Session {
         return con;
     }
 
+    /*
+    Устанавливает свойства для https соединения con
+    @con-соединение
+     */
+    public void setConnectionProperties(HttpsURLConnection con) throws  Exception{
+        con.setAllowUserInteraction(true);
+        con.setRequestMethod("GET");
+        con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
+    }
     /*
     Инициализация сессии с указанным именем пользователя и паролем
     задает имя пользователя и пароль для последующих действий
