@@ -1,13 +1,16 @@
 package hse.zhizh.abfclient.Model;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.File;
-
+import org.apache.commons.io.FileUtils;
 /**
  * Created by E-Lev on 07.01.2015.
  */
 public class Repository {
+
+
 
     String name;
     File path;
@@ -18,9 +21,13 @@ public class Repository {
         path = cntxt.getFilesDir();
         File projdir = new File(path.getAbsolutePath() + "/" + name + "/");
 //       TODO Надо сделать что-то с удалением папки, джигиту непустые папки не нравятся
-//       if (projdir.exists()) {
-//            projdir.delete();
-//        }
+       if (projdir.exists()) {
+           try {
+               FileUtils.deleteDirectory(projdir);
+           } catch (Exception e) {
+               Log.d("ABF-Client", "Directory had not been deleted! :" + projdir.getAbsolutePath());
+           }
+       }
         path = projdir;
         url = "https://abf.io/lotmen/0ad.git";
     }
