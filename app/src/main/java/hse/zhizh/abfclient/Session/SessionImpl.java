@@ -13,7 +13,7 @@ import java.net.URLConnection;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class SessionImpl {
+public class SessionImpl implements Session {
     private String username;
     private String userpass;
 
@@ -66,13 +66,9 @@ public class SessionImpl {
             con = (HttpsURLConnection)url.openConnection();
             con.setAllowUserInteraction(true);
             con.setRequestMethod("GET");
+            con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
             con.connect();
-            //dumpl all cert info
-            //print_https_cert(con);
-
-            //dump all the content
             int code = con.getResponseCode();
-            //print_content(con);
             System.out.println("code:" + code);
         } catch (MalformedURLException e) {
             e.printStackTrace();
