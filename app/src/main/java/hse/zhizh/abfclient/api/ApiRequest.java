@@ -8,5 +8,4 @@ package hse.zhizh.abfclient.api;
 
 public interface ApiRequest {
     String sendRequest(String... request_args) throws Exception;
-
 }

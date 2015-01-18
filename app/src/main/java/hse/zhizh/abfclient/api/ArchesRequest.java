@@ -24,7 +24,7 @@ public class ArchesRequest implements ApiRequest {
         try {
             url = new URL(https_url);
             con = (HttpsURLConnection)url.openConnection();
-            SessionImpl.setConnectionProperties(con);
+            SessionImpl.setConnectionProperties(con,"GET");
             con.connect();
             int code = con.getResponseCode();
             System.out.println("code:" + code);

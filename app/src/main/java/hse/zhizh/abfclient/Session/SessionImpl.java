@@ -63,7 +63,7 @@ public class SessionImpl implements Session {
         try {
             url = new URL(https_url);
             con = (HttpsURLConnection)url.openConnection();
-            setConnectionProperties(con);
+            setConnectionProperties(con,"GET");
             con.connect();
             int code = con.getResponseCode();
             System.out.println("code:" + code);
@@ -79,9 +79,9 @@ public class SessionImpl implements Session {
     Устанавливает свойства для https соединения con
     @con-соединение
      */
-    public static void setConnectionProperties(HttpsURLConnection con) throws  Exception{
+    public static void setConnectionProperties(HttpsURLConnection con,String requestMethod) throws  Exception{
         con.setAllowUserInteraction(true);
-        con.setRequestMethod("GET");
+        con.setRequestMethod(requestMethod);
         con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
     }
     /*
