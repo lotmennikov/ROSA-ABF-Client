@@ -13,7 +13,7 @@ import java.net.URLConnection;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class SessionImpl {
+public class SessionImpl implements Session {
     private String username;
     private String userpass;
 
@@ -61,18 +61,11 @@ public class SessionImpl {
         URL url;
         HttpsURLConnection con=null;
         try {
-
             url = new URL(https_url);
             con = (HttpsURLConnection)url.openConnection();
-            con.setAllowUserInteraction(true);
-            con.setRequestMethod("GET");
+            setConnectionProperties(con,"GET");
             con.connect();
-            //dumpl all cert info
-            //print_https_cert(con);
-
-            //dump all the content
             int code = con.getResponseCode();
-            //print_content(con);
             System.out.println("code:" + code);
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -82,6 +75,15 @@ public class SessionImpl {
         return con;
     }
 
+    /*
+    Устанавливает свойства для https соединения con
+    @con-соединение
+     */
+    public static void setConnectionProperties(HttpsURLConnection con,String requestMethod) throws  Exception{
+        con.setAllowUserInteraction(true);
+        con.setRequestMethod(requestMethod);
+        con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
+    }
     /*
     Инициализация сессии с указанным именем пользователя и паролем
     задает имя пользователя и пароль для последующих действий
@@ -95,7 +97,7 @@ public class SessionImpl {
     Функция для строкового представления ответа от сервера
     @con - соединение по которому был отправлен запрос
      */
-    public String requestContent(HttpsURLConnection con){
+    public static String requestContent(HttpsURLConnection con){
         String content="";
         if(con!=null){
 
