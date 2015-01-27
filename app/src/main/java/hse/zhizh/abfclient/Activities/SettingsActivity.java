@@ -1,19 +1,41 @@
 package hse.zhizh.abfclient.Activities;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 
 import hse.zhizh.abfclient.R;
 
 
 public class SettingsActivity extends ActionBarActivity {
 
+    EditText groupText;
+    EditText projectText;
+    EditText branchText;
+    String dgroup, dproject, dbranch;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        SharedPreferences shp = getApplicationContext().getSharedPreferences(getString(R.string.app_preferences_file), Context.MODE_PRIVATE);
+        dgroup = shp.getString("DefaultGroup", "");
+        dproject = shp.getString("DefaultProject", "");
+        dbranch = shp.getString("DefaultBranch", "");
+
+        groupText = (EditText)findViewById(R.id.defaultGroupText);
+        projectText = (EditText)findViewById(R.id.defaultProjectText);
+        branchText = (EditText)findViewById(R.id.defaultBranchText);
+
+        groupText.setText(dgroup);
+        projectText.setText(dproject);
+        branchText.setText(dbranch);
     }
 
 
@@ -37,5 +59,22 @@ public class SettingsActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void onSaveSettingsButtonClick(View v) {
+        // TODO check values
+        dgroup = groupText.getText().toString();
+        dproject = projectText.getText().toString();
+        dbranch =  branchText.getText().toString();
+
+        // TODO replace keys with string IDs
+        SharedPreferences shp = this.getApplicationContext().getSharedPreferences(getString(R.string.app_preferences_file), Context.MODE_PRIVATE);
+        shp.edit()
+                .putString("DefaultGroup", dgroup)
+                .putString("DefaultProject", dproject)
+                .putString("DefaultBranch", dbranch)
+                .commit();
+        this.finish();
     }
 }

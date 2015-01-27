@@ -10,8 +10,6 @@ import org.apache.commons.io.FileUtils;
  */
 public class Repository {
 
-
-
     String name;
     File path;
     String url;
@@ -20,14 +18,14 @@ public class Repository {
         name = "0ad";
         path = cntxt.getFilesDir();
         File projdir = new File(path.getAbsolutePath() + "/" + name + "/");
-//       TODO Надо сделать что-то с удалением папки, джигиту непустые папки не нравятся
-       if (projdir.exists()) {
-           try {
-               FileUtils.deleteDirectory(projdir);
-           } catch (Exception e) {
-               Log.d("ABF-Client", "Directory had not been deleted! :" + projdir.getAbsolutePath());
-           }
-       }
+
+        if (projdir.exists()) {
+            try {
+                FileUtils.deleteDirectory(projdir);
+            } catch (Exception e) {
+                Log.d("ABF-Client", "Directory had not been deleted! :" + projdir.getAbsolutePath());
+            }
+        }
         path = projdir;
         url = "https://abf.io/lotmen/0ad.git";
     }
@@ -42,14 +40,6 @@ public class Repository {
 
     public String getRemoteURL() {
         return url;
-    }
-
-    public String getUsername() {
-        return "lotmen";
-    }
-
-    public String getPassword() {
-        return "fab688";
     }
 
 }

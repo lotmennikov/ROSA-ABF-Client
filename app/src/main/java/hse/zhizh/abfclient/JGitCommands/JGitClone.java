@@ -50,18 +50,6 @@ public class JGitClone extends JGitCommand {
 //                .setProgressMonitor(new RepoCloneMonitor())
                 .setDirectory(localRepo);
 
-
-        String username = mRepo.getUsername();
-        String password = mRepo.getPassword();
-        Locale.setDefault(Locale.US);
-
-        if (username != null && password != null && !username.equals("")
-                && !password.equals("")) {
-            UsernamePasswordCredentialsProvider auth = new UsernamePasswordCredentialsProvider(
-                    username, password);
-            cloneCommand.setCredentialsProvider(auth);
-        }
-
         try {
             // execution of cloneCommand
             cloneCommand.call();

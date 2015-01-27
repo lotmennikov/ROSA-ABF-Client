@@ -1,4 +1,22 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/container"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    tools:context="hse.zhizh.abfclient.Activities.ProjectsActivity" tools:ignore="MergeRootFrame" />
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools" android:id="@+id/container"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        tools:context="hse.zhizh.abfclient.Activities.ProjectsActivity" tools:ignore="MergeRootFrame"
+        android:orientation="vertical">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Get Projects"
+        android:id="@+id/test_getprojects"
+        android:onClick="onGetProjectsButtonClick" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/test_projectslabel"
+        android:layout_margin="10dp"
+        android:background="#fffff9ec" />
+</LinearLayout>
+

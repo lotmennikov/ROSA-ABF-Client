@@ -10,22 +10,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import hse.zhizh.abfclient.ABFQueries.ABFProjects;
+import hse.zhizh.abfclient.Model.Project;
 import hse.zhizh.abfclient.R;
 
 /* Список проектов
  */
-public class ProjectsActivity extends ActionBarActivity {
+public class ProjectsActivity extends ActionBarActivity implements CommandResultListener {
+
+    TextView test_projectslist;
+    ABFProjects ProjectsCommand;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_projects);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
-        }
+        test_projectslist = (TextView)findViewById(R.id.test_projectslabel);
     }
 
 
@@ -51,19 +54,31 @@ public class ProjectsActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
+    public void onGetProjectsButtonClick(View v) {
+        if (ProjectsCommand == null) {
+            ProjectsCommand = new ABFProjects(this);
+            ProjectsCommand.execute();
         }
+    }
 
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_projects, container, false);
-            return rootView;
+    @Override
+    public void onCommandExecuted(boolean success) {
+        if (success) {
+            Project[] proj = ProjectsCommand.projects;
+
+            String newtext = "";
+            for (int i = 0; i < proj.length; ++i) {
+                newtext += proj[i].getId() + "\n"
+                        +  proj[i].getName() + " (" + proj[i].getFullname() + ")\n"
+                        +  proj[i].getDescription() + "\n";
+            }
+            test_projectslist.setText(newtext);
+            Toast tst = Toast.makeText(this.getApplicationContext(), "Got Projects", Toast.LENGTH_LONG);
+            tst.show();
+        } else {
+            Toast tst = Toast.makeText(this.getApplicationContext(), "GetProjects Failed", Toast.LENGTH_LONG);
+            tst.show();
         }
+        ProjectsCommand = null;
     }
 }
