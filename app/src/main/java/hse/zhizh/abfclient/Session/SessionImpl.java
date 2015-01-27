@@ -112,7 +112,7 @@ public class SessionImpl implements Session {
 
                 while ((input = br.readLine()) != null){
                     System.out.println(input);
-                    //content+=input+"\n";
+                    content += input;
                 }
                 br.close();
 

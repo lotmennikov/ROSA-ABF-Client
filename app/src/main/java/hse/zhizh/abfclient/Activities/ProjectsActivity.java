@@ -78,6 +78,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
         } else {
             Toast tst = Toast.makeText(this.getApplicationContext(), "GetProjects Failed", Toast.LENGTH_LONG);
             tst.show();
+            test_projectslist.setText("ProjectsJSON: " + ProjectsCommand.response);
         }
         ProjectsCommand = null;
     }

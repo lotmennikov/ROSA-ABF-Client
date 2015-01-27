@@ -19,14 +19,21 @@ public class ABFProjects extends ABFQuery {
     public Project[] projects;
     private final CommandResultListener activity;
 
+    public String response;
     public ABFProjects(CommandResultListener activ) {
         activity = activ;
     }
 
+
+    /*
+        Получение JSON из запроса к REST API
+        и его разбор на массив проектов
+     */
     @Override
     protected Boolean doInBackground(Void... params) {
         try {
             String json = new ProjectsRequest().getProjects();
+            response = json;
             JSONObject jsonObject = new JSONObject(json);
             JSONArray jsonProjects = (JSONArray)jsonObject.get("projects");
             projects = new Project[jsonProjects.length()];
