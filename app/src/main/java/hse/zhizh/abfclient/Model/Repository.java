@@ -5,6 +5,8 @@ import android.util.Log;
 
 import java.io.File;
 import org.apache.commons.io.FileUtils;
+import org.eclipse.jgit.api.Git;
+
 /**
  * Created by E-Lev on 07.01.2015.
  */
@@ -14,9 +16,12 @@ public class Repository {
     File path;
     String url;
 
+    public Git git;
+
     public Repository(Context cntxt) {
         name = "0ad";
         path = cntxt.getFilesDir();
+        git = null;
         File projdir = new File(path.getAbsolutePath() + "/" + name + "/");
 
         if (projdir.exists()) {

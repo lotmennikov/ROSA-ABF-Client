@@ -10,5 +10,6 @@ import java.util.ArrayList;
  * Created by E-Lev on 07.01.2015.
  */
 public abstract class ABFQuery extends AsyncTask<Void, Void, Boolean> {
+    public static int PROJECTS_QUERY = 1;
 
 }

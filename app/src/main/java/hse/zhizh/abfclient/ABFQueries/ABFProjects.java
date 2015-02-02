@@ -62,7 +62,7 @@ public class ABFProjects extends ABFQuery {
         } else {
             Log.d("ABF-Client GetProjects", "Failed to get objects");
         }
-        activity.onCommandExecuted(success);
+        activity.onCommandExecuted(PROJECTS_QUERY, success);
     }
 
 

@@ -8,3 +8,6 @@ local.properties
 gradle/wrapper/gradle-wrapper.properties
 .idea/misc.xml
 .idea/misc.xml
+.idea/gradle.xml
+.idea/gradle.xml
+gradle/wrapper/gradle-wrapper.properties

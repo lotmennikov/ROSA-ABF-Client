@@ -19,11 +19,11 @@ import java.util.Locale;
 
 import hse.zhizh.abfclient.Activities.CommandResultListener;
 import hse.zhizh.abfclient.Model.Repository;
+import hse.zhizh.abfclient.jgit.JGitQuery;
 
 
 /**
  * Клонирование проекта через JGit
- * Требуется переделка
  *
  * Created by E-Lev on 07.01.2015.
  */
@@ -42,39 +42,11 @@ public class JGitClone extends JGitCommand {
     protected Boolean doInBackground(Void... params) {
         Log.d("ABF CLIENT", "Clone procedure begin...");
 
-        File localRepo = mRepo.getDir();
-
-        // initializing cloneCommand
-        CloneCommand cloneCommand = Git.cloneRepository()
-                .setURI(mRepo.getRemoteURL()).setCloneAllBranches(true)
-//                .setProgressMonitor(new RepoCloneMonitor())
-                .setDirectory(localRepo);
-
-        try {
-            // execution of cloneCommand
-            cloneCommand.call();
+        if (JGitQuery.cloneRepo(mRepo)) {
             Log.d("ABF CLIENT", "Clone procedure ends with no exception...");
-        } catch (InvalidRemoteException e) {
-            e.printStackTrace();
+            return true;
+        } else
             return false;
-        } catch (TransportException e) {
-            e.printStackTrace();
-            return false;
-        } catch (GitAPIException e) {
-            e.printStackTrace();
-            return false;
-        } catch (JGitInternalException e) {
-            e.printStackTrace();
-            return false;
-        } catch (OutOfMemoryError e) {
-            e.printStackTrace();
-            return false;
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            return false;
-        }
-      return true;
-
     }
 
     @Override
@@ -84,7 +56,7 @@ public class JGitClone extends JGitCommand {
         } else {
             Log.d("ABF Client Clone Command", "Clone Failed");
         }
-        activity.onCommandExecuted(success);
+        activity.onCommandExecuted(CLONE_COMMAND, success);
     }
 
     @Override

@@ -62,7 +62,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
     }
 
     @Override
-    public void onCommandExecuted(boolean success) {
+    public void onCommandExecuted(int commandId, boolean success) {
         if (success) {
             Project[] proj = ProjectsCommand.projects;
 
