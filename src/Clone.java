@@ -7,6 +7,7 @@ import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand;
+import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
@@ -31,22 +32,23 @@ public class Clone {
     public static final int COMMIT_TYPE_TEMP = 2;
     public static final int COMMIT_TYPE_REMOTE = 3;
 
-    static Git g;
+   // static Git g;
+    static Reposit r = new Reposit();
     public static void main(String[] args)  {
-        Reposit r = new Reposit();
         XTrustProvider.install();
         Clone.cloneRepo(r);
-        //List<Ref> l = g.branchList().call();
-        String[] arr = Clone.getBranches();
-        String[] arr2 = Clone.getBranches2();
+        String[] arr = Clone.getBranches(r);
+       // String[] arr2 = Clone.getBranches2();
         for (String s : arr) {
             System.out.println(s);
         }
         System.out.println();
-        for (String s : arr2) {
+        for (String s : arr) {
             System.out.println(s);
         }
-        Clone.checkout(arr2[2]);
+       // Clone.checkout(r, arr[2]);
+        r.git = getGit(r);
+        boolean b = pullRepo(r);
     }
 
     public static int getCommitType(String[] splits) {
@@ -67,16 +69,16 @@ public class Clone {
         return String.format("refs/heads/%s", splits[3]);
     }
 
-    public static String[] getBranches() {
+    public static String[] getBranches(Reposit reposit) {
         try {
             Set<String> branchSet = new HashSet<String>();
             List<String> branchList = new ArrayList<String>();
-            List<Ref> localRefs = g.branchList().call();
+            List<Ref> localRefs = reposit.git.branchList().call();
             for (Ref ref : localRefs) {
                 branchSet.add(ref.getName());
                 branchList.add(ref.getName());
             }
-            List<Ref> remoteRefs = g.branchList()
+            List<Ref> remoteRefs = reposit.git.branchList()
                     .setListMode(ListBranchCommand.ListMode.REMOTE).call();
             for (Ref ref : remoteRefs) {
                 String name = ref.getName();
@@ -91,10 +93,10 @@ public class Clone {
         return new String[0];
     }
 
-    public static String[] getBranches2() {
+   /* public static String[] getBranches2() {
         try {
             List<String> branchList = new ArrayList<String>();
-            List<Ref> refs = g.branchList()
+            List<Ref> refs = .branchList()
                     .setListMode(ListBranchCommand.ListMode.ALL).call();
             for (Ref ref : refs) {
                 String name = ref.getName();
@@ -104,16 +106,75 @@ public class Clone {
         } catch (GitAPIException e) {
         }
         return new String[0];
-    }
+    }*/
 
-    public static void checkout(String branchName) {
+    public static void checkout(Reposit reposit, String branchName) {
         try {
-            g.checkout().setName(branchName).call();
+            reposit.git.checkout().setName(branchName).call();
         } catch (GitAPIException e) {
             e.printStackTrace();
         }
+
+        //TODO
+     /*   Ref ref = git.checkout().
+                setCreateBranch(true).
+                setName("branchName").
+                setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK).
+                setStartPoint("origin/" + branchName).
+                call();*/
     }
 
+    public static Git getGit(Reposit reposit) {
+        if (reposit.git != null)
+            return reposit.git;
+        File f = r.getDir();
+        try {
+            reposit.git = Git.open(f);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return reposit.git;
+    }
+
+    public static boolean pullRepo(Reposit reposit) {
+        Git git;
+        try {
+            git = getGit(reposit);
+        } catch (Exception e) {
+            return false;
+        }
+        PullCommand pullCommand = git.pull()
+                .setProgressMonitor(new RepoCloneMonitor());
+
+               //TODO
+               // .setTransportConfigCallback(new SgitTransportCallback());
+
+        String username = reposit.getUsername();
+        String password = reposit.getPassword();
+        if (username != null && password != null && !username.equals("")
+                && !password.equals("")) {
+            UsernamePasswordCredentialsProvider auth = new UsernamePasswordCredentialsProvider(
+                    username, password);
+            pullCommand.setCredentialsProvider(auth);
+        }
+        try {
+            pullCommand.call();
+        } catch (TransportException e) {
+
+            return false;
+        } catch (Exception e) {
+            return false;
+        } catch (OutOfMemoryError e) {
+            return false;
+        } catch (Throwable e) {
+            return false;
+        }
+
+        //TODO
+       // reposit.updateLatestCommitInfo();
+
+        return true;
+    }
     // Uses cloneCommand to clone repository
     public static boolean cloneRepo(Reposit reposit) {
         System.err.println("Clone procedure begin...");
@@ -139,7 +200,7 @@ public class Clone {
         }
         try {
             // execution of cloneCommand
-            g = cloneCommand.call();
+            reposit.git = cloneCommand.call();
             System.err.println("Clone procedure ends with no exception...");
         } catch (InvalidRemoteException e) {
             e.printStackTrace();
@@ -270,6 +331,8 @@ public class Clone {
         public File getDir() {
             return new File("C:/TestGit/");
         }
+
+        public Git git;
 
         public String getRemoteURL() {
             return "https://abf.io/creepycheese/pvpgn.git";
