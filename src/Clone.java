@@ -4,10 +4,7 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 
-import org.eclipse.jgit.api.CloneCommand;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.ListBranchCommand;
-import org.eclipse.jgit.api.PullCommand;
+import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
@@ -17,7 +14,6 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.tukaani.xz.XZInputStream;
 
-import java.awt.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -25,7 +21,7 @@ import java.util.*;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
-// Testing JGit clone command
+// Testing JGit commands
 public class Clone {
     public static final int COMMIT_TYPE_HEAD = 0;
     public static final int COMMIT_TYPE_TAG = 1;
@@ -107,6 +103,19 @@ public class Clone {
         }
         return new String[0];
     }*/
+
+    //TODO
+    //Not tested!!!
+    public boolean reset(Reposit reposit) {
+        try {
+            reposit.git.reset().setMode(ResetCommand.ResetType.HARD).call();
+        } catch (Exception e) {
+            return false;
+        } catch (Throwable e) {
+            return false;
+        }
+        return true;
+    }
 
     public static void checkout(Reposit reposit, String branchName) {
         try {
