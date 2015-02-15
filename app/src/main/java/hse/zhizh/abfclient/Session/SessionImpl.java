@@ -100,9 +100,7 @@ public class SessionImpl implements Session {
     public static String requestContent(HttpsURLConnection con){
         String content="";
         if(con!=null){
-
             try {
-
                 System.out.println("****** Content of the URL ********");
                 BufferedReader br =
                         new BufferedReader(
@@ -112,10 +110,11 @@ public class SessionImpl implements Session {
 
                 while ((input = br.readLine()) != null){
                     System.out.println(input);
-                    //content+=input+"\n";
+                    //content = input;
+                    content+=input;
                 }
                 br.close();
-
+                return content;
             } catch (IOException e) {
                 e.printStackTrace();
             }

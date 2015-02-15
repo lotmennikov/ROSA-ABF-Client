@@ -37,6 +37,7 @@ import java.util.List;
 import hse.zhizh.abfclient.R;
 import hse.zhizh.abfclient.Session.Session;
 import hse.zhizh.abfclient.Session.SessionImpl;
+import hse.zhizh.abfclient.api.ProjectsRequest;
 
 
 /**
@@ -111,6 +112,9 @@ public class LoginActivity extends Activity {
                 SessionImpl s = new SessionImpl(mUsername, mPassword);//"creepycheese","ewqforce1");
                 //код ответа, если 200 то ОК
                 code = s.createConnection().getResponseCode();
+                ProjectsRequest pr = new ProjectsRequest();
+                //pr.sendRequest();
+                System.out.println("RESULTS OF REQUEST: " +pr.sendRequest());
                 s.requestContent(s.createConnection());
             } catch(Exception e){
                 e.printStackTrace();
