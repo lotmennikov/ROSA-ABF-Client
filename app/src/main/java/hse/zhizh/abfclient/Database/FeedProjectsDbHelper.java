@@ -18,10 +18,11 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
                     ProjectsContract.FeedProjects._ID + " INTEGER PRIMARY KEY," +
                     ProjectsContract.FeedProjects.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
                     ProjectsContract.FeedProjects.COLUMN_NAME_PROJECT_ID + TEXT_TYPE + COMMA_SEP +
-                    ProjectsContract.FeedProjects.COLUMN_NAME_VISIBILITY +  TEXT_TYPE + COMMA_SEP +
+                    ProjectsContract.FeedProjects.COLUMN_NAME_DESCRIPTION +  TEXT_TYPE + COMMA_SEP +
                     ProjectsContract.FeedProjects.COLUMN_NAME_FULLNAME + TEXT_TYPE + COMMA_SEP +
                     ProjectsContract.FeedProjects.COLUMN_NAME_GIT_URL + TEXT_TYPE + COMMA_SEP +
-                    ProjectsContract.FeedProjects.COLUMN_NAME_SSH_URL + TEXT_TYPE+ ")";
+                    ProjectsContract.FeedProjects.COLUMN_NAME_OWNER_ID + TEXT_TYPE+COMMA_SEP+
+                    ProjectsContract.FeedProjects.COLUMN_NAME_IS_LOCAL + " BOOLEAN "+ ")";
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + ProjectsContract.FeedProjects.TABLE_NAME;
 
@@ -48,16 +49,17 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
     }
 
     //Добавление проекта в базу
-    public long addProject(String project_id,String fullname, String name, String ssh_url,String git_url,String visibility)
+    public long addProject(String project_id,String fullname, String name, String owner_id,String git_url,String description,boolean is_local)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(ProjectsContract.FeedProjects.COLUMN_NAME_PROJECT_ID,project_id );
         values.put(ProjectsContract.FeedProjects.COLUMN_NAME_FULLNAME,fullname );
         values.put(ProjectsContract.FeedProjects.COLUMN_NAME_NAME,name );
-        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_SSH_URL,ssh_url );
+        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_OWNER_ID,owner_id );
         values.put(ProjectsContract.FeedProjects.COLUMN_NAME_GIT_URL,git_url );
-        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_VISIBILITY,visibility );
+        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_DESCRIPTION,description );
+        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_IS_LOCAL,is_local );
 
         long newRowId;
         newRowId = db.insert(
@@ -76,7 +78,7 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
 // you will actually use after this query.
         String[] projection = {
                 ProjectsContract.FeedProjects._ID,
-                ProjectsContract.FeedProjects.COLUMN_NAME_VISIBILITY,
+                ProjectsContract.FeedProjects.COLUMN_NAME_OWNER_ID,
                 ProjectsContract.FeedProjects.COLUMN_NAME_NAME,
                 ProjectsContract.FeedProjects.COLUMN_NAME_PROJECT_ID
         };
@@ -108,7 +110,7 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
 
        String[] projection = {
                ProjectsContract.FeedProjects._ID,
-               ProjectsContract.FeedProjects.COLUMN_NAME_VISIBILITY,
+               ProjectsContract.FeedProjects.COLUMN_NAME_DESCRIPTION,
                ProjectsContract.FeedProjects.COLUMN_NAME_NAME,
                ProjectsContract.FeedProjects.COLUMN_NAME_PROJECT_ID
        };
@@ -120,16 +122,17 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
 
 
     //Обновляет ряд с project_id, возвращает кол-во обноленных записей
-    public int updateProject(String project_id,String fullname, String name, String ssh_url,String git_url,String visibility){
+    public int updateProject(String project_id,String fullname, String name, String description,String git_url,String owner_id,boolean is_local){
         SQLiteDatabase db = this.getReadableDatabase();
 
 // New value for one column
         ContentValues values = new ContentValues();;
         values.put(ProjectsContract.FeedProjects.COLUMN_NAME_FULLNAME,fullname );
         values.put(ProjectsContract.FeedProjects.COLUMN_NAME_NAME,name );
-        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_SSH_URL,ssh_url );
+        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_OWNER_ID,owner_id );
         values.put(ProjectsContract.FeedProjects.COLUMN_NAME_GIT_URL,git_url );
-        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_VISIBILITY,visibility );
+        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_DESCRIPTION,description );
+        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_IS_LOCAL,is_local );
 
 
 // Which row to update, based on the ID

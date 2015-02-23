@@ -7,6 +7,6 @@ package hse.zhizh.abfclient.Activities;
  */
 public interface CommandResultListener {
 
-    public void onCommandExecuted(boolean success);
+    public void onCommandExecuted(int commandId, boolean success);
 
 }

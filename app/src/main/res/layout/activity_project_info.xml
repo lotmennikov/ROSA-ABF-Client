@@ -11,10 +11,9 @@
         android:layout_height="wrap_content"
         android:text="Clone lotmen/0ad Project"
         android:id="@+id/clone_button"
+        android:onClick="onCloneButtonClick"
         android:layout_below="@+id/filesdir_label"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="43dp"
-        android:onClick="onCloneButtonClick" />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -24,4 +23,31 @@
         android:id="@+id/filesdir_label"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/test_branchlist"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="#fffdffcc"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@+id/getbranches_button"
+        android:layout_margin="10dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Get Branches"
+        android:id="@+id/getbranches_button"
+        android:layout_below="@+id/clone_button"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:onClick="onGetBranchesButtonClick" />
 </RelativeLayout>

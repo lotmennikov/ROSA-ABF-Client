@@ -7,5 +7,7 @@ import android.os.AsyncTask;
  */
 public abstract class JGitCommand extends AsyncTask<Void, Void, Boolean> {
 
+    public static final int CLONE_COMMAND = 1;
+    public static final int GETBRANCHES_COMMAND = 2;
 
 }

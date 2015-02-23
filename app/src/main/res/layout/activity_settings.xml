@@ -18,7 +18,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText"
+        android:id="@+id/defaultGroupText"
         android:hint="Group"
         android:text="import" />
 
@@ -32,7 +32,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText2"
+        android:id="@+id/defaultProjectText"
         android:layout_gravity="center_horizontal"
         android:hint="Project"
         android:text="emacs" />
@@ -47,14 +47,14 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText3"
+        android:id="@+id/defaultBranchText"
         android:hint="Branch"
         android:text="master" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="122dp"
         android:layout_height="wrap_content"
         android:text="Save"
         android:id="@+id/button5"
-        android:layout_gravity="center_horizontal" />
+        android:onClick="onSaveSettingsButtonClick" />
 </LinearLayout>

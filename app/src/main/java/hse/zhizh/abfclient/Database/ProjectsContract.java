@@ -17,10 +17,12 @@ public final class ProjectsContract {
         public static final String TABLE_NAME = "projects";
         public static final String COLUMN_NAME_PROJECT_ID = "project_id";
         public static final String COLUMN_NAME_NAME = "name";
-        public static final String COLUMN_NAME_VISIBILITY = "visibility";
+        public static final String COLUMN_NAME_DESCRIPTION = "description";
         public static final String COLUMN_NAME_FULLNAME = "fullname";
         public static final String COLUMN_NAME_GIT_URL = "git_url";
-        public static final String COLUMN_NAME_SSH_URL = "ssh_url";
+        public static final String COLUMN_NAME_OWNER_ID = "owner_id";
+        public static final String COLUMN_NAME_IS_LOCAL = "is_local";
+
     }
 
 
