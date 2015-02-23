@@ -13,5 +13,6 @@
     <string name="title_activity_commits">CommitsActivity</string>
     <string name="title_activity_projects">ProjectsActivity</string>
     <string name="app_preferences_file">abfclientprefs.xml</string>
+    <string name="prompt_password_no_o">Password</string>
 
 </resources>

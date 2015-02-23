@@ -11,23 +11,19 @@ import hse.zhizh.abfclient.jgit.JGitQuery;
  *
  * Created by E-Lev on 02.02.2015.
  */
-public class JGitBranch extends JGitCommand {
+public class JGitBranch {
 
     private final Repository mRepo;
-    private final CommandResultListener activity;
 
     public String[] result;
 
-    public JGitBranch(Repository rep, CommandResultListener activ) {
+    public JGitBranch(Repository rep) {
         mRepo = rep;
-        activity = activ;
 
         result = null;
     }
 
-    // Асинхронное доставание списка веток
-    @Override
-    protected Boolean doInBackground(Void... params) {
+    public boolean execute() {
         result = JGitQuery.getBranches(mRepo);
         if (result != null)
             return true;
@@ -35,18 +31,4 @@ public class JGitBranch extends JGitCommand {
             return false;
     }
 
-    @Override
-    protected void onPostExecute(final Boolean success) {
-        if (success) {
-            Log.d("ABF Client Branches Command", "Success");
-        } else {
-            Log.d("ABF Client Branches Command", "Fail");
-        }
-        activity.onCommandExecuted(GETBRANCHES_COMMAND, success);
-    }
-
-    @Override
-    protected void onCancelled() {
-
-    }
 }

@@ -1,53 +1,100 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="hse.zhizh.abfclient.Activities.ProjectInfoActivity">
+    tools:context="hse.zhizh.abfclient.Activities.ProjectInfoActivity"
+    android:background="#ffbeeacf">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="ProjectName"
+            android:id="@+id/projectnameLabel"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Clone lotmen/0ad Project"
-        android:id="@+id/clone_button"
-        android:onClick="onCloneButtonClick"
-        android:layout_below="@+id/filesdir_label"
-        android:layout_centerHorizontal="true" />
+        android:text="Local Init"
+        android:id="@+id/initButton"
+        android:onClick="onInitButtonClick" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="getFilesDir()"
-        android:id="@+id/filesdir_label"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/test_branchlist"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:background="#fffdffcc"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_below="@+id/getbranches_button"
-        android:layout_margin="10dp" />
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Clone"
+            android:id="@+id/clone_button"
+            android:onClick="onCloneButtonClick"
+            android:layout_below="@+id/projectnameLabel"
+            android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Get Branches"
-        android:id="@+id/getbranches_button"
-        android:layout_below="@+id/clone_button"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="10dp"
-        android:onClick="onGetBranchesButtonClick" />
-</RelativeLayout>
+        android:text="Pull"
+        android:layout_below="@+id/pushButton"
+        android:layout_alignLeft="@+id/pushButton"
+        android:layout_alignStart="@+id/pushButton"
+        android:id="@+id/pullButton"
+        android:onClick="onPullButtonClick" />
+
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Commit"
+            android:id="@+id/commitButton"
+            android:layout_below="@+id/button4"
+            android:layout_centerHorizontal="true"
+        android:onClick="onCommitButtonClick" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Push"
+            android:id="@+id/pushButton"
+            android:layout_below="@+id/getbranches_button"
+            android:layout_alignLeft="@+id/clone_button"
+            android:layout_alignStart="@+id/clone_button"
+            android:onClick="onPushButtonClick" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Commits"
+            android:id="@+id/commitslistButton"
+            android:layout_below="@+id/commitButton"
+            android:layout_centerHorizontal="true"
+            android:onClick="onCommitsButtonClick" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Contents"
+            android:id="@+id/contentsButton"
+            android:layout_below="@+id/commitslistButton"
+            android:layout_centerHorizontal="true"
+            android:onClick="onContentsButtonClick" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Builds"
+            android:id="@+id/buildsButton"
+            android:layout_below="@+id/contentsButton"
+            android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Build"
+        android:id="@+id/newbuildButton"
+        android:layout_below="@+id/buildsButton"
+        android:layout_centerHorizontal="true" />
+
+</TableLayout>

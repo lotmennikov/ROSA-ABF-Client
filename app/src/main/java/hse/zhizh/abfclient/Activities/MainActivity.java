@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import hse.zhizh.abfclient.R;
+import hse.zhizh.abfclient.common.Settings;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -17,6 +18,10 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // set default application context
+        Settings.appContext = getApplicationContext();
+
+        // move to login activity
         onLoginButtonClick(null);
     }
 
@@ -76,6 +81,9 @@ public class MainActivity extends ActionBarActivity {
             TextView pass_lab = (TextView)findViewById(R.id.password_label);
             usr_lab.setText(usr);
             pass_lab.setText(pwd);
+
+            // перейти к проектам
+            onProjectsButtonClick(null);
         }
 
     }

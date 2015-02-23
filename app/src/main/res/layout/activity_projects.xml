@@ -2,21 +2,29 @@
         xmlns:tools="http://schemas.android.com/tools" android:id="@+id/container"
         android:layout_width="match_parent" android:layout_height="match_parent"
         tools:context="hse.zhizh.abfclient.Activities.ProjectsActivity" tools:ignore="MergeRootFrame"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:descendantFocusability="blocksDescendants"
+        android:clickable="true"
+    android:background="#ffbeeacf">
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Get Projects"
         android:id="@+id/test_getprojects"
-        android:onClick="onGetProjectsButtonClick" />
+        android:onClick="onGetProjectsButtonClick"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#ff00dc74" />
 
-    <TextView
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/test_projectslabel"
+        android:id="@+id/projectsList"
         android:layout_margin="10dp"
-        android:background="#fffff9ec" />
+        android:background="#ffe5ffe7"
+        android:descendantFocusability="blocksDescendants"/>
+
 </LinearLayout>
 

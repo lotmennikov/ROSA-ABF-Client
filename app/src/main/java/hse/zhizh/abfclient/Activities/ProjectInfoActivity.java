@@ -1,40 +1,45 @@
 package hse.zhizh.abfclient.Activities;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import hse.zhizh.abfclient.JGitCommands.JGitBranch;
 import hse.zhizh.abfclient.JGitCommands.JGitClone;
 import hse.zhizh.abfclient.JGitCommands.JGitCommand;
+import hse.zhizh.abfclient.JGitCommands.JGitInit;
+import hse.zhizh.abfclient.Model.Project;
 import hse.zhizh.abfclient.Model.Repository;
 import hse.zhizh.abfclient.R;
+import hse.zhizh.abfclient.common.Settings;
 
 public class ProjectInfoActivity extends ActionBarActivity implements CommandResultListener {
 
+    Project project;
     Repository repo;
 
     JGitBranch branchcom;
-
-    TextView test_branchlist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_info);
 
-        TextView textView = (TextView)findViewById(R.id.filesdir_label);
-        textView.setText(getFilesDir().getAbsolutePath());
+        TextView textView = (TextView)findViewById(R.id.projectnameLabel);
 
-        test_branchlist = (TextView)findViewById(R.id.test_branchlist);
+        // test repository
+        project = Settings.currentProject;
+        repo = project.getRepo();
 
-        repo = new Repository(this.getApplicationContext());
+        textView.setText(project.getFullname());
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -58,7 +63,16 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         return super.onOptionsItemSelected(item);
     }
 
-    // TODO универсализировать
+    // TODO locally init repository
+    public void onInitButtonClick(View v) {
+        if (repo.git == null) {
+            JGitInit initcom = new JGitInit(repo, this);
+            initcom.execute();
+        } else {
+            Toast.makeText(this.getApplicationContext(), "Already initialized", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     // Тест клонирования объекта
     public void onCloneButtonClick(View v) {
         if (repo.git == null) {
@@ -69,14 +83,54 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         }
     }
 
-    // получить список веток
-    public void onGetBranchesButtonClick(View v) {
-        if (repo.git == null) {
-            Toast.makeText(this.getApplicationContext(), "Not initialized", Toast.LENGTH_LONG).show();
-        } else {
-            branchcom = new JGitBranch(repo, this);
-            branchcom.execute();
+    // TODO новый коммит
+    public void onCommitButtonClick(View v) {
+
+
+    }
+
+    // TODO pull repository
+    public void onPullButtonClick(View v) {
+
+    }
+
+    // TODO push to repository
+    public void onPushButtonClick(View v) {
+        if (project.isInitialized()) {
         }
+    }
+
+
+    // TODO reset repository
+    public void onResetButtonClick(View v) {
+        if (project.isInitialized()) {
+
+        }
+    }
+
+    // TODO list commits
+    public void onCommitsButtonClick(View v) {
+        if (project.isInitialized()) {
+        }
+    }
+
+    // list file structure
+    public void onContentsButtonClick(View v) {
+        if (project.isInitialized()) {
+            Intent projectcontent_intent = new Intent(ProjectInfoActivity.this, ProjectContentsActivity.class);
+            startActivity(projectcontent_intent);
+        }
+    }
+
+    // TODO list builds
+    public void onBuildsButtonClick(View v) {
+
+    }
+
+    // TODO create new build
+    public void onNewBuildButtonClick(View v) {
+
+
     }
 
     @Override
@@ -84,28 +138,23 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         switch (commandID) {
             case JGitCommand.CLONE_COMMAND:
                 if (success) {
-                    Toast tst = Toast.makeText(this.getApplicationContext(), "Cloned", Toast.LENGTH_LONG);
+                    project.init(); // set initialized to true
+                    Toast tst = Toast.makeText(this.getApplicationContext(), "Cloned", Toast.LENGTH_SHORT);
                     tst.show();
                 } else {
-                    Toast tst = Toast.makeText(this.getApplicationContext(), "Clone Failed", Toast.LENGTH_LONG);
+                    Toast tst = Toast.makeText(this.getApplicationContext(), "Clone Failed", Toast.LENGTH_SHORT);
                     tst.show();
                 }
                 break;
-            case JGitCommand.GETBRANCHES_COMMAND:
+            case JGitCommand.INIT_COMMAND:
                 if (success) {
-                    String[] branches = branchcom.result;
-                    String txt = "";
-                    for (int i = 0; i< branches.length; ++i) {
-                        txt += branches[i] + "\n";
-                    }
-                    test_branchlist.setText(txt);
-                    Toast tst = Toast.makeText(this.getApplicationContext(), "GetBranches Successful", Toast.LENGTH_LONG);
+                    project.init(); // set initialized to true
+                    Toast tst = Toast.makeText(this.getApplicationContext(), "Init", Toast.LENGTH_SHORT);
                     tst.show();
                 } else {
-                    Toast tst = Toast.makeText(this.getApplicationContext(), "GetBranches Failed", Toast.LENGTH_LONG);
+                    Toast tst = Toast.makeText(this.getApplicationContext(), "Init Failed", Toast.LENGTH_SHORT);
                     tst.show();
                 }
-                break;
             default:
                 break;
         }
