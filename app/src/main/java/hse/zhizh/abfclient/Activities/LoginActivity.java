@@ -34,6 +34,8 @@ import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import hse.zhizh.abfclient.Database.FeedProjectsDbHelper;
+import hse.zhizh.abfclient.Database.ProjectsContract;
 import hse.zhizh.abfclient.R;
 import hse.zhizh.abfclient.Session.Session;
 import hse.zhizh.abfclient.Session.SessionImpl;
@@ -142,6 +144,9 @@ public class LoginActivity extends Activity {
                 login_result.putExtra("Username", mUsername);
                 login_result.putExtra("Password", mPassword);
 
+                //Тест добавления и создания БД
+                FeedProjectsDbHelper h = new FeedProjectsDbHelper(getBaseContext());
+                System.out.println("NEW ROW: " + h.addProject("test","test","test","test","test","test"));
                 setResult(RESULT_OK, login_result);
                 finish();
             } else {
