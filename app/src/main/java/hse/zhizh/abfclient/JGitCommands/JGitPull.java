@@ -25,11 +25,11 @@ public class JGitPull extends JGitCommand {
     // Асинхронное выполнение инициализации епозитория
     @Override
     protected Boolean doInBackground(Void... params) {
-        Log.d(Settings.TAG + COMMANDTAG, "Init procedure begin...");
+        Log.d(Settings.TAG + COMMANDTAG, "procedure begin...");
 
         // TODO подставить функцию
         if (true) { // JGitQuery.cloneRepo(mRepo)) {
-            Log.d(Settings.TAG + COMMANDTAG, "Init procedure ends with no exception...");
+            Log.d(Settings.TAG + COMMANDTAG, "procedure ends with no exception...");
             return true;
         } else
             return false;
@@ -38,9 +38,9 @@ public class JGitPull extends JGitCommand {
     @Override
     protected void onPostExecute(final Boolean success) {
         if (success) {
-            Log.d(Settings.TAG + COMMANDTAG, "Initialized successfully");
+            Log.d(Settings.TAG + COMMANDTAG, "success");
         } else {
-            Log.d(Settings.TAG + COMMANDTAG, "Initialization Failed");
+            Log.d(Settings.TAG + COMMANDTAG, "fail");
         }
         activity.onCommandExecuted(CLONE_COMMAND, success);
     }
