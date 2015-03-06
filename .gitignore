@@ -3,15 +3,7 @@
 .idea/*
 build/*
 local.properties
-<<<<<<< HEAD
 .idea/misc.xml
 .idea/gradle.xml
 gradle/wrapper/gradle-wrapper.properties
-.idea/misc.xml
-.idea/misc.xml
-.idea/gradle.xml
-.idea/gradle.xml
-gradle/wrapper/gradle-wrapper.properties
-=======
-.idea/misc.xml
->>>>>>> 60cd0350c931a3a080df9fb3f5efbd98a264a412
+

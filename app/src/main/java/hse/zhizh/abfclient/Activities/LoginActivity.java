@@ -34,9 +34,12 @@ import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import hse.zhizh.abfclient.Database.FeedProjectsDbHelper;
+import hse.zhizh.abfclient.Database.ProjectsContract;
 import hse.zhizh.abfclient.R;
 import hse.zhizh.abfclient.Session.Session;
 import hse.zhizh.abfclient.Session.SessionImpl;
+import hse.zhizh.abfclient.api.ProjectsRequest;
 
 
 /**
@@ -115,6 +118,9 @@ public class LoginActivity extends Activity {
                 SessionImpl s = new SessionImpl(mUsername, mPassword);//"creepycheese","ewqforce1");
                 //код ответа, если 200 то ОК
                 code = s.createConnection().getResponseCode();
+                ProjectsRequest pr = new ProjectsRequest();
+                //pr.sendRequest();
+                System.out.println("RESULTS OF REQUEST: " +pr.sendRequest());
                 s.requestContent(s.createConnection());
             } catch(Exception e){
                 e.printStackTrace();
@@ -142,6 +148,9 @@ public class LoginActivity extends Activity {
                 login_result.putExtra("Username", mUsername);
                 login_result.putExtra("Password", mPassword);
 
+                //Тест добавления и создания БД
+                FeedProjectsDbHelper h = new FeedProjectsDbHelper(getBaseContext());
+                System.out.println("NEW ROW: " + h.addProject("test","test","test","test","test","test"));
                 setResult(RESULT_OK, login_result);
                 finish();
             } else {
