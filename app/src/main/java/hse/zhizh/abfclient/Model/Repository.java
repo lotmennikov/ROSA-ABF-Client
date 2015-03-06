@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import java.io.File;
+import java.io.IOException;
+
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 
@@ -52,6 +54,29 @@ public class Repository {
         this.url = git_url;
 
         this.git = null;
+    }
+
+    public String getBranchName(){
+        try {
+            return getGit().getRepository().getFullBranch();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // initGitLocally
+    public Git getGit() {
+        if (git != null)
+            return git;
+        File f = getDir();
+        git = null;
+        try {
+            git = Git.open(f);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return git;
     }
 
     // clear repository directory

@@ -19,51 +19,6 @@
             android:gravity="center_horizontal" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Local Init"
-        android:id="@+id/initButton"
-        android:onClick="onInitButtonClick" />
-
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Clone"
-            android:id="@+id/clone_button"
-            android:onClick="onCloneButtonClick"
-            android:layout_below="@+id/projectnameLabel"
-            android:layout_centerHorizontal="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Pull"
-        android:layout_below="@+id/pushButton"
-        android:layout_alignLeft="@+id/pushButton"
-        android:layout_alignStart="@+id/pushButton"
-        android:id="@+id/pullButton"
-        android:onClick="onPullButtonClick" />
-
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Commit"
-            android:id="@+id/commitButton"
-            android:layout_below="@+id/button4"
-            android:layout_centerHorizontal="true"
-        android:onClick="onCommitButtonClick" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Push"
-            android:id="@+id/pushButton"
-            android:layout_below="@+id/getbranches_button"
-            android:layout_alignLeft="@+id/clone_button"
-            android:layout_alignStart="@+id/clone_button"
-            android:onClick="onPushButtonClick" />
-
-        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Commits"

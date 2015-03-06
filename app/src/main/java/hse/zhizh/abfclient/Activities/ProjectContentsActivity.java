@@ -44,6 +44,8 @@ public class ProjectContentsActivity extends ActionBarActivity implements Comman
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_contents);
 
+//        getActionBar().setDisplayOptions();
+
         fileList = (ListView)findViewById(R.id.fileList);
 
         repo = Settings.currentProject.getRepo();
@@ -92,6 +94,12 @@ public class ProjectContentsActivity extends ActionBarActivity implements Comman
                 }
             }
         });
+        if (currentDir.getAbsolutePath().equals(repo.getDir().getAbsolutePath())) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
+        else {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     private void getBranches() {
@@ -131,12 +139,21 @@ public class ProjectContentsActivity extends ActionBarActivity implements Comman
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            //noinspection SimplifiableIfStatement
+            case (R.id.action_settings):
+                return true;
+            case (android.R.id.home):
+                if (!currentDir.getAbsolutePath().equals(repo.getDir().getAbsolutePath())) {
+                    currentDir = currentDir.getParentFile();
+                    setFileList();
+                } else {
+                    this.finish();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -162,5 +179,10 @@ public class ProjectContentsActivity extends ActionBarActivity implements Comman
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.finish();
     }
 }

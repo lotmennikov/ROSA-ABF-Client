@@ -45,41 +45,65 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_project_info, menu);
+
+        getSupportActionBar().setTitle(project.getName());
+
         return true;
     }
 
+    // обработчик кнопочек меню
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_clone:
+                onCloneButtonClick(null);
+                return true;
+            case R.id.action_pull:
+                onPullButtonClick(null);
+                return true;
+            case R.id.action_push:
+                onPushButtonClick(null);
+                return true;
+            case R.id.action_commit:
+                onCommitButtonClick(null);
+                return true;
+            case R.id.action_init:
+                onInitButtonClick(null);
+                return true;
+            case R.id.action_settings:
+                return true;
+            default:
+                break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    // TODO locally init repository
+    // init repository locally
+    // TODO убрать инициализацию в сам проект, делать автоматически
     public void onInitButtonClick(View v) {
         if (repo.git == null) {
-            JGitInit initcom = new JGitInit(repo, this);
-            initcom.execute();
+            JGitInit initCom = new JGitInit(repo);
+            if (initCom.execute()) {
+                project.init();
+                Toast.makeText(this.getApplicationContext(), "Init", Toast.LENGTH_SHORT).show();
+            } else
+                Toast.makeText(this.getApplicationContext(), "Init Failed", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this.getApplicationContext(), "Already initialized", Toast.LENGTH_SHORT).show();
         }
     }
 
-    // Тест клонирования объекта
+    // клонирование репозитория
     public void onCloneButtonClick(View v) {
         if (repo.git == null) {
             JGitClone clonecom = new JGitClone(repo, this);
             clonecom.execute();
         } else {
-            Toast.makeText(this.getApplicationContext(), "Already cloned", Toast.LENGTH_LONG).show();
+            Toast.makeText(this.getApplicationContext(), "Already cloned", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -99,7 +123,6 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         if (project.isInitialized()) {
         }
     }
-
 
     // TODO reset repository
     public void onResetButtonClick(View v) {
@@ -124,7 +147,8 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
 
     // TODO list builds
     public void onBuildsButtonClick(View v) {
-
+        Intent builds_intent = new Intent(ProjectInfoActivity.this, BuildsActivity.class);
+        startActivity(builds_intent);
     }
 
     // TODO create new build
@@ -146,15 +170,6 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
                     tst.show();
                 }
                 break;
-            case JGitCommand.INIT_COMMAND:
-                if (success) {
-                    project.init(); // set initialized to true
-                    Toast tst = Toast.makeText(this.getApplicationContext(), "Init", Toast.LENGTH_SHORT);
-                    tst.show();
-                } else {
-                    Toast tst = Toast.makeText(this.getApplicationContext(), "Init Failed", Toast.LENGTH_SHORT);
-                    tst.show();
-                }
             default:
                 break;
         }

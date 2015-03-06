@@ -22,7 +22,7 @@ public class JGitPush extends JGitCommand {
         activity = activ;
     }
 
-    // Асинхронное выполнение инициализации епозитория
+    // Асинхронное выполнение
     @Override
     protected Boolean doInBackground(Void... params) {
         Log.d(Settings.TAG + COMMANDTAG, "procedure begin...");

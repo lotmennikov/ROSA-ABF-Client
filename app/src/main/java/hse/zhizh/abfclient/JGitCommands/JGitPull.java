@@ -22,13 +22,13 @@ public class JGitPull extends JGitCommand {
         activity = activ;
     }
 
-    // Асинхронное выполнение инициализации епозитория
+    // Асинхронное выполнение
     @Override
     protected Boolean doInBackground(Void... params) {
         Log.d(Settings.TAG + COMMANDTAG, "procedure begin...");
 
         // TODO подставить функцию
-        if (true) { // JGitQuery.cloneRepo(mRepo)) {
+        if (true) {
             Log.d(Settings.TAG + COMMANDTAG, "procedure ends with no exception...");
             return true;
         } else

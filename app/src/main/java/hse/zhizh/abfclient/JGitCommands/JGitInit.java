@@ -8,42 +8,30 @@ import hse.zhizh.abfclient.common.Settings;
 import hse.zhizh.abfclient.jgit.JGitQuery;
 
 /**
+ * Local initialization of the repository
+ *
  * Created by E-Lev on 23.02.2015.
  */
-public class JGitInit extends JGitCommand {
+public class JGitInit {
+
+    private final String COMMANDTAG = "JGit Init";
 
     private final Repository mRepo;
-    private final CommandResultListener activity;
 
-    public JGitInit(Repository rep, CommandResultListener activ) {
-        mRepo = rep;
-        activity = activ;
+    public JGitInit(Repository repo) {
+        mRepo = repo;
     }
 
-    // Асинхронное выполнение инициализации епозитория
-    @Override
-    protected Boolean doInBackground(Void... params) {
-        Log.d(Settings.TAG + "Init Command", "Init procedure begin...");
-
-        // TODO подставить функцию
-        if (true) { // JGitQuery.cloneRepo(mRepo)) {
-            Log.d(Settings.TAG + "Init Command", "Init procedure ends with no exception...");
+    // init repository locally
+    public boolean execute() {
+        // TODO move init to jgit_class
+        if (mRepo.getGit() != null) {
+            Log.d(Settings.TAG + COMMANDTAG, "git initialized");
             return true;
-        } else
-            return false;
-    }
-
-    @Override
-    protected void onPostExecute(final Boolean success) {
-        if (success) {
-            Log.d(Settings.TAG + "Init Command", "Initialized successfully");
         } else {
-            Log.d(Settings.TAG + "Init Command", "Initialization Failed");
+            Log.e(Settings.TAG + COMMANDTAG, "git not initialized");
+        return false;
         }
-        activity.onCommandExecuted(CLONE_COMMAND, success);
     }
-
-    @Override
-    protected void onCancelled() {  }
 
 }

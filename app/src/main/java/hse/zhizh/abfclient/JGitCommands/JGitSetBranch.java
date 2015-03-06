@@ -23,7 +23,7 @@ public class JGitSetBranch extends JGitCommand {
         this.branchname = branchname;
     }
 
-    // Асинхронное выполнение инициализации епозитория
+    // Асинхронное выполнение
     @Override
     protected Boolean doInBackground(Void... params) {
         Log.d(Settings.TAG + COMMANDTAG, "procedure begin...");

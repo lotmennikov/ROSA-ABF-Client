@@ -13,9 +13,10 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/giticonabf"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme"
+        android:screenOrientation="portrait" >
         <activity
             android:name=".Activities.MainActivity"
             android:label="@string/app_name" >
@@ -40,7 +41,8 @@
         </activity>
         <activity
             android:name=".Activities.ProjectInfoActivity"
-            android:label="@string/title_activity_project_info" >
+            android:label="@string/title_activity_project_info"
+            android:uiOptions="splitActionBarWhenNarrow" >
         </activity>
         <activity
             android:name=".Activities.BuildsActivity"
