@@ -10,14 +10,14 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import java.io.File;
 import java.util.Locale;
 
-public class Clone {
+public class JGitClone {
 
     Repository repository;
     UsernamePasswordCredentialsProvider auth;
-    public Clone(Repository repository) {
+    public JGitClone(Repository repository) {
         this.repository = repository;
-        String username = repository.getUsername();
-        String password = repository.getPassword();
+        String username = Settings.repo_username;
+        String password = Settings.repo_password;
         if (username != null && password != null && !username.equals("")
                 && !password.equals("")) {
             auth = new UsernamePasswordCredentialsProvider(username, password);

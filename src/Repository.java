@@ -20,7 +20,6 @@ public class Repository {
         if (git != null)
             return git;
         File f = getDir();
-        Git git = null;
         try {
             git = Git.open(f);
         } catch (IOException e) {
@@ -41,13 +40,6 @@ public class Repository {
             return "https://abf.io/creepycheese/pvpgn.git";
         }
 
-    public String getUsername() {
-            return "creepycheese";
-        }
-
-    public String getPassword() {
-            return "ewqforce1";
-        }
 
     public void updateStatus(String s) {
             System.out.println(s);

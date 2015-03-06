@@ -1,4 +1,6 @@
 
+import org.eclipse.jgit.api.PullCommand;
+
 import java.io.*;
 import java.util.ArrayList;
 
@@ -10,21 +12,21 @@ public class Test {
     public static void main(String[] args) {
         XTrustProvider.install();
         Repository r = new Repository();
-        Clone cloneCommand = new Clone(r);
-        Branches branchesCommand = new Branches(r);
-        Commit_pull_push_reset bigCommand = new Commit_pull_push_reset(r);
+        JGitClone JGitCloneCommand = new JGitClone(r);
+        JGitBranches JGitBranchesCommand = new JGitBranches(r);
+        JGitPull pullCommand = new JGitPull(r);
         Upload_download_abf_yml upload_download_command = new Upload_download_abf_yml(r);
-        cloneCommand.cloneRepo();
-        String[] arr = branchesCommand.getBranches();
+        JGitCloneCommand.cloneRepo();
+        String[] arr = JGitBranchesCommand.getBranches();
         for (String s : arr) {
             System.out.println(s);
         }
         // Clone.checkout(r, arr[2]);
         //  boolean c = commitChanges(r, "test commit message2", true);
-        ArrayList<Commit> commits = branchesCommand.getCommits();
+        ArrayList<Commit> commits = JGitBranchesCommand.getCommits();
         upload_download_command.upload_abf_yml(new File("C:/test10.txt"));
         upload_download_command.download_abf_yml();
-        boolean b = bigCommand.pullRepo();
+        boolean b = pullCommand.pullRepo();
         //    boolean d = pushRepo(r, true);
     }
 }

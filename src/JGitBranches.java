@@ -8,7 +8,7 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import java.io.IOException;
 import java.util.*;
 
-public class Branches {
+public class JGitBranches {
 
     private static final int COMMIT_TYPE_HEAD = 0;
     private static final int COMMIT_TYPE_TAG = 1;
@@ -17,7 +17,7 @@ public class Branches {
 
     Repository repository;
 
-    public Branches(Repository repository) {
+    public JGitBranches(Repository repository) {
         this.repository = repository;
     }
 

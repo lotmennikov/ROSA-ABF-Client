@@ -91,7 +91,7 @@ public class Upload_download_abf_yml {
         builder.addPart("file", new FileBody(fileToUpload));
         HttpPost request = new HttpPost("http://file-store.rosalinux.ru/api/v1/upload");
         request.setEntity(builder.build());
-        String encoding = new Base64().encodeAsString(new String("creepycheese:ewqforce1").getBytes());
+        String encoding = new Base64().encodeAsString(new String(Settings.filestore_username + ":" + Settings.filestore_password).getBytes());
         request.setHeader("Authorization", encoding);
         CloseableHttpResponse response2 = null;
         try {

@@ -1,6 +1,6 @@
-import org.eclipse.jgit.api.*;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.PushCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.transport.PushResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteRefUpdate;
@@ -9,74 +9,28 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import java.io.File;
 import java.util.Collection;
 
-
-public class Commit_pull_push_reset {
-
+/**
+ * Created by Administrator on 3/6/2015.
+ */
+public class JGitPush {
 
     Repository repository;
     UsernamePasswordCredentialsProvider auth;
     private StringBuffer resultMsg = new StringBuffer();
-    public Commit_pull_push_reset(Repository repository) {
+    public JGitPush(Repository repository) {
         this.repository = repository;
-        String username = repository.getUsername();
-        String password = repository.getPassword();
+        String username = Settings.repo_username;
+        String password = Settings.repo_password;
         if (username != null && password != null && !username.equals("")
                 && !password.equals("")) {
             auth = new UsernamePasswordCredentialsProvider(username, password);
         }
     }
-
-
-    public boolean commitChanges(String commitMessage) {
-        Git git = repository.getGit();
-        AddCommand add_all = git.add().addFilepattern("."); // add all files to stage
-        CommitCommand cc = git.commit().setMessage(commitMessage);
-      //  CommitCommand cc = git.commit().setAll(stageAll).setMessage(commitMessage);
-
-        try {
-            add_all.call();
-            cc.call();
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
-    }
-
-    public boolean pullRepo() {
-        Git git = repository.getGit();
-        PullCommand pullCommand = git.pull();
-
-        //TODO
-          //      .setProgressMonitor(new RepoCloneMonitor());
-
-        //TODO
-        // .setTransportConfigCallback(new SgitTransportCallback());
-
-        pullCommand.setCredentialsProvider(auth);
-        try {
-            pullCommand.call();
-        } catch (TransportException e) {
-
-            return false;
-        } catch (Exception e) {
-            return false;
-        } catch (OutOfMemoryError e) {
-            return false;
-        } catch (Throwable e) {
-            return false;
-        }
-
-        //TODO
-        // reposit.updateLatestCommitInfo();
-
-        return true;
-    }
-
     //push all - push all branches
     public boolean pushRepo(boolean pushAll) {
         Git git = repository.getGit();
         PushCommand pushCommand = git.push().setPushTags()
-             //   .setProgressMonitor(new RepoCloneMonitor())
+                //   .setProgressMonitor(new RepoCloneMonitor())
                 .setRemote(repository.getRemoteURL());
         if (pushAll) {
             pushCommand.setPushAll();
@@ -172,18 +126,4 @@ public class Commit_pull_push_reset {
         }
         return true;
     }
-
-    //TODO
-    //Not tested!!!
-    public boolean reset() {
-        try {
-            repository.getGit().reset().setMode(ResetCommand.ResetType.HARD).call();
-        } catch (Exception e) {
-            return false;
-        } catch (Throwable e) {
-            return false;
-        }
-        return true;
-    }
-
 }
