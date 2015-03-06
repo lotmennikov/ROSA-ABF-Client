@@ -15,7 +15,8 @@ public class Test {
         JGitClone JGitCloneCommand = new JGitClone(r);
         JGitBranches JGitBranchesCommand = new JGitBranches(r);
         JGitPull pullCommand = new JGitPull(r);
-        Upload_download_abf_yml upload_download_command = new Upload_download_abf_yml(r);
+        Upload_abf_yml upload__command = new Upload_abf_yml(r);
+        Download_abf_yml download_command = new Download_abf_yml(r);
         JGitCloneCommand.cloneRepo();
         String[] arr = JGitBranchesCommand.getBranches();
         for (String s : arr) {
@@ -24,8 +25,8 @@ public class Test {
         // Clone.checkout(r, arr[2]);
         //  boolean c = commitChanges(r, "test commit message2", true);
         ArrayList<Commit> commits = JGitBranchesCommand.getCommits();
-        upload_download_command.upload_abf_yml(new File("C:/test10.txt"));
-        upload_download_command.download_abf_yml();
+        upload__command.upload_abf_yml(new File("C:/test10.txt"));
+        download_command.download_abf_yml();
         boolean b = pullCommand.pullRepo();
         //    boolean d = pushRepo(r, true);
     }
