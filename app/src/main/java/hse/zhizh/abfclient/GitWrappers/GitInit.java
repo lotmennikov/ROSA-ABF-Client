@@ -1,24 +1,22 @@
-package hse.zhizh.abfclient.JGitCommands;
+package hse.zhizh.abfclient.GitWrappers;
 
 import android.util.Log;
 
-import hse.zhizh.abfclient.Activities.CommandResultListener;
 import hse.zhizh.abfclient.Model.Repository;
 import hse.zhizh.abfclient.common.Settings;
-import hse.zhizh.abfclient.jgit.JGitQuery;
 
 /**
  * Local initialization of the repository
  *
  * Created by E-Lev on 23.02.2015.
  */
-public class JGitInit {
+public class GitInit {
 
-    private final String COMMANDTAG = "JGit Init";
+    private final String COMMANDTAG = "Git Init";
 
     private final Repository mRepo;
 
-    public JGitInit(Repository repo) {
+    public GitInit(Repository repo) {
         mRepo = repo;
     }
 

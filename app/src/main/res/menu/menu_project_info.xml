@@ -9,14 +9,6 @@
           app:showAsAction="always">
         <menu>
             <item
-                android:id="@+id/action_init"
-                android:title="Init"
-                app:showAsAction="never" />
-            <item
-                android:id="@+id/action_clone"
-                android:title="Clone"
-                app:showAsAction="never" />
-            <item
                 android:id="@+id/action_pull"
                 android:title="Pull"
                 app:showAsAction="never" />

@@ -1,4 +1,4 @@
-package hse.zhizh.abfclient.JGitCommands;
+package hse.zhizh.abfclient.GitWrappers;
 
 import android.util.Log;
 
@@ -13,12 +13,12 @@ import hse.zhizh.abfclient.jgit.JGitQuery;
  *
  * Created by E-Lev on 07.01.2015.
  */
-public class JGitClone extends JGitCommand {
+public class GitClone extends GitCommand {
 
     private final Repository mRepo;
     private final CommandResultListener activity;
 
-    public JGitClone(Repository rep, CommandResultListener activ) {
+    public GitClone(Repository rep, CommandResultListener activ) {
         mRepo = rep;
         activity = activ;
     }

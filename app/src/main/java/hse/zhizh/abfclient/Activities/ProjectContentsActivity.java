@@ -17,10 +17,9 @@ import android.widget.Toast;
 
 import java.io.File;
 
-import hse.zhizh.abfclient.JGitCommands.JGitBranch;
-import hse.zhizh.abfclient.JGitCommands.JGitCommand;
-import hse.zhizh.abfclient.JGitCommands.JGitSetBranch;
-import hse.zhizh.abfclient.Model.Project;
+import hse.zhizh.abfclient.GitWrappers.GitBranch;
+import hse.zhizh.abfclient.GitWrappers.GitCommand;
+import hse.zhizh.abfclient.GitWrappers.GitSetBranch;
 import hse.zhizh.abfclient.Model.Repository;
 import hse.zhizh.abfclient.R;
 import hse.zhizh.abfclient.common.Settings;
@@ -103,7 +102,7 @@ public class ProjectContentsActivity extends ActionBarActivity implements Comman
     }
 
     private void getBranches() {
-        JGitBranch brcom = new JGitBranch(repo);
+        GitBranch brcom = new GitBranch(repo);
         if (brcom.execute())
             branches = brcom.result;
         else
@@ -117,7 +116,7 @@ public class ProjectContentsActivity extends ActionBarActivity implements Comman
         blder.setAdapter(branchesAdapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                JGitSetBranch setBranch = new JGitSetBranch(repo, ProjectContentsActivity.this, branches[which]);
+                GitSetBranch setBranch = new GitSetBranch(repo, ProjectContentsActivity.this, branches[which]);
                 setBranch.execute();
             }
         });
@@ -159,7 +158,7 @@ public class ProjectContentsActivity extends ActionBarActivity implements Comman
     @Override
     public void onCommandExecuted(int commandId, boolean success) {
         switch (commandId) {
-            case JGitCommand.SETBRANCH_COMMAND:
+            case GitCommand.SETBRANCH_COMMAND:
 
                 if (success) {
                     if (currentDir.exists()) {

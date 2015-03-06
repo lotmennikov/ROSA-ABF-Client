@@ -1,23 +1,22 @@
-package hse.zhizh.abfclient.JGitCommands;
+package hse.zhizh.abfclient.GitWrappers;
 
 import android.util.Log;
 
 import hse.zhizh.abfclient.Activities.CommandResultListener;
 import hse.zhizh.abfclient.Model.Repository;
 import hse.zhizh.abfclient.common.Settings;
-import hse.zhizh.abfclient.jgit.JGitQuery;
 
 /**
  * Created by E-Lev on 23.02.2015.
  */
-public class JGitPush extends JGitCommand {
+public class GitPull extends GitCommand {
 
-    private final String COMMANDTAG = "JGit Push";
+    private final String COMMANDTAG = "Git Pull";
 
     private final Repository mRepo;
     private final CommandResultListener activity;
 
-    public JGitPush(Repository rep, CommandResultListener activ) {
+    public GitPull(Repository rep, CommandResultListener activ) {
         mRepo = rep;
         activity = activ;
     }
@@ -28,7 +27,7 @@ public class JGitPush extends JGitCommand {
         Log.d(Settings.TAG + COMMANDTAG, "procedure begin...");
 
         // TODO подставить функцию
-        if (true) { // JGitQuery.cloneRepo(mRepo)) {
+        if (true) {
             Log.d(Settings.TAG + COMMANDTAG, "procedure ends with no exception...");
             return true;
         } else

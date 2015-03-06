@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -43,12 +44,12 @@ import hse.zhizh.abfclient.api.ProjectsRequest;
 
 
 /**
- * A login screen that offers login via email/password.
+ * A login screen that offers login via username/password.
  *
  *
  * TODO Нужно приделать Account Manager
  */
-public class LoginActivity extends Activity {
+public class LoginActivity extends ActionBarActivity {
 
     private UserLoginTask mAuthTask = null;
 
@@ -139,27 +140,21 @@ public class LoginActivity extends Activity {
             Toast toast = Toast.makeText(context, "code:" + f_code, duration);
             toast.show();
             if (success) {
-                //show toast======
 
-                //show toast end ====
                 Log.d("ABF Client LoginActivity", "Login Success");
 
                 Intent login_result = new Intent();
                 login_result.putExtra("Username", mUsername);
                 login_result.putExtra("Password", mPassword);
-
-                //Тест добавления и создания БД
-                FeedProjectsDbHelper h = new FeedProjectsDbHelper(getBaseContext());
-                System.out.println("NEW ROW: " + h.addProject("test","test","test","test","test","test"));
                 setResult(RESULT_OK, login_result);
                 finish();
+
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
 
                 Log.d("ABF Client LoginActivity", "Login Fail");
             }
-
         }
 
         @Override
