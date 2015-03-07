@@ -189,6 +189,11 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
        db.delete(ProjectsContract.FeedProjects.TABLE_NAME, selection, selectionArgs);
    }
 
+    public void deleteAll(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.delete(ProjectsContract.FeedProjects.TABLE_NAME, null, null);
+    }
+
 
     //Обновляет ряд с project_id, возвращает кол-во обноленных записей
     public int updateProject(String project_id,String fullname, String name, String description,String git_url,String owner_id,boolean is_local){

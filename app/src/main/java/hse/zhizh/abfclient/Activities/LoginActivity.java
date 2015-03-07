@@ -150,7 +150,7 @@ public class LoginActivity extends Activity {
 
                 //Тест добавления и создания БД
                 FeedProjectsDbHelper h = new FeedProjectsDbHelper(getBaseContext());
-                System.out.println("NEW ROW: " + h.addProject("test","test","test","test","test","test"));
+                System.out.println("NEW ROW: " + h.addProject("test","test","test","test","test","test",true));
                 setResult(RESULT_OK, login_result);
                 finish();
             } else {
