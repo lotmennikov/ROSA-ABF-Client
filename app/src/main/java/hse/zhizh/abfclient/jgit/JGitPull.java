@@ -40,13 +40,16 @@ public class JGitPull {
         try {
             pullCommand.call();
         } catch (TransportException e) {
-
+            e.printStackTrace();
             return false;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         } catch (OutOfMemoryError e) {
+            e.printStackTrace();
             return false;
         } catch (Throwable e) {
+            e.printStackTrace();
             return false;
         }
 

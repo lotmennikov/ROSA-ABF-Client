@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,12 +57,14 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
     private ViewPager viewPager;
     private ActionBar actionBar;
     private ProjectPagerAdapter ppAdapter;
+    private Button branchButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_info);
 
+        branchButton = (Button)findViewById(R.id.branchButton);
         viewPager = (ViewPager)findViewById(R.id.projectInfoPager);
         actionBar = getSupportActionBar();
         ppAdapter = new ProjectPagerAdapter(getSupportFragmentManager());
@@ -160,6 +163,8 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 GitSetBranch setBranch = new GitSetBranch(repo, ProjectInfoActivity.this, branches[which]);
+                String[] nameparts = branches[which].split("/");
+                branchButton.setText(nameparts[nameparts.length-1]);
                 setBranch.execute();
             }
         });
