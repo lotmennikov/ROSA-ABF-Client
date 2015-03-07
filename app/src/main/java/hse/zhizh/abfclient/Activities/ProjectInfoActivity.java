@@ -6,26 +6,30 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import hse.zhizh.abfclient.JGitCommands.JGitBranch;
-import hse.zhizh.abfclient.JGitCommands.JGitClone;
-import hse.zhizh.abfclient.JGitCommands.JGitCommand;
-import hse.zhizh.abfclient.JGitCommands.JGitInit;
+import hse.zhizh.abfclient.GitWrappers.GitBranch;
 import hse.zhizh.abfclient.Model.Project;
 import hse.zhizh.abfclient.Model.Repository;
 import hse.zhizh.abfclient.R;
 import hse.zhizh.abfclient.common.Settings;
 
+/**
+ * Обзор проекта
+ *  Содержимое
+ *  Коммиты
+ *  Сборки
+ *  Команды
+ *
+ * TODO сделать вкладки
+ */
 public class ProjectInfoActivity extends ActionBarActivity implements CommandResultListener {
 
     Project project;
     Repository repo;
 
-    JGitBranch branchcom;
+    GitBranch branchcom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +63,6 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id) {
-            case R.id.action_clone:
-                onCloneButtonClick(null);
-                return true;
             case R.id.action_pull:
                 onPullButtonClick(null);
                 return true;
@@ -71,9 +72,6 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
             case R.id.action_commit:
                 onCommitButtonClick(null);
                 return true;
-            case R.id.action_init:
-                onInitButtonClick(null);
-                return true;
             case R.id.action_settings:
                 return true;
             default:
@@ -82,45 +80,30 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         return super.onOptionsItemSelected(item);
     }
 
-    // init repository locally
-    // TODO убрать инициализацию в сам проект, делать автоматически
-    public void onInitButtonClick(View v) {
-        if (repo.git == null) {
-            JGitInit initCom = new JGitInit(repo);
-            if (initCom.execute()) {
-                project.init();
-                Toast.makeText(this.getApplicationContext(), "Init", Toast.LENGTH_SHORT).show();
-            } else
-                Toast.makeText(this.getApplicationContext(), "Init Failed", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this.getApplicationContext(), "Already initialized", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    // клонирование репозитория
-    public void onCloneButtonClick(View v) {
-        if (repo.git == null) {
-            JGitClone clonecom = new JGitClone(repo, this);
-            clonecom.execute();
-        } else {
-            Toast.makeText(this.getApplicationContext(), "Already cloned", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     // TODO новый коммит
     public void onCommitButtonClick(View v) {
+        if (project.isInitialized()) {
 
-
+        } else {
+            Toast.makeText(getApplicationContext(), "Not Initialized", Toast.LENGTH_SHORT).show();
+        }
     }
 
     // TODO pull repository
     public void onPullButtonClick(View v) {
+        if (project.isInitialized()) {
 
+        } else {
+            Toast.makeText(getApplicationContext(), "Not Initialized", Toast.LENGTH_SHORT).show();
+        }
     }
 
     // TODO push to repository
     public void onPushButtonClick(View v) {
         if (project.isInitialized()) {
+
+        } else {
+            Toast.makeText(getApplicationContext(), "Not Initialized", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -128,20 +111,28 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
     public void onResetButtonClick(View v) {
         if (project.isInitialized()) {
 
+        } else {
+            Toast.makeText(getApplicationContext(), "Not Initialized", Toast.LENGTH_SHORT).show();
         }
     }
 
     // TODO list commits
     public void onCommitsButtonClick(View v) {
         if (project.isInitialized()) {
+
+        } else {
+            Toast.makeText(getApplicationContext(), "Not Initialized", Toast.LENGTH_SHORT).show();
         }
     }
 
     // list file structure
+    // TODO вделать в вкладку
     public void onContentsButtonClick(View v) {
         if (project.isInitialized()) {
             Intent projectcontent_intent = new Intent(ProjectInfoActivity.this, ProjectContentsActivity.class);
             startActivity(projectcontent_intent);
+        } else {
+            Toast.makeText(getApplicationContext(), "Not Initialized", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -153,13 +144,33 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
 
     // TODO create new build
     public void onNewBuildButtonClick(View v) {
+        if (project.isInitialized()) {
 
+        } else {
+            Toast.makeText(getApplicationContext(), "Not Initialized", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // TODO сделать загрузку вкладки с содержимым
+    private void initContentsTab() {
 
     }
 
+    // TODO сделать загрузку вкладки со сборками
+    private void initBuildsTab() {
+
+    }
+
+    // TODO сделать загрузку вкладки с коммитами
+    private void initCommitsTab() {
+
+    }
+
+
+    // TODO Вставить ветки, гитовые команды
     @Override
     public void onCommandExecuted(int commandID, boolean success) {
-        switch (commandID) {
+/*        switch (commandID) {
             case JGitCommand.CLONE_COMMAND:
                 if (success) {
                     project.init(); // set initialized to true
@@ -173,5 +184,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
             default:
                 break;
         }
+    */
     }
+
 }

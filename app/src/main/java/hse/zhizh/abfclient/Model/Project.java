@@ -14,13 +14,11 @@ public class Project {
     private String git_url;
     private String description;
     private int owner_id;
-    private boolean islocal; // repository is on the device
-
+    private boolean local; // repository is on the device
 
 // non-database
     private Repository repository; // repository object
     private boolean initialized;   // repository initialized\
-
 
     public Project(int id, String name, String fullname, String git_url, String description, int owner_id) {
         this.id = id;
@@ -30,10 +28,14 @@ public class Project {
         this.description = description;
         this.owner_id = owner_id;
 
-
-        islocal = false;
+        local = false;
         initialized = false;
         repository = null;
+    }
+
+    // called only in DBHelper
+    public void setLocal(boolean local) {
+        this.local = local;
     }
 
     // Creating repository object. WITHOUT INITIALIZATION!
@@ -41,10 +43,12 @@ public class Project {
         repository = new Repository(Settings.appContext, this.name, this.git_url);
     }
 
+    // must be called only after successful JGitInit or JGitClone
     public void init() {
         initialized = true;
     }
 
+// Getters
     public int getId() { return id; }
     public String getFullname() { return fullname; }
     public String getName() { return name; }
@@ -53,6 +57,6 @@ public class Project {
     public int getOwnerId() { return owner_id; }
     public Repository getRepo() { return repository; }
 
-    public boolean isLocal() { return islocal; }
+    public boolean isLocal() { return local; }
     public boolean isInitialized()   { return initialized;   }
 }

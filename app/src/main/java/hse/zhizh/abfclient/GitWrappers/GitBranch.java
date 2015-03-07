@@ -1,8 +1,5 @@
-package hse.zhizh.abfclient.JGitCommands;
+package hse.zhizh.abfclient.GitWrappers;
 
-import android.util.Log;
-
-import hse.zhizh.abfclient.Activities.CommandResultListener;
 import hse.zhizh.abfclient.Model.Repository;
 import hse.zhizh.abfclient.jgit.JGitQuery;
 
@@ -11,13 +8,13 @@ import hse.zhizh.abfclient.jgit.JGitQuery;
  *
  * Created by E-Lev on 02.02.2015.
  */
-public class JGitBranch {
+public class GitBranch {
 
     private final Repository mRepo;
 
     public String[] result;
 
-    public JGitBranch(Repository rep) {
+    public GitBranch(Repository rep) {
         mRepo = rep;
 
         result = null;
