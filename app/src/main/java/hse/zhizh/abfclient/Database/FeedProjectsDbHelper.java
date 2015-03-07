@@ -119,7 +119,7 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
                     getString(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_NAME));
             Integer owner_id=cursor.
                     getInt(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_OWNER_ID));
-            Project to_add = new Project(project_id,name,fullname,git_url,description,owner_id);
+            Project to_add = new Project(project_id,name,fullname,git_url,description,owner_id, true);
 
             projects.put(project_id,to_add);
         }
@@ -173,7 +173,7 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
                     getString(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_NAME));
             Integer owner_id=Integer.parseInt(cursor.
                     getString(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_OWNER_ID)));
-            Project to_add = new Project(project_id,name,fullname,git_url,description,owner_id);
+            Project to_add = new Project(project_id,name,fullname,git_url,description,owner_id, true);
 
             projects.add(to_add);
         }

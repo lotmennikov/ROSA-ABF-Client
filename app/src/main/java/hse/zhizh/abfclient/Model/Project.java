@@ -33,6 +33,19 @@ public class Project {
         repository = null;
     }
 
+    public Project(int id, String name, String fullname, String git_url, String description, int owner_id, boolean islocal) {
+        this.id = id;
+        this.name = name;
+        this.fullname = fullname;
+        this.git_url = git_url;
+        this.description = description;
+        this.owner_id = owner_id;
+        this.local = islocal;
+
+        initialized = false;
+        repository = null;
+    }
+
     // called only in DBHelper
     public void setLocal(boolean local) {
         this.local = local;

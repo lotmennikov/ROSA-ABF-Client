@@ -44,6 +44,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
         setContentView(R.layout.activity_projects);
         projectsList = (ListView)findViewById(R.id.projectsList);
 
+        // выбор проекта
         projectsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -57,13 +58,18 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
                 if (Settings.currentProject.getRepo() == null) {
                     Settings.currentProject.createRepo();
                 }
-
-                // выбор способа инициализации
-                if (!Settings.currentProject.isInitialized()) {
-                    initDialog.show();
-                } else {
+                if (Settings.currentProject.isInitialized()) {
                     startProjectActivity();
+                } else {
+                    // выбор способа инициализации
+                    if (Settings.currentProject.isLocal()) {
+                        if (InitCurrentProjectRepository())
+                            startProjectActivity();
+                    } else {
+                        initDialog.show();
+                    }
                 }
+
                 Log.d(Settings.TAG + " ProjectsActivity", "Project onClick, starting projectInfoActivity " + position);
             }
         });
@@ -83,15 +89,10 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
         blder.setNegativeButton("Init locally", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                GitInit initCommand = new GitInit(Settings.currentProject.getRepo());
-                if (initCommand.execute()) { // норм
-                    Settings.currentProject.init();
-                    Toast.makeText(getApplicationContext(), "Init", Toast.LENGTH_SHORT).show();
-
-                    // переход
-                    startProjectActivity();
-                } else
-                    Toast.makeText(getApplicationContext(), "Init Failed", Toast.LENGTH_SHORT).show();
+                if (InitCurrentProjectRepository()) {
+                    AddCurrentProjectToDB();
+                    startProjectActivity();// переход
+                }
             }
         });
 
@@ -109,16 +110,36 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
         initDialog = blder.create();
     }
 
+    private boolean InitCurrentProjectRepository() {
+        GitInit initCommand = new GitInit(Settings.currentProject.getRepo());
+        if (initCommand.execute()) { // норм
+            Settings.currentProject.init();
+            Toast.makeText(getApplicationContext(), "Init", Toast.LENGTH_SHORT).show();
+            return true;
+        } else {
+            Toast.makeText(getApplicationContext(), "Init Failed", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
     // переход к проекту
     private void startProjectActivity() {
         Intent projectinfo_intent = new Intent(ProjectsActivity.this, ProjectInfoActivity.class);
         startActivity(projectinfo_intent);
     }
 
+    // добавление проекта в базу
+    public void AddCurrentProjectToDB() {
+        FeedProjectsDbHelper helper = new FeedProjectsDbHelper(this.getApplicationContext());
+        helper.addProject(Settings.currentProject, true);
+        helper.close();
+        Toast.makeText(getApplicationContext(), "Adding project to DB", Toast.LENGTH_SHORT).show();
+    }
+
     // TODO связь с базой - получение проектов в базе
     private void getDatabaseProjects() {
         //Тест добавления и создания БД
-        FeedProjectsDbHelper h = new FeedProjectsDbHelper(getBaseContext());
+//        FeedProjectsDbHelper h = new FeedProjectsDbHelper(getBaseContext());
 //        System.out.println("NEW ROW: " + h.addProject("test","test","test","test","test","test", true));
 
     }
@@ -131,20 +152,21 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
         }
     }
 
-
     // Test
     public void onGetDBProjectsClick(View v) {
-        FeedProjectsDbHelper h = new FeedProjectsDbHelper(getBaseContext());
+        FeedProjectsDbHelper h = new FeedProjectsDbHelper(getApplicationContext());
         try {
             ArrayList<Project> projectsList = h.readProjects();
             h.close();
-            projects = (Project[]) projectsList.toArray();
+            projects = projectsList.toArray(new Project[projectsList.size()]);
             setProjectsList();
+            Toast.makeText(getApplicationContext(), projectsList.size() + " projects in DB", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
             h.close();
-//            h = new FeedProjectsDbHelper(getBaseContext());
-//            h.
+            h = new FeedProjectsDbHelper(getBaseContext());
+            h.deleteAll();
+            h.close();
         }
 
     }
@@ -159,6 +181,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
                         Settings.currentProject.init(); // set initialized to true
                         Toast tst = Toast.makeText(this.getApplicationContext(), "Cloned", Toast.LENGTH_SHORT);
                         tst.show();
+                        AddCurrentProjectToDB();
 
                         // переход к проекту
                         startProjectActivity();

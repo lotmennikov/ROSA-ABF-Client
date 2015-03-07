@@ -48,8 +48,6 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onProjectContentsButtonClick(View v) {
-        Intent projectcontent_intent = new Intent(MainActivity.this, ProjectContentsActivity.class);
-        startActivity(projectcontent_intent);
     }
 
     public void onProjectsButtonClick(View v) {
@@ -58,8 +56,6 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onCommitsButtonClick(View v) {
-        Intent commits_intent = new Intent(MainActivity.this, CommitsActivity.class);
-        startActivity(commits_intent);
     }
 
     public void onBuildInfoButtonClick(View v) {
@@ -68,8 +64,6 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onBuildsButtonClick(View v) {
-        Intent builds_intent = new Intent(MainActivity.this, BuildsActivity.class);
-        startActivity(builds_intent);
     }
 
     @Override

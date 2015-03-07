@@ -110,10 +110,7 @@ public class SessionImpl implements Session {
 
                 while ((input = br.readLine()) != null){
                     System.out.println(input);
-<<<<<<< HEAD
-=======
 
->>>>>>> 8e9f63d7d80aee8909191441ce0f55f276890be5
                     content += input;
                 }
                 br.close();
