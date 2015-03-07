@@ -24,6 +24,14 @@
                 android:id="@+id/action_reset"
                 android:title="Reset"
                 app:showAsAction="never" />
+            <item
+                android:id="@+id/action_newfile"
+                android:title="New File"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_addbinary"
+                android:title="Add binary file"
+                app:showAsAction="never" />
         </menu>
     </item>
 </menu>

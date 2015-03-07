@@ -119,4 +119,13 @@ public class ContentsFragment extends Fragment implements ProjectActivityEventLi
     public boolean onRefreshed() {
         return false;
     }
+
+    public void refresh() {
+        if (currentDir.exists()) {
+            setFileList();
+        } else {
+            currentDir = repo.getDir();
+            setFileList();
+        }
+    }
 }

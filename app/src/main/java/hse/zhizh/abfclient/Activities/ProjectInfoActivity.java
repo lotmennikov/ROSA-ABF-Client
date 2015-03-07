@@ -16,8 +16,17 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.commons.io.output.WriterOutputStream;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import hse.zhizh.abfclient.GitWrappers.GitBranch;
 import hse.zhizh.abfclient.GitWrappers.GitCommand;
+import hse.zhizh.abfclient.GitWrappers.GitCommit;
+import hse.zhizh.abfclient.GitWrappers.GitPull;
+import hse.zhizh.abfclient.GitWrappers.GitPush;
 import hse.zhizh.abfclient.GitWrappers.GitSetBranch;
 import hse.zhizh.abfclient.Model.Project;
 import hse.zhizh.abfclient.Model.Repository;
@@ -38,7 +47,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
     Project project;
     Repository repo;
 
-    GitBranch branchcom;
+    GitCommand gitCommand;
 
     String[] branches;
     AlertDialog branchDialog;
@@ -101,34 +110,6 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         return true;
     }
 
-    // обработчик кнопочек меню
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.action_pull:
-                onPullButtonClick(null);
-                return true;
-            case R.id.action_push:
-                onPushButtonClick(null);
-                return true;
-            case R.id.action_commit:
-                onCommitButtonClick(null);
-                return true;
-            case R.id.action_settings:
-                return true;
-            case (android.R.id.home):
-                this.finish();
-                return true;
-            default:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     // список веток
     private void getBranches() {
         GitBranch brcom = new GitBranch(repo);
@@ -137,6 +118,38 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         else
             this.finish();
     }
+
+// **** КНОПОЧКИ ****
+    // обработчик кнопочек меню
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    // Handle action bar item clicks here. The action bar will
+    // automatically handle clicks on the Home/Up button, so long
+    // as you specify a parent activity in AndroidManifest.xml.
+    int id = item.getItemId();
+    switch (id) {
+        case R.id.action_pull:
+            onPullButtonClick(null);
+            return true;
+        case R.id.action_push:
+            onPushButtonClick(null);
+            return true;
+        case R.id.action_commit:
+            onCommitButtonClick(null);
+            return true;
+        case R.id.action_settings:
+            return true;
+        case (android.R.id.home):
+            this.finish();
+            return true;
+        case (R.id.action_newfile):
+            onNewFileButtonClick(null);
+            break;
+        default:
+            break;
+    }
+    return super.onOptionsItemSelected(item);
+}
 
     // TODO подправить окошко
     public void onBranchButtonClick(View v) {
@@ -154,40 +167,47 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         branchDialog.show();
     }
 
-    // TODO новый коммит
+    // TODO check, сделать окошко
     public void onCommitButtonClick(View v) {
-        if (project.isInitialized()) {
-
-        } else {
-            Toast.makeText(getApplicationContext(), "Not Initialized", Toast.LENGTH_SHORT).show();
+        if (gitCommand == null) {
+            gitCommand = new GitCommit(repo, this, "ABF client commit");
+            gitCommand.execute();
         }
     }
 
-    // TODO pull repository
+    // TODO check
     public void onPullButtonClick(View v) {
-        if (project.isInitialized()) {
-
-        } else {
-            Toast.makeText(getApplicationContext(), "Not Initialized", Toast.LENGTH_SHORT).show();
+        if (gitCommand == null) {
+            gitCommand = new GitPull(repo, this);
+            gitCommand.execute();
         }
     }
 
-    // TODO push to repository
+    // TODO check
     public void onPushButtonClick(View v) {
-        if (project.isInitialized()) {
+        if (gitCommand == null) {
+            gitCommand = new GitPush(repo, this);
+            gitCommand.execute();
+        }
+    }
 
-        } else {
-            Toast.makeText(getApplicationContext(), "Not Initialized", Toast.LENGTH_SHORT).show();
+    public void onNewFileButtonClick(View v) {
+        File newfile = new File(repo.getDir() + "/file.txt");
+        try {
+            PrintWriter pw = new PrintWriter(newfile);
+            pw.append("\ntime:" + System.currentTimeMillis());
+            pw.close();
+            Toast.makeText(getApplicationContext(), "file created", Toast.LENGTH_SHORT).show();
+            ppAdapter.refreshContents();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "file was not created", Toast.LENGTH_SHORT).show();
         }
     }
 
     // TODO reset repository
     public void onResetButtonClick(View v) {
-        if (project.isInitialized()) {
-
-        } else {
-            Toast.makeText(getApplicationContext(), "Not Initialized", Toast.LENGTH_SHORT).show();
-        }
+        Toast.makeText(getApplicationContext(), "No function call", Toast.LENGTH_SHORT).show();
     }
 
     // TODO create new build
@@ -198,6 +218,15 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
             Toast.makeText(getApplicationContext(), "Not Initialized", Toast.LENGTH_SHORT).show();
         }
     }
+
+    // если вклалка не обрабатывает, можно закрывать
+    @Override
+    public void onBackPressed() {
+        if (!((ProjectActivityEventListener)ppAdapter.getItem(viewPager.getCurrentItem())).onBackPressed())
+            this.finish();
+    }
+
+// **** ВКЛАДКИ ****
 
     // TODO сделать загрузку вкладки с содержимым
     private void initContentsTab() {
@@ -214,42 +243,54 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
 
     }
 
+
+// Команды с асинхронным выполнением
     // TODO Вставить ветки, гитовые команды
     @Override
     public void onCommandExecuted(int commandID, boolean success) {
         switch (commandID) {
-/*            case JGitCommand.CLONE_COMMAND:
+            case GitCommand.COMMIT_COMMAND:
                 if (success) {
-                    project.init(); // set initialized to true
-                    Toast tst = Toast.makeText(this.getApplicationContext(), "Cloned", Toast.LENGTH_SHORT);
+                    Toast tst = Toast.makeText(this.getApplicationContext(), "Commit", Toast.LENGTH_SHORT);
                     tst.show();
                 } else {
-                    Toast tst = Toast.makeText(this.getApplicationContext(), "Clone Failed", Toast.LENGTH_SHORT);
+                    Toast tst = Toast.makeText(this.getApplicationContext(), "Commit Failed", Toast.LENGTH_SHORT);
                     tst.show();
                 }
-                break;
-*/
-            case GitCommand.COMMIT_COMMAND:
+                gitCommand = null;
                 break;
             case GitCommand.PULL_COMMAND:
+                if (success) {
+                    ppAdapter.refreshContents();
+                    Toast tst = Toast.makeText(this.getApplicationContext(), "Pull", Toast.LENGTH_SHORT);
+                    tst.show();
+                } else {
+                    Toast tst = Toast.makeText(this.getApplicationContext(), "Pull Failed", Toast.LENGTH_SHORT);
+                    tst.show();
+                }
+                gitCommand = null;
                 break;
             case GitCommand.PUSH_COMMAND:
+                if (success) {
+                    Toast tst = Toast.makeText(this.getApplicationContext(), "Pushed", Toast.LENGTH_SHORT);
+                    tst.show();
+                } else {
+                    Toast tst = Toast.makeText(this.getApplicationContext(), "Push Failed", Toast.LENGTH_SHORT);
+                    tst.show();
+                }
+                gitCommand = null;
                 break;
             case GitCommand.SETBRANCH_COMMAND:
                 if (success) {
-//                    if (currentDir.exists()) {
-//                        setFileList();
-//                    } else {
-//                        currentDir = repo.getDir();
-//                        setFileList();
-//                    }
+                    ppAdapter.refreshContents();
                     Toast tst = Toast.makeText(this.getApplicationContext(), "new branch", Toast.LENGTH_LONG);
                     tst.show();
                 } else {
                     Toast tst = Toast.makeText(this.getApplicationContext(), "branch set failed", Toast.LENGTH_LONG);
                     tst.show();
-//                    this.finish();
+                    this.finish();
                 }
+                gitCommand = null;
                 break;
             default:
                 break;
@@ -257,12 +298,8 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
 
     }
 
-    // если вклалка не обрабатывает, можно закрывать
-    @Override
-    public void onBackPressed() {
-        if (!((ProjectActivityEventListener)ppAdapter.getItem(viewPager.getCurrentItem())).onBackPressed())
-            this.finish();
-    }
+
+
 
 // -------- tabs ---------
 

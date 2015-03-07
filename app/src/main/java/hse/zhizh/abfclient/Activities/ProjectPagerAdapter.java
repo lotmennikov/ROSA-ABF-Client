@@ -39,4 +39,8 @@ public class ProjectPagerAdapter extends FragmentPagerAdapter {
         // get item count - equal to number of tabs
         return 3;
     }
+
+    public void refreshContents() {
+        contentsF.refresh();
+    }
 }

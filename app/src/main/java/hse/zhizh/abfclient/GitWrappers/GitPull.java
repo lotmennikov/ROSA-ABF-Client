@@ -5,6 +5,7 @@ import android.util.Log;
 import hse.zhizh.abfclient.Activities.CommandResultListener;
 import hse.zhizh.abfclient.Model.Repository;
 import hse.zhizh.abfclient.common.Settings;
+import hse.zhizh.abfclient.jgit.JGitPull;
 
 /**
  * Created by E-Lev on 23.02.2015.
@@ -25,13 +26,18 @@ public class GitPull extends GitCommand {
     @Override
     protected Boolean doInBackground(Void... params) {
         Log.d(Settings.TAG + COMMANDTAG, "procedure begin...");
+        try {
+            JGitPull pull = new JGitPull(mRepo);
 
-        // TODO подставить функцию
-        if (true) {
-            Log.d(Settings.TAG + COMMANDTAG, "procedure ends with no exception...");
-            return true;
-        } else
+            if (pull.pullRepo()) {
+                Log.d(Settings.TAG + COMMANDTAG, "procedure ends with no exception...");
+                return true;
+            } else
+                return false;
+        } catch (Exception e) {
+            e.printStackTrace();
             return false;
+        }
     }
 
     @Override
@@ -41,7 +47,7 @@ public class GitPull extends GitCommand {
         } else {
             Log.d(Settings.TAG + COMMANDTAG, "fail");
         }
-        activity.onCommandExecuted(CLONE_COMMAND, success);
+        activity.onCommandExecuted(PULL_COMMAND, success);
     }
 
     @Override

@@ -5,7 +5,7 @@ import android.util.Log;
 import hse.zhizh.abfclient.Activities.CommandResultListener;
 import hse.zhizh.abfclient.Model.Repository;
 import hse.zhizh.abfclient.common.Settings;
-import hse.zhizh.abfclient.jgit.JGitQuery;
+import hse.zhizh.abfclient.jgit.JGitClone;
 
 
 /**
@@ -30,12 +30,19 @@ public class GitClone extends GitCommand {
         // очистка папки
         mRepo.Clear();
 
-        // вызов JGit
-        if (JGitQuery.cloneRepo(mRepo)) {
-            Log.d(Settings.TAG, "Clone procedure ends with no exception...");
-            return true;
-        } else
+        try {
+            JGitClone clone = new JGitClone(mRepo);
+
+            // вызов JGit
+            if (clone.cloneRepo()) {
+                Log.d(Settings.TAG, "Clone procedure ends with no exception...");
+                return true;
+            } else
+                return false;
+        } catch (Exception e) {
+            e.printStackTrace();
             return false;
+        }
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import hse.zhizh.abfclient.Model.Repository;
 import hse.zhizh.abfclient.common.Settings;
+import hse.zhizh.abfclient.jgit.JGitInit;
 
 /**
  * Local initialization of the repository
@@ -22,13 +23,17 @@ public class GitInit {
 
     // init repository locally
     public boolean execute() {
-        // TODO move init to jgit_class
-        if (mRepo.getGit() != null) {
-            Log.d(Settings.TAG + COMMANDTAG, "git initialized");
-            return true;
-        } else {
-            Log.e(Settings.TAG + COMMANDTAG, "git not initialized");
-        return false;
+        try {
+            if (new JGitInit(mRepo).initRepo()) {
+                Log.d(Settings.TAG + COMMANDTAG, "git initialized");
+                return true;
+            } else {
+                Log.e(Settings.TAG + COMMANDTAG, "git not initialized");
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 

@@ -5,6 +5,7 @@ import android.util.Log;
 import hse.zhizh.abfclient.Activities.CommandResultListener;
 import hse.zhizh.abfclient.Model.Repository;
 import hse.zhizh.abfclient.common.Settings;
+import hse.zhizh.abfclient.jgit.JGitPush;
 
 /**
  * Created by E-Lev on 23.02.2015.
@@ -25,14 +26,22 @@ public class GitPush extends GitCommand {
     @Override
     protected Boolean doInBackground(Void... params) {
         Log.d(Settings.TAG + COMMANDTAG, "procedure begin...");
+        try {
+            JGitPush push = new JGitPush(mRepo);
 
-        // TODO подставить функцию
-        if (true) { // JGitQuery.cloneRepo(mRepo)) {
-            Log.d(Settings.TAG + COMMANDTAG, "procedure ends with no exception...");
-            return true;
-        } else
+            if (push.pushRepo(false)) {
+
+                Log.d(Settings.TAG + COMMANDTAG, "procedure ends with no exception...");
+                return true;
+
+            } else
+                return false;
+        } catch (Exception e) {
+            e.printStackTrace();
             return false;
+        }
     }
+
 
     @Override
     protected void onPostExecute(final Boolean success) {
@@ -41,7 +50,7 @@ public class GitPush extends GitCommand {
         } else {
             Log.d(Settings.TAG + COMMANDTAG, "fail");
         }
-        activity.onCommandExecuted(CLONE_COMMAND, success);
+        activity.onCommandExecuted(PUSH_COMMAND, success);
     }
 
     @Override

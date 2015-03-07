@@ -17,6 +17,12 @@ public class Settings {
     public static final String TAG = "ABF Client";
 
 
+//    public static String repo_username = "lotmen";
+//    public static String repo_password = "fab688";
+
+    public static String repo_username = "lotmen";
+    public static String repo_password = "fab688";
+
     // user projects
     public static List<Project> projects;
 

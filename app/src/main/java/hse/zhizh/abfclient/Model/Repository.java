@@ -67,16 +67,11 @@ public class Repository {
 
     // initGitLocally
     public Git getGit() {
-        if (git != null)
-            return git;
-        File f = getDir();
-        git = null;
-        try {
-            git = Git.open(f);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         return git;
+    }
+
+    public void setGit(Git git) {
+        this.git = git;
     }
 
     // clear repository directory
