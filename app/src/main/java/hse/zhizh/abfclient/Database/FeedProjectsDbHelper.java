@@ -23,11 +23,11 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + ProjectsContract.FeedProjects.TABLE_NAME + " (" +
                     ProjectsContract.FeedProjects._ID + " INTEGER PRIMARY KEY," +
                     ProjectsContract.FeedProjects.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
-                    ProjectsContract.FeedProjects.COLUMN_NAME_PROJECT_ID + TEXT_TYPE + COMMA_SEP +
+                    ProjectsContract.FeedProjects.COLUMN_NAME_PROJECT_ID + "INTEGER" + COMMA_SEP +
                     ProjectsContract.FeedProjects.COLUMN_NAME_DESCRIPTION +  TEXT_TYPE + COMMA_SEP +
                     ProjectsContract.FeedProjects.COLUMN_NAME_FULLNAME + TEXT_TYPE + COMMA_SEP +
                     ProjectsContract.FeedProjects.COLUMN_NAME_GIT_URL + TEXT_TYPE + COMMA_SEP +
-                    ProjectsContract.FeedProjects.COLUMN_NAME_OWNER_ID + TEXT_TYPE+COMMA_SEP+
+                    ProjectsContract.FeedProjects.COLUMN_NAME_OWNER_ID + "INTEGER"+COMMA_SEP+
                     ProjectsContract.FeedProjects.COLUMN_NAME_IS_LOCAL + " BOOLEAN "+ ")";
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + ProjectsContract.FeedProjects.TABLE_NAME;
@@ -55,16 +55,16 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
     }
 
     //Добавление проекта в базу
-    public long addProject(String project_id,String fullname, String name, String owner_id,String git_url,String description,boolean is_local)
+    public long addProject(Project project,boolean is_local)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_PROJECT_ID,project_id );
-        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_FULLNAME,fullname );
-        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_NAME,name );
-        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_OWNER_ID,owner_id );
-        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_GIT_URL,git_url );
-        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_DESCRIPTION,description );
+        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_PROJECT_ID,project.getId() );
+        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_FULLNAME,project.getFullname() );
+        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_NAME,project.getName() );
+        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_OWNER_ID,project.getOwnerId() );
+        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_GIT_URL,project.getGitUrl() );
+        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_DESCRIPTION,project.getDescription() );
         values.put(ProjectsContract.FeedProjects.COLUMN_NAME_IS_LOCAL,is_local );
 
         long newRowId;
@@ -75,8 +75,17 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
         return newRowId;
     }
 
+    private String[] toStringArrConverterHelper(int[] ids){
+        String str="";
+        for(int el:ids){
+            str+=el+",";
+        }
+        return new String[]{str.substring(0, str.length()-1)};
+    }
+
     //ids=new String[] {"2,3"} as example
-    public HashMap<Integer,Project> readProjectsWithIds(String[] ids){
+    public HashMap<Integer,Project> readProjectsWithIds(int[] int_ids){
+        String[] ids = toStringArrConverterHelper(int_ids);
         SQLiteDatabase db = this.getReadableDatabase();
         String[] projection = {
                 ProjectsContract.FeedProjects._ID,
@@ -98,8 +107,8 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
 
 
         while(cursor.moveToNext()){
-            Integer project_id = Integer.parseInt(cursor.getString(
-                    cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_PROJECT_ID)));
+            Integer project_id = cursor.getInt(
+                    cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_PROJECT_ID));
             String git_url=cursor.
                     getString(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_GIT_URL));
             String fullname=cursor.
@@ -108,8 +117,8 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
                     getString(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_DESCRIPTION));
             String name =cursor.
                     getString(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_NAME));
-            Integer owner_id=Integer.parseInt(cursor.
-                    getString(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_OWNER_ID)));
+            Integer owner_id=cursor.
+                    getInt(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_OWNER_ID));
             Project to_add = new Project(project_id,name,fullname,git_url,description,owner_id);
 
             projects.put(project_id,to_add);
