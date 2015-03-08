@@ -1,0 +1,134 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:weightSum="1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/gridLayout" >
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Login"
+                android:id="@+id/button8"
+                android:layout_row="0"
+                android:layout_column="0"
+                android:onClick="onLoginButtonClick"
+                android:layout_gravity="center_horizontal" />
+    
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Settings"
+                android:id="@+id/button9"
+                android:layout_row="0"
+                android:layout_column="1"
+                android:onClick="onSettingsButtonClick"
+                android:layout_gravity="center_horizontal" />
+    
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Project Info"
+                android:id="@+id/button11"
+                android:layout_row="1"
+                android:layout_column="0"
+                android:layout_gravity="center_horizontal"
+                android:onClick="onProjectInfoButtonClick" />
+    
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Project Contents"
+                android:id="@+id/button12"
+                android:layout_row="1"
+                android:layout_column="1"
+                android:layout_gravity="center_horizontal"
+                android:onClick="onProjectContentsButtonClick" />
+    
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Projects"
+                android:id="@+id/button10"
+                android:layout_row="2"
+                android:layout_column="0"
+                android:layout_gravity="center_horizontal"
+                android:onClick="onProjectsButtonClick" />
+    
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Commits"
+                android:id="@+id/button13"
+                android:layout_row="2"
+                android:layout_column="1"
+                android:layout_gravity="center_horizontal"
+                android:onClick="onCommitsButtonClick" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Builds"
+                android:id="@+id/button"
+                android:layout_row="3"
+                android:layout_column="0"
+                android:layout_gravity="center_horizontal"
+                android:onClick="onBuildsButtonClick" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Build Info"
+                android:id="@+id/button2"
+                android:layout_row="3"
+                android:layout_column="1"
+                android:layout_gravity="center_horizontal"
+                android:onClick="onBuildInfoButtonClick" />
+        </GridLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Password"
+                android:id="@+id/password_label"
+                android:layout_gravity="center" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Login"
+                android:id="@+id/username_label"
+                android:layout_gravity="left|center_vertical" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Code"
+                android:id="@+id/returncode_label"
+                android:layout_gravity="right|center_vertical" />
+        </FrameLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

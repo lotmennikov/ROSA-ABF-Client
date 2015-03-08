@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="org.eclipse.jgit_corrected">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/org.eclipse.jgit_corrected.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/libs/org.eclipse.jgit_corrected.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

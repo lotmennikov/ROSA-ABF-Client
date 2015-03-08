@@ -1,0 +1,8 @@
+*.iml
+.gradle/*
+.idea/*
+build/*
+local.properties
+.idea/misc.xml
+.idea/gradle.xml
+gradle/wrapper/gradle-wrapper.properties

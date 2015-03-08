@@ -1,0 +1,41 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="hse.zhizh.abfclient.Activities.ProjectInfoActivity">
+    <item android:id="@+id/action_settings"
+          android:title="Actions"
+          android:icon = "@android:drawable/ic_menu_more"
+          android:orderInCategory="100"
+          app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/action_pull"
+                android:title="Pull"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_push"
+                android:title="Push"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_commit"
+                android:title="Commit"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_reset"
+                android:title="Reset"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_newfile"
+                android:title="New File"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_addbinary"
+                android:title="Add binary file"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_newbuild"
+                android:title="New Build"
+                app:showAsAction="never" />
+        </menu>
+    </item>
+</menu>
