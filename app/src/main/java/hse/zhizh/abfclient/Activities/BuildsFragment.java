@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import hse.zhizh.abfclient.Model.Build;
 import hse.zhizh.abfclient.R;
 
 /**
@@ -29,6 +30,10 @@ public class BuildsFragment extends Fragment implements ProjectActivityEventList
 
 
 
+    // TODO refresh
+    public void refresh(Build[] builds) {
+
+    }
 
 // project activity events
 

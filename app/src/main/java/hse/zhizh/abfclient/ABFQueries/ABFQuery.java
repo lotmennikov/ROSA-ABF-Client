@@ -11,5 +11,8 @@ import java.util.ArrayList;
  */
 public abstract class ABFQuery extends AsyncTask<Void, Void, Boolean> {
     public static final int PROJECTS_QUERY = 201;
+    public static final int BUILDS_QUERY = 202;
+    public static final int PLATFORMS_QUERY = 203;
+    public static final int NEWBUILD_QUERY = 204;
 
 }

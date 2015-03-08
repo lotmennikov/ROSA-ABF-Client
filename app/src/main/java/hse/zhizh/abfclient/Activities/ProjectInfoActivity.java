@@ -26,9 +26,12 @@ import java.io.PrintWriter;
 import hse.zhizh.abfclient.GitWrappers.GitBranch;
 import hse.zhizh.abfclient.GitWrappers.GitCommand;
 import hse.zhizh.abfclient.GitWrappers.GitCommit;
+import hse.zhizh.abfclient.GitWrappers.GitCommitList;
 import hse.zhizh.abfclient.GitWrappers.GitPull;
 import hse.zhizh.abfclient.GitWrappers.GitPush;
 import hse.zhizh.abfclient.GitWrappers.GitSetBranch;
+import hse.zhizh.abfclient.Model.Build;
+import hse.zhizh.abfclient.Model.Commit;
 import hse.zhizh.abfclient.Model.Project;
 import hse.zhizh.abfclient.Model.Repository;
 import hse.zhizh.abfclient.R;
@@ -51,9 +54,12 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
     GitCommand gitCommand;
 
     String[] branches;
+    Commit[] commits;
+    Build[] builds;
+
     AlertDialog branchDialog;
 
-    private String[] tabLabels = new String[]{ "Builds", "Files", "Commits"};
+    private String[] tabLabels = new String[]{ "Commits", "Files", "Builds"};
     private ViewPager viewPager;
     private ActionBar actionBar;
     private ProjectPagerAdapter ppAdapter;
@@ -97,7 +103,10 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         // репозиторий уже инициализирован
         project = Settings.currentProject;
         repo = project.getRepo();
+
         getBranches();
+        getCommits();
+        getBuilds();
 
         // текущая вкладка
         viewPager.setCurrentItem(1); // file list
@@ -120,6 +129,23 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
             branches = brcom.result;
         else
             this.finish();
+    }
+
+    // список коммитов
+    private void getCommits() {
+        GitCommitList gcomList = new GitCommitList(repo);
+        if (gcomList.execute()) {
+            commits = gcomList.result;
+        } else {
+            commits = null;
+            Toast.makeText(this.getApplicationContext(), "No commits!", Toast.LENGTH_SHORT).show();
+            //this.finish();
+        }
+        ppAdapter.refreshCommits(commits);
+    }
+
+    // список сборок
+    private void getBuilds() {
     }
 
 // **** КНОПОЧКИ ****
@@ -147,6 +173,12 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
             return true;
         case (R.id.action_newfile):
             onNewFileButtonClick(null);
+            break;
+        case (R.id.action_addbinary):
+            // TODO
+            break;
+        case (R.id.action_newbuild):
+            // TODO
             break;
         default:
             break;
@@ -288,6 +320,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
             case GitCommand.SETBRANCH_COMMAND:
                 if (success) {
                     ppAdapter.refreshContents();
+                    getCommits();
                     Toast tst = Toast.makeText(this.getApplicationContext(), "new branch", Toast.LENGTH_LONG);
                     tst.show();
                 } else {

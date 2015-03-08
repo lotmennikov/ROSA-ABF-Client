@@ -11,6 +11,8 @@ import hse.zhizh.abfclient.common.Settings;
 import hse.zhizh.abfclient.jgit.JGitBranches;
 
 /**
+ * Получение списка коммитов (не асинхронное)
+ *
  * Created by E-Lev on 07.03.2015.
  */
 public class GitCommitList {
@@ -29,8 +31,9 @@ public class GitCommitList {
         try {
             JGitBranches branches = new JGitBranches(mRepo);
             ArrayList<Commit> commits = branches.getCommits();
-            result = commits.toArray(new Commit[commits.size()]);
-            if (result != null) {
+            if (commits != null) {
+                result = commits.toArray(new Commit[commits.size()]);
+
                 Log.d(Settings.TAG + COMMANDTAG, "list received");
                 return true;
             } else {

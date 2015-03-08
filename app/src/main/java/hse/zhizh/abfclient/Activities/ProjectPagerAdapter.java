@@ -3,6 +3,10 @@ package hse.zhizh.abfclient.Activities;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import hse.zhizh.abfclient.Model.Build;
+import hse.zhizh.abfclient.Model.Commit;
+
 /**
  * Created by E-Lev on 07.03.2015.
  */
@@ -42,5 +46,13 @@ public class ProjectPagerAdapter extends FragmentPagerAdapter {
 
     public void refreshContents() {
         contentsF.refresh();
+    }
+
+    public void refreshCommits(Commit[] commits) {
+        commitsF.refresh(commits);
+    }
+
+    public void refreshBuilds(Build[] builds) {
+        buildsF.refresh(builds);
     }
 }

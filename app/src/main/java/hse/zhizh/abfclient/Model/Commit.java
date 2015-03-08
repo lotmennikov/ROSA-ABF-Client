@@ -10,12 +10,18 @@ public class Commit {
     private String name;
     private String hash;
     private Date date;
-    private boolean isPushed;
+    private boolean pushed;
 
-    public Commit(String name, String hash, Date date, boolean isPushed) {
+    public Commit(String name, String hash, Date date, boolean pushed) {
         this.name = name;
         this.hash = hash;
         this.date = date;
-        this.isPushed = isPushed;
+        this.pushed = pushed;
     }
+
+    public String getName()   { return name;  }
+    public String getHash()   { return hash;  }
+    public Date getDate()     { return date;  }
+    public boolean isPushed() { return pushed;}
+
 }

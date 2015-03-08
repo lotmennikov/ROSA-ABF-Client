@@ -2,6 +2,8 @@ package hse.zhizh.abfclient.common;
 
 import android.content.Context;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,4 +65,6 @@ public class Settings {
         return projects;
     }
 
+
+    public static DateFormat commitDate = new SimpleDateFormat("dd.MM.yyyy");
 }
