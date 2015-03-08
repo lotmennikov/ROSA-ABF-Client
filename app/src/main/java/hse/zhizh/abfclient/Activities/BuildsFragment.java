@@ -32,7 +32,6 @@ public class BuildsFragment extends Fragment implements ProjectActivityEventList
 
     // TODO refresh
     public void refresh(Build[] builds) {
-
     }
 
 // project activity events

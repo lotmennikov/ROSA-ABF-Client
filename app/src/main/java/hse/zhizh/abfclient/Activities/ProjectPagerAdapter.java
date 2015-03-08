@@ -44,6 +44,8 @@ public class ProjectPagerAdapter extends FragmentPagerAdapter {
         return 3;
     }
 
+// ******* refresh fragments *********
+
     public void refreshContents() {
         contentsF.refresh();
     }

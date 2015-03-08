@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import hse.zhizh.abfclient.ABFQueries.ABFBuilds;
+import hse.zhizh.abfclient.ABFQueries.ABFQuery;
 import hse.zhizh.abfclient.GitWrappers.GitBranch;
 import hse.zhizh.abfclient.GitWrappers.GitCommand;
 import hse.zhizh.abfclient.GitWrappers.GitCommit;
@@ -52,6 +54,8 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
     Repository repo;
 
     GitCommand gitCommand;
+    ABFQuery abfQuery;
+
 
     String[] branches;
     Commit[] commits;
@@ -131,6 +135,8 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
             this.finish();
     }
 
+// **** НА ВКЛАДКИ ****
+
     // список коммитов
     private void getCommits() {
         GitCommitList gcomList = new GitCommitList(repo);
@@ -146,6 +152,13 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
 
     // список сборок
     private void getBuilds() {
+        if (abfQuery == null) {
+            abfQuery = new ABFBuilds(this, project.getId());
+            abfQuery.execute();
+            // waiting for response
+        } else {
+            Toast.makeText(this.getApplicationContext(), "Last query has not finished yet!", Toast.LENGTH_SHORT).show();
+        }
     }
 
 // **** КНОПОЧКИ ****
@@ -263,29 +276,13 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
             this.finish();
     }
 
-// **** ВКЛАДКИ ****
-
-    // TODO сделать загрузку вкладки с содержимым
-    private void initContentsTab() {
-
-    }
-
-    // TODO сделать загрузку вкладки со сборками
-    private void initBuildsTab() {
-
-    }
-
-    // TODO сделать загрузку вкладки с коммитами
-    private void initCommitsTab() {
-
-    }
-
 
 // Команды с асинхронным выполнением
     // TODO Вставить ветки, гитовые команды
     @Override
     public void onCommandExecuted(int commandID, boolean success) {
         switch (commandID) {
+// -------- JGIT ------------
             case GitCommand.COMMIT_COMMAND:
                 if (success) {
                     Toast tst = Toast.makeText(this.getApplicationContext(), "Commit", Toast.LENGTH_SHORT);
@@ -329,6 +326,17 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
                     this.finish();
                 }
                 gitCommand = null;
+                break;
+// ---------- ABF -----------------
+            case ABFQuery.BUILDS_QUERY:
+                if (success) {
+                    builds = ((ABFBuilds)abfQuery).builds;
+                } else {
+                    builds = null;
+                    Toast.makeText(this.getApplicationContext(), "No builds!", Toast.LENGTH_SHORT).show();
+                }
+                abfQuery = null;
+                ppAdapter.refreshBuilds(builds);
                 break;
             default:
                 break;
