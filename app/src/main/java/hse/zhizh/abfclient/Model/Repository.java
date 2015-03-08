@@ -30,7 +30,9 @@ public class Repository {
     // default repository
     public Repository(Context cntxt) {
         name = "0ad";
-        path = cntxt.getFilesDir();
+//        path = cntxt.getFilesDir();
+        path = new File("mnt/sdcard/Android/data/hse.zhizh.abfclient/repo/");
+
         git = null;
         File projdir = new File(path.getAbsolutePath() + "/" + name + "/");
 
@@ -48,7 +50,8 @@ public class Repository {
     //repository from project info
     public Repository(Context cntxt, String name, String git_url) {
         this.name = name;
-        this.path = cntxt.getFilesDir();
+//        this.path = cntxt.getFilesDir();
+        this.path = new File("mnt/sdcard/Android/data/hse.zhizh.abfclient/repo/");
         File projdir = new File(this.path.getAbsolutePath() + "/" + this.name + "/");
         this.path = projdir;
         this.url = git_url;

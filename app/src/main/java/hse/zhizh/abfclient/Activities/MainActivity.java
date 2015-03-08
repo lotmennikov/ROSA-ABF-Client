@@ -59,7 +59,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onBuildInfoButtonClick(View v) {
-        Intent buildinfo_intent = new Intent(MainActivity.this, BuildInfoActivity.class);
+        Intent buildinfo_intent = new Intent(MainActivity.this, NewBuildActivity.class);
         startActivity(buildinfo_intent);
     }
 

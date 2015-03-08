@@ -7,19 +7,19 @@ import android.view.MenuItem;
 
 import hse.zhizh.abfclient.R;
 
-public class BuildInfoActivity extends ActionBarActivity {
+public class NewBuildActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_build_info);
+        setContentView(R.layout.activity_new_build);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_build_info, menu);
+        getMenuInflater().inflate(R.menu.menu_new_build, menu);
         return true;
     }
 

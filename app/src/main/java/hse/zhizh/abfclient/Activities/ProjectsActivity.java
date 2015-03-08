@@ -1,6 +1,7 @@
 package hse.zhizh.abfclient.Activities;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
@@ -11,7 +12,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -27,6 +30,13 @@ import hse.zhizh.abfclient.R;
 import hse.zhizh.abfclient.common.Settings;
 
 /* Список проектов
+ *
+ * Перечисление загруженных проектов
+ * Добавление и клонирование нового проекта
+ * Удаление репозитория проекта с устройства
+ *
+ * TODO окно добавления, упорядочить базу, удаление, внешний вид
+ *
  */
 public class ProjectsActivity extends ActionBarActivity implements CommandResultListener {
 
@@ -37,6 +47,14 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
     Project[] projects;
 
     AlertDialog initDialog;
+
+
+    Dialog addProjectDialog;
+    EditText addpGroup;
+    EditText addpProject;
+    EditText addpBranch;
+    EditText addpUser;
+    EditText addpPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +126,31 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
             }
         });
         initDialog = blder.create();
+    }
+
+    private void initAddProjectDialog() {
+        // custom dialog
+        addProjectDialog = new Dialog(this.getApplicationContext());
+        addProjectDialog.setContentView(R.layout.dialog_addproject);
+        addProjectDialog.setTitle("Add project");
+
+/*        EditText
+        // set the custom dialog components - text, image and button
+        TextView text = (TextView) dialog.findViewById(R.id.text);
+        text.setText("Android custom dialog example!");
+        ImageView image = (ImageView) dialog.findViewById(R.id.image);
+        image.setImageResource(R.drawable.ic_launcher);
+
+        Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
+        // if button is clicked, close the custom dialog
+        dialogButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();*/
     }
 
     private boolean InitCurrentProjectRepository() {

@@ -49,7 +49,7 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".Activities.BuildInfoActivity"
+            android:name=".Activities.NewBuildActivity"
             android:label="@string/title_activity_build_info"
             android:configChanges="orientation"
             android:screenOrientation="portrait">

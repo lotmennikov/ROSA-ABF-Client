@@ -114,6 +114,12 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
 
         // текущая вкладка
         viewPager.setCurrentItem(1); // file list
+
+        // branchButton caption
+        String branchname = project.getRepo().getBranchName();
+        System.out.println("branch:" + branchname);
+        String[] nameparts = branchname.split("/");
+        branchButton.setText(nameparts[nameparts.length-1]);
     }
 
     @Override
@@ -192,6 +198,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
             break;
         case (R.id.action_newbuild):
             // TODO
+            onNewBuildButtonClick(null);
             break;
         default:
             break;
@@ -241,6 +248,12 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         }
     }
 
+    // TODO reset repository
+    public void onResetButtonClick(View v) {
+        Toast.makeText(getApplicationContext(), "No function call", Toast.LENGTH_SHORT).show();
+    }
+
+    // TODO add dialog
     public void onNewFileButtonClick(View v) {
         File newfile = new File(repo.getDir() + "/file.txt");
         try {
@@ -255,18 +268,16 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         }
     }
 
-    // TODO reset repository
-    public void onResetButtonClick(View v) {
-        Toast.makeText(getApplicationContext(), "No function call", Toast.LENGTH_SHORT).show();
+    // TODO add dialog, file chooser, jgit call
+    public void onAddBinaryButtonClick(View v) {
+        Toast.makeText(getApplicationContext(), "Add Binary Click", Toast.LENGTH_SHORT).show();
     }
 
-    // TODO create new build
+    // TODO check
     public void onNewBuildButtonClick(View v) {
-        if (project.isInitialized()) {
-
-        } else {
-            Toast.makeText(getApplicationContext(), "Not Initialized", Toast.LENGTH_SHORT).show();
-        }
+        Toast.makeText(getApplicationContext(), "New Build", Toast.LENGTH_SHORT).show();
+        Intent newbuildIntent = new Intent(ProjectInfoActivity.this, NewBuildActivity.class);
+        startActivity(newbuildIntent);
     }
 
     // если вклалка не обрабатывает, можно закрывать
@@ -285,6 +296,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
 // -------- JGIT ------------
             case GitCommand.COMMIT_COMMAND:
                 if (success) {
+                    getCommits();
                     Toast tst = Toast.makeText(this.getApplicationContext(), "Commit", Toast.LENGTH_SHORT);
                     tst.show();
                 } else {
@@ -296,6 +308,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
             case GitCommand.PULL_COMMAND:
                 if (success) {
                     ppAdapter.refreshContents();
+                    getCommits();
                     Toast tst = Toast.makeText(this.getApplicationContext(), "Pull", Toast.LENGTH_SHORT);
                     tst.show();
                 } else {
@@ -306,6 +319,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
                 break;
             case GitCommand.PUSH_COMMAND:
                 if (success) {
+                    getCommits();
                     Toast tst = Toast.makeText(this.getApplicationContext(), "Pushed", Toast.LENGTH_SHORT);
                     tst.show();
                 } else {
@@ -318,10 +332,10 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
                 if (success) {
                     ppAdapter.refreshContents();
                     getCommits();
-                    Toast tst = Toast.makeText(this.getApplicationContext(), "new branch", Toast.LENGTH_LONG);
+                    Toast tst = Toast.makeText(this.getApplicationContext(), "new branch", Toast.LENGTH_SHORT);
                     tst.show();
                 } else {
-                    Toast tst = Toast.makeText(this.getApplicationContext(), "branch set failed", Toast.LENGTH_LONG);
+                    Toast tst = Toast.makeText(this.getApplicationContext(), "branch set failed", Toast.LENGTH_SHORT);
                     tst.show();
                     this.finish();
                 }
