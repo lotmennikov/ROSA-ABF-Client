@@ -146,7 +146,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Start Build"
-                android:id="@+id/nb_startbuildButton" />
+                android:id="@+id/nb_startbuildButton"
+                android:onClick="onStartNewBuildClick" />
         </LinearLayout>
     </ScrollView>
 

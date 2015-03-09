@@ -6,13 +6,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import hse.zhizh.abfclient.R;
-
+/*
+ *
+ * Configuring and starting a new build
+ *
+ * TODO atart the build
+ *
+ */
 public class NewBuildActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_build);
+        getSupportActionBar().setIcon(R.drawable.giticonabf);
+        setTitle("Start New Build");
     }
 
 
@@ -37,4 +45,12 @@ public class NewBuildActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    public void onStartNewBuildClick() {
+        // TODO start build
+
+        this.finish();
+    }
+
 }

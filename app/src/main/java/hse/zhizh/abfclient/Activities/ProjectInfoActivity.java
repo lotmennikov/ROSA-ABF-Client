@@ -73,6 +73,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_info);
+        getSupportActionBar().setIcon(R.drawable.giticonabf);
 
         branchButton = (Button)findViewById(R.id.branchButton);
         viewPager = (ViewPager)findViewById(R.id.projectInfoPager);
@@ -361,6 +362,15 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
                 break;
         }
 
+    }
+
+    @Override
+    public void onDestroy() {
+        if (abfQuery != null)
+            abfQuery.cancel(true);
+        if (gitCommand != null)
+            gitCommand.cancel(false);
+        super.onDestroy();
     }
 
 // -------- tabs ---------

@@ -23,9 +23,11 @@ import org.eclipse.jgit.diff.Edit;
 
 import java.util.ArrayList;
 
+import hse.zhizh.abfclient.ABFQueries.ABFProjectID;
 import hse.zhizh.abfclient.ABFQueries.ABFProjects;
 import hse.zhizh.abfclient.ABFQueries.ABFQuery;
 import hse.zhizh.abfclient.Database.FeedProjectsDbHelper;
+import hse.zhizh.abfclient.Database.ProjectsContract;
 import hse.zhizh.abfclient.GitWrappers.GitClone;
 import hse.zhizh.abfclient.GitWrappers.GitCommand;
 import hse.zhizh.abfclient.GitWrappers.GitInit;
@@ -39,24 +41,24 @@ import hse.zhizh.abfclient.common.Settings;
  * Добавление и клонирование нового проекта
  * Удаление репозитория проекта с устройства
  *
- * TODO окно добавления, упорядочить базу, удаление, внешний вид
+ * TODO упорядочить базу, внешний вид
  *
  */
 public class ProjectsActivity extends ActionBarActivity implements CommandResultListener {
 
     ListView projectsList;
-    ABFProjects ProjectsCommand;
+
+    ABFQuery abfQuery;
     GitClone cloneCommand;
 
     Project[] projects;
 
     AlertDialog initDialog;
-
+    AlertDialog deleteDialog;
 
     Dialog addProjectDialog;
     EditText addpGroup;
     EditText addpProject;
-//    EditText addpBranch;
     EditText addpUser;
     EditText addpPassword;
     Button addpClone;
@@ -66,9 +68,14 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_projects);
+        setTitle("Projects");
+        getSupportActionBar().setIcon(R.drawable.giticonabf);
+
         projectsList = (ListView)findViewById(R.id.projectsList);
 
-        // выбор проекта
+        abfQuery = null;
+
+        // выбор проекта по обычному нажатию
         projectsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -97,16 +104,27 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
                 Log.d(Settings.TAG + " ProjectsActivity", "Project onClick, starting projectInfoActivity " + position);
             }
         });
+        // удаление по длинному нажжатию
+        projectsList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (projects[position].isLocal()) {
+                    Settings.currentProject = projects[position];
+                    deleteDialog.show();
+                }
+                return true;
+            }
+        });
+
         initInitDialog();
         initAddProjectDialog();
+        initDeleteDialog();
 
-//        getDatabaseProjects();
+        getDatabaseProjects();
     }
 
-    // меню выбора способа инициализации проекта
+    // Test - меню выбора способа инициализации проекта
     private void initInitDialog() {
-//        String[] menu_options = new String[]{ "Init locally", "Clone" };
-//        ArrayAdapter<String> branchesAdapter = new ArrayAdapter<String>(this, R.layout.dialog_menu_item,menu_options );
         AlertDialog.Builder blder = new AlertDialog.Builder(this);
         blder.setTitle("Initialize project");
 
@@ -135,6 +153,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
         initDialog = blder.create();
     }
 
+    // Диалог добавления проекта
     private void initAddProjectDialog() {
         // custom dialog
 
@@ -144,7 +163,6 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
 
         addpGroup = (EditText)addProjectDialog.findViewById(R.id.addp_groupText);
         addpProject = (EditText)addProjectDialog.findViewById(R.id.addp_projectText);
-//        addpBranch = (EditText)addProjectDialog.findViewById(R.id.addp_branchText);
         addpUser = (EditText)addProjectDialog.findViewById(R.id.addp_username);
         addpPassword = (EditText)addProjectDialog.findViewById(R.id.addp_password);
         addpClone = (Button)addProjectDialog.findViewById(R.id.addp_clonebutton);
@@ -153,8 +171,13 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
             @Override
             public void onClick(View v) {
                 // TODO Clone только здесь
-
-
+                if (abfQuery == null) {
+                    abfQuery = new ABFProjectID(ProjectsActivity.this,
+                            addpProject.getText().toString(),
+                            addpGroup.getText().toString());
+                    abfQuery.execute();
+                } else
+                    Toast.makeText(getApplicationContext(), "AbfQuery not finished", Toast.LENGTH_SHORT).show();
 
                 Toast.makeText(getApplicationContext(), "Clone Click", Toast.LENGTH_SHORT).show();
                 addProjectDialog.dismiss();
@@ -163,6 +186,42 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
 
     }
 
+    // Диалог удаления проекта
+    private void initDeleteDialog() {
+        AlertDialog.Builder blder = new AlertDialog.Builder(this);
+        blder.setTitle("Delete project?");
+
+        // init
+        blder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        // clone
+        blder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // delete from DB
+                FeedProjectsDbHelper helper = new FeedProjectsDbHelper(getApplicationContext());
+                int projectID = Settings.currentProject.getId();
+                helper.deleteProject(projectID);
+                helper.close();
+
+                // TODO удаление с устройства
+                Settings.currentProject = null;
+                Toast.makeText(getApplicationContext(), "Project was removed from the DB, but not from the device", Toast.LENGTH_SHORT).show();
+                // refresh list
+                getDatabaseProjects();
+
+            }
+        });
+        deleteDialog = blder.create();
+
+    }
+
+    // локальный инит - только если в базе
     private boolean InitCurrentProjectRepository() {
         GitInit initCommand = new GitInit(Settings.currentProject.getRepo());
         if (initCommand.execute()) { // норм
@@ -190,24 +249,8 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
         helper.close();
     }
 
-    // TODO связь с базой - получение проектов в базе
+    // Связь с базой - получение проектов в базе
     private void getDatabaseProjects() {
-        //Тест добавления и создания БД
-//        FeedProjectsDbHelper h = new FeedProjectsDbHelper(getBaseContext());
-//        System.out.println("NEW ROW: " + h.addProject("test","test","test","test","test","test", true));
-
-    }
-
-    // получение проектов
-    public void onGetProjectsButtonClick(View v) {
-        if (ProjectsCommand == null) {
-            ProjectsCommand = new ABFProjects(this);
-            ProjectsCommand.execute();
-        }
-    }
-
-    // Test
-    public void onGetDBProjectsClick(View v) {
         FeedProjectsDbHelper h = new FeedProjectsDbHelper(getApplicationContext());
         try {
             ArrayList<Project> projectsList = h.readProjects();
@@ -225,6 +268,22 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
 
     }
 
+    // получение проектов по ABF
+    public void onGetProjectsButtonClick(View v) {
+        if (abfQuery == null) {
+            abfQuery = new ABFProjects(this);
+            abfQuery.execute();
+        } else {
+            Toast.makeText(this.getApplicationContext(), "ABF Query has not finished yet", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Test
+    public void onGetDBProjectsClick(View v) {
+        getDatabaseProjects();
+    }
+
+    // Test
     public void onClearDBButtonClick(View v) {
         FeedProjectsDbHelper helper = new FeedProjectsDbHelper(this.getApplicationContext());
         helper.deleteAll();
@@ -236,6 +295,8 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
     @Override
     public void onCommandExecuted(int commandID, boolean success) {
             switch (commandID) {
+
+// ************ JGIt ***************
                 // клонирование
                 case GitCommand.CLONE_COMMAND:
                     if (success) {
@@ -251,11 +312,11 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
                         tst.show();
                     }
                     break;
-
+// ********** ABF *******************
                 // получение списка проектов
                 case ABFQuery.PROJECTS_QUERY:
                     if (success) {
-                        projects = ProjectsCommand.projects;
+                        projects = ((ABFProjects)abfQuery).projects;
 
                         setProjectsList();
 
@@ -265,15 +326,39 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
                         Toast tst = Toast.makeText(this.getApplicationContext(), "GetProjects Failed", Toast.LENGTH_SHORT);
                         tst.show();
                     }
-                    ProjectsCommand = null;
-
+                    abfQuery = null;
                     break;
+
+                case ABFQuery.PROJECTID_QUERY:
+                    if (success) {
+                        // теперь проект текущий
+                        Settings.currentProject = ((ABFProjectID)abfQuery).result;
+                        // сделать репу, если нет
+                        if (Settings.currentProject.getRepo() == null) {
+                            Settings.currentProject.createRepo();
+                        }
+                        // запуск клонирования
+                        cloneCommand = new GitClone(Settings.currentProject.getRepo(), ProjectsActivity.this);
+                        cloneCommand.execute();
+                        // TODO показать крутяшку
+
+
+                        Toast tst = Toast.makeText(this.getApplicationContext(), "Cloning ProjectID: " + Settings.currentProject.getId(), Toast.LENGTH_SHORT);
+                        tst.show();
+                    } else {
+                        Toast tst = Toast.makeText(this.getApplicationContext(), "GetProjectID Failed", Toast.LENGTH_SHORT);
+                        tst.show();
+                    }
+                    abfQuery = null;
+                    break;
+
                 default:
                     break;
             }
 
     }
 
+    // вывод списка проектов
     public void setProjectsList() {
         String[] proj = new String[projects.length];
         String newtext;
@@ -299,6 +384,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
         return true;
     }
 
+    // Кнопочки верхнего меню - добавление проекта
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

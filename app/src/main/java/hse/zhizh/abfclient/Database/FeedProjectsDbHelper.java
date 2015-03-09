@@ -194,7 +194,7 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
 
 
     //Удаляет проект по его project_id
-   public void deleteProject(String project_id){
+   public void deleteProject(int project_id){
        SQLiteDatabase db = this.getReadableDatabase();
 
        String[] projection = {
@@ -204,7 +204,7 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
                ProjectsContract.FeedProjects.COLUMN_NAME_PROJECT_ID
        };
        String selection = ProjectsContract.FeedProjects.COLUMN_NAME_PROJECT_ID + " IS ?";
-       String[] selectionArgs = {project_id};
+       String[] selectionArgs = { Integer.toString(project_id) };
 
        db.delete(ProjectsContract.FeedProjects.TABLE_NAME, selection, selectionArgs);
    }

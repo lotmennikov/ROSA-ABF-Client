@@ -4,6 +4,7 @@ import android.util.Log;
 
 import hse.zhizh.abfclient.Activities.CommandResultListener;
 import hse.zhizh.abfclient.Model.Project;
+import hse.zhizh.abfclient.api.ProjectsRequest;
 import hse.zhizh.abfclient.common.Settings;
 
 /**
@@ -31,14 +32,18 @@ public class ABFProjectID extends ABFQuery {
     @Override
     protected Boolean doInBackground(Void... params) {
         Log.d(Settings.TAG + COMMANDTAG, "Sending request...");
-
-        // result = new ProjectsRequest().xxx
-
-        if (result != null) {
-            return true;
-        } else {
+        try {
+            result = new ProjectsRequest().getProjectByOwnerAndName(groupName, projectName);
+            if (result != null) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
+
     }
 
     @Override

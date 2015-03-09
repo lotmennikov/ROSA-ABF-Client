@@ -74,33 +74,32 @@ public class ProjectsRequest implements ApiRequest {
             e.printStackTrace();
         }
 
-        return parseJsonResponse(requestContent(con))[0];
+        return parseJsonResponse(requestContent(con));
     }
 
-    private Project[] parseJsonResponse(String response){
-        Project[] projects;
+    // парсинг json на один проект
+    private Project parseJsonResponse(String response){
+        Project project;
         try {
             String json = response;
             JSONObject jsonObject = new JSONObject(json);
-            JSONArray jsonProjects = (JSONArray)jsonObject.get("projects");
-            projects = new Project[jsonProjects.length()];
-            String pname = "", pfullname = "", pgiturl = "", pdescription = "";
-            int pid = 0 , powner = 0 ;
-            for (int i = 0; i < jsonProjects.length(); ++i) {
-                JSONObject proj = jsonProjects.getJSONObject(i);
-                pid = proj.getInt("id");
-                pname = proj.getString("name");
-                pfullname = proj.getString("fullname");
-                pgiturl = proj.getString("git_url");
-                pdescription = proj.getString("description");
-                powner = proj.getJSONObject("owner").getInt("id");
-                projects[i] = new Project(pid,pname, pfullname, pgiturl, pdescription, powner);
-            }
+
+            JSONObject proj = (JSONObject)jsonObject.get("project");
+
+            int pid = proj.getInt("id");
+            String pname = proj.getString("name");
+            String pfullname = proj.getString("fullname");
+            String pgiturl = proj.getString("git_url");
+            String pdescription = "";
+            int powner = proj.getJSONObject("owner").getInt("id");
+            project = new Project(pid,pname, pfullname, pgiturl, pdescription, powner);
+
+            return project;
         } catch (Exception e) {
             e.printStackTrace();
-            return new Project[0];
+            return null;
         }
-        return projects;
+
     }
 
     /*

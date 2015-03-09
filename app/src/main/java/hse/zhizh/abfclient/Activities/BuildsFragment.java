@@ -83,4 +83,5 @@ public class BuildsFragment extends Fragment implements ProjectActivityEventList
     public boolean onRefreshed() {
         return false;
     }
+
 }
