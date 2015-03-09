@@ -36,12 +36,26 @@ public class Get_Files_abf_yml {
                 else if (line.contains("sources:"))
                     flag = 2;
                 else if (flag == 1) {
-                    String name = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
-                    String hash = line.substring(line.indexOf(": ") + 1);
+                    String name = null;
+                    String hash = null;
+                    if (line.indexOf("\"") != -1) {
+                        name = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
+                        hash = line.substring(line.indexOf(": ") + 1);
+                    } else {
+                        name = line.substring(0, line.indexOf(": "));
+                        hash = line.substring(line.indexOf(": ") + 1);
+                    }
                     files.add(new AbfFile(name, hash, true));
                 } else if (flag == 2) {
-                    String name = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
-                    String hash = line.substring(line.indexOf(": ") + 1);
+                    String name = null;
+                    String hash = null;
+                    if (line.indexOf("\"") != -1) {
+                        name = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
+                        hash = line.substring(line.indexOf(": ") + 1);
+                    } else {
+                        name = line.substring(0, line.indexOf(": "));
+                        hash = line.substring(line.indexOf(": ") + 1);
+                    }
                     files.add(new AbfFile(name, hash, false));
                 } else flag = 0;
                 line = br.readLine();
