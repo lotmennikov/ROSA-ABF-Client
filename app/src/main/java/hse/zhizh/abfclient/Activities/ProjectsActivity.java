@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import org.eclipse.jgit.diff.Edit;
 
+
 import java.util.ArrayList;
 
 import hse.zhizh.abfclient.ABFQueries.ABFProjects;
@@ -59,6 +60,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
     EditText addpUser;
     EditText addpPassword;
     Button addpClone;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +137,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
 
     private void initAddProjectDialog() {
         // custom dialog
+
         addProjectDialog = new Dialog(this);
         addProjectDialog.setContentView(R.layout.dialog_addproject);
         addProjectDialog.setTitle("Add project");
@@ -157,6 +160,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
                 addProjectDialog.dismiss();
             }
         });
+
     }
 
     private boolean InitCurrentProjectRepository() {
@@ -306,6 +310,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
             default:
                 break;
         }
+
         return super.onOptionsItemSelected(item);
     }
 

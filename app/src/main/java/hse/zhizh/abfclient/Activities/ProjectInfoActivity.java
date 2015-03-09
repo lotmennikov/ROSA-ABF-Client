@@ -108,7 +108,8 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         project = Settings.currentProject;
         repo = project.getRepo();
 
-        getBranches();
+
+      //  getBranches();
         getCommits();
         getBuilds();
 
@@ -208,6 +209,9 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
 
     // TODO подправить окошко
     public void onBranchButtonClick(View v) {
+
+        getBranches();
+
         ArrayAdapter<String> branchesAdapter = new ArrayAdapter<String>(this, R.layout.dialog_menu_item, branches);
         AlertDialog.Builder blder = new AlertDialog.Builder(this);
         blder.setTitle("Set branch");

@@ -1,5 +1,6 @@
 package hse.zhizh.abfclient.jgit;
 
+import org.eclipse.jgit.api.CreateBranchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -28,9 +29,9 @@ public class JGitBranches {
 
     //get all branches
     public String[] getBranches() {
+        Set<String> branchSet = new HashSet<String>();
+        List<String> branchList = new ArrayList<String>();
         try {
-            Set<String> branchSet = new HashSet<String>();
-            List<String> branchList = new ArrayList<String>();
             List<Ref> localRefs = repository.getGit().branchList().call();
             for (Ref ref : localRefs) {
                 branchSet.add(ref.getName());
@@ -45,11 +46,10 @@ public class JGitBranches {
                     continue;
                 branchList.add(name);
             }
-            return branchList.toArray(new String[0]);
         } catch (GitAPIException e) {
-
+            e.printStackTrace();
         }
-        return new String[0];
+        return branchList.toArray(new String[branchList.size()]);
     }
 
     public static String convertRemoteName(String remote) {
@@ -72,22 +72,37 @@ public class JGitBranches {
 
     //set current branch
     public boolean checkout(String branchName) {
-        try {
-            repository.getGit().checkout().setName(branchName).call();
-        } catch (GitAPIException e) {
-            e.printStackTrace();
-            return false;
+        String[] splits = branchName.split("/");
+        if (splits.length == 4) {
+            try {
+                repository.getGit().checkout().setCreateBranch(true).setName(splits[3])
+                        .setStartPoint(branchName).call();
+            } catch (GitAPIException e) {
+                e.printStackTrace();
+                return false;
+            }
+            try {
+                repository.getGit()
+                        .branchCreate()
+                        .setUpstreamMode(
+                                CreateBranchCommand.SetupUpstreamMode.SET_UPSTREAM)
+                        .setStartPoint(branchName).setName(splits[3])
+                        .setForce(true).call();
+            } catch (GitAPIException e) {
+                e.printStackTrace();
+                return false;
+            }
         }
-
+        else {
+            try {
+                repository.getGit().checkout().setName(branchName).call();
+            } catch (GitAPIException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
         System.out.println("Current branch is " + repository.getBranchName());
         return true;
-        //TODO
-     /*   Ref ref = git.checkout().
-                setCreateBranch(true).
-                setName("branchName").
-                setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK).
-                setStartPoint("origin/" + branchName).
-                call();*/
     }
 
     //get all commits of current branch
