@@ -37,25 +37,23 @@ public class ABFBuilds extends ABFQuery {
     protected Boolean doInBackground(Void... params) {
         Log.d(Settings.TAG + COMMANDTAG, "Sending request...");
         try {
-/*            String json = new BuildsRequest().getProjects();  //new ProjectsRequest().getProjects();
+           String json = new BuildsRequest().sendRequest(Integer.toString(projectId));  //new ProjectsRequest().getProjects();
             response = json;
             JSONObject jsonObject = new JSONObject(json);
-            JSONArray jsonProjects = (JSONArray)jsonObject.get("projects");
-            projects = new Project[jsonProjects.length()];
-            String pname = "", pfullname = "", pgiturl = "", pdescription = "";
-            int pid = 0 , powner = 0 ;
-            for (int i = 0; i < jsonProjects.length(); ++i) {
-                JSONObject proj = jsonProjects.getJSONObject(i);
-                pid = proj.getInt("id");
-                pname = proj.getString("name");
-                pfullname = proj.getString("fullname");
-                pgiturl = proj.getString("git_url");
-                pdescription = proj.getString("description");
-                powner = proj.getJSONObject("owner").getInt("id");
-                projects[i] = new Project(pid,pname, pfullname, pgiturl, pdescription, powner);
+            JSONArray jsonBuilds = (JSONArray)jsonObject.get("projects");
+            builds = new Build[jsonBuilds.length()];
+            String url = "";
+            int status = 0;
+            int build_id = 0 , project_id = 0 ;
+            for (int i = 0; i < jsonBuilds.length(); ++i) {
+                JSONObject proj = jsonBuilds.getJSONObject(i);
+                build_id = proj.getInt("id");
+                status = proj.getInt("status");
+                project_id = proj.getInt("project_id");
+                url = proj.getString("url");
+                builds[i] = new Build(build_id,project_id,200,status,url);
             }
             // TODO убрать return, распарсить сборки
-*/
             return false;
         } catch (Exception e) {
             e.printStackTrace();

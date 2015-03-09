@@ -55,7 +55,7 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
     }
 
     //Добавление проекта в базу
-    public long addProject(Project project,boolean is_local)
+    public long addProject(Project project)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -65,7 +65,7 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
         values.put(ProjectsContract.FeedProjects.COLUMN_NAME_OWNER_ID,project.getOwnerId() );
         values.put(ProjectsContract.FeedProjects.COLUMN_NAME_GIT_URL,project.getGitUrl() );
         values.put(ProjectsContract.FeedProjects.COLUMN_NAME_DESCRIPTION,project.getDescription() );
-        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_IS_LOCAL,is_local );
+        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_IS_LOCAL,project.isLocal() );
 
         long newRowId;
         newRowId = db.insert(

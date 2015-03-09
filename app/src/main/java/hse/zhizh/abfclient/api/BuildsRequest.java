@@ -38,29 +38,4 @@ public class BuildsRequest implements ApiRequest {
         return SessionImpl.requestContent(con);
     }
 
-
-    /*
-    Получение всех проектов
-     */
-    public String getProjects(){
-        try {
-            return sendRequest();
-        } catch(Exception e) {
-            return "[]";
-        }
-    }
-
-    /*
-    Получает проект по его id
-    String @id-id проекта
-    при неудаче возвращаеет "[]"
-    */
-    public String getProject(String id){
-        try {
-            return sendRequest(id);
-        } catch(Exception e) {
-            return "[]";
-        }
-    }
-
 }
