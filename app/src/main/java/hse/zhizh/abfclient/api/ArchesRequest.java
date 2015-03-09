@@ -1,9 +1,14 @@
 package hse.zhizh.abfclient.api;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import hse.zhizh.abfclient.Model.Architecture;
+import hse.zhizh.abfclient.Model.Platform;
 import hse.zhizh.abfclient.Session.Session;
 import hse.zhizh.abfclient.Session.SessionImpl;
 
@@ -33,7 +38,27 @@ public class ArchesRequest implements ApiRequest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return SessionImpl.requestContent(con);
+    }
+
+    public Architecture[] getArches(String response){
+        Architecture[] arches;
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray jsonProjects = (JSONArray)jsonObject.get("projects");
+            arches = new Architecture[jsonProjects.length()];
+            String name="";
+            int id =0;
+            for (int i = 0; i < jsonProjects.length(); ++i) {
+                JSONObject proj = jsonProjects.getJSONObject(i);
+                id = proj.getInt("id");
+                name = proj.getString("name");
+                arches[i] = new Architecture(id,name);
+            }
+            return arches;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
