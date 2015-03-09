@@ -97,8 +97,10 @@ public class Repository {
     }
 
     public File getBinDir() {
-        File binPath = new File("mnt/sdcard/Android/data/hse.zhizh.abfclient/bin/");
-        return new File(binPath.getAbsolutePath() + "/" + name + "/");
+        File binPath = new File("mnt/sdcard/Android/data/hse.zhizh.abfclient/bin/" + name + "/");
+        if (!binPath.exists())
+            binPath.mkdirs();
+        return binPath;
     }
 
     public String getRemoteURL() {
