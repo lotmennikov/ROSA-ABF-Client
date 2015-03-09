@@ -2,6 +2,7 @@ package hse.zhizh.abfclient.Activities;
 
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -78,6 +80,45 @@ public class ContentsFragment extends Fragment implements ProjectActivityEventLi
                 }
             }
         });
+        fileList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (!files[position].isDirectory()) {
+                    AlertDialog deleteDialog;
+                    final File delFile = files[position];
+                    // проходим в другую папку
+                    AlertDialog.Builder blder = new AlertDialog.Builder(ContentsFragment.this.getActivity());
+                    blder.setTitle("Delete File?");
+
+                    // delete file
+                    blder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            delFile.delete();
+                            setFileList();
+
+                            Log.d(Settings.TAG + " ContentsFragment", "Deleting file " + delFile.getName());
+                            Toast.makeText(ContentsFragment.this.getActivity(), "File has been deleted", Toast.LENGTH_SHORT).show();
+
+                            dialog.dismiss();
+                        }
+                    });
+
+                    // cancel deletion
+                    blder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    deleteDialog = blder.create();
+                    deleteDialog.show();
+                }
+                return true;
+            }
+
+        });
+
     }
 
     @Override

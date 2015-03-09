@@ -12,10 +12,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.eclipse.jgit.diff.Edit;
 
 import java.util.ArrayList;
 
@@ -52,9 +55,10 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
     Dialog addProjectDialog;
     EditText addpGroup;
     EditText addpProject;
-    EditText addpBranch;
+//    EditText addpBranch;
     EditText addpUser;
     EditText addpPassword;
+    Button addpClone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +96,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
             }
         });
         initInitDialog();
+        initAddProjectDialog();
 
 //        getDatabaseProjects();
     }
@@ -130,27 +135,28 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
 
     private void initAddProjectDialog() {
         // custom dialog
-        addProjectDialog = new Dialog(this.getApplicationContext());
+        addProjectDialog = new Dialog(this);
         addProjectDialog.setContentView(R.layout.dialog_addproject);
         addProjectDialog.setTitle("Add project");
 
-/*        EditText
-        // set the custom dialog components - text, image and button
-        TextView text = (TextView) dialog.findViewById(R.id.text);
-        text.setText("Android custom dialog example!");
-        ImageView image = (ImageView) dialog.findViewById(R.id.image);
-        image.setImageResource(R.drawable.ic_launcher);
+        addpGroup = (EditText)addProjectDialog.findViewById(R.id.addp_groupText);
+        addpProject = (EditText)addProjectDialog.findViewById(R.id.addp_projectText);
+//        addpBranch = (EditText)addProjectDialog.findViewById(R.id.addp_branchText);
+        addpUser = (EditText)addProjectDialog.findViewById(R.id.addp_username);
+        addpPassword = (EditText)addProjectDialog.findViewById(R.id.addp_password);
+        addpClone = (Button)addProjectDialog.findViewById(R.id.addp_clonebutton);
 
-        Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
-        // if button is clicked, close the custom dialog
-        dialogButton.setOnClickListener(new OnClickListener() {
+        addpClone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
+                // TODO Clone только здесь
+
+
+
+                Toast.makeText(getApplicationContext(), "Clone Click", Toast.LENGTH_SHORT).show();
+                addProjectDialog.dismiss();
             }
         });
-
-        dialog.show();*/
     }
 
     private boolean InitCurrentProjectRepository() {
@@ -288,11 +294,18 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            //noinspection SimplifiableIfStatement
+            case R.id.action_settings:
+            {
+                return true;
+            }
+            case R.id.action_addproject:
+                addProjectDialog.show();
+                return true;
+            default:
+                break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
