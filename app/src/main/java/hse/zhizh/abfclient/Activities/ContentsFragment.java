@@ -2,6 +2,7 @@ package hse.zhizh.abfclient.Activities;
 
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,6 +37,8 @@ public class ContentsFragment extends Fragment implements ProjectActivityEventLi
 
     private View fragmentView;
 
+    private Context context;
+
     public ContentsFragment() {
         setRepository();
     }
@@ -58,7 +61,7 @@ public class ContentsFragment extends Fragment implements ProjectActivityEventLi
             fileNames[i] = files[i].getName() + (files[i].isDirectory() ? "/" : "");
         }
 
-        ArrayAdapter<String> filesAdapter = new ArrayAdapter<String>(this.getActivity(), R.layout.contents_list_element, fileNames);
+        final ArrayAdapter<String> filesAdapter = new ArrayAdapter<String>(this.getActivity(), R.layout.contents_list_element, fileNames);
         fileList.setAdapter(filesAdapter);
 
         fileList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -70,11 +73,21 @@ public class ContentsFragment extends Fragment implements ProjectActivityEventLi
                     setFileList();
                 }
                 else {
-                    // редактирование файла другим приложением
+                    // ------------------------------------------------------------------------------------------------------------
+                    // редактировать файл
+                    File file = files[position];//new File(filesAdapter.getItem(position));
+                    Intent fileEditIntent = new Intent(getActivity(), EditFileActivity.class);
+                    Uri uri = Uri.fromFile(files[position]);
+                    fileEditIntent.putExtra(EditFileActivity.TAG_FILE_NAME,
+                            file.getAbsolutePath());
+                    startActivity(fileEditIntent);
+                    /*// редактирование файла другим приложением
                     Intent intent = new Intent(Intent.ACTION_EDIT);
                     Uri uri = Uri.fromFile(files[position]);
                     intent.setDataAndType(uri, "text/plain");
                     startActivity(intent);
+                    // ------------------------------------------------------------------------------------------------------------
+                    */
                 }
             }
         });
