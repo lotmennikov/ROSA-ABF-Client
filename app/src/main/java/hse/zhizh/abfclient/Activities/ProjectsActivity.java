@@ -224,6 +224,13 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
 
     }
 
+    public void onClearDBButtonClick(View v) {
+        FeedProjectsDbHelper helper = new FeedProjectsDbHelper(this.getApplicationContext());
+        helper.deleteAll();
+        helper.close();
+        Toast.makeText(this.getApplicationContext(), "All projects were removed", Toast.LENGTH_SHORT).show();
+    }
+
     // получение проектов, завершение клонирования
     @Override
     public void onCommandExecuted(int commandID, boolean success) {

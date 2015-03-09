@@ -51,10 +51,10 @@ public class CommitsFragment extends Fragment implements ProjectActivityEventLis
                     comms[i] = newtext;
                 }
 
-                Log.d(Settings.TAG + " CommitsFragment", "Setting Adapter");
             } else {
                 comms = new String[0];
             }
+            Log.d(Settings.TAG + " CommitsFragment", "Setting Adapter");
             ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(this.getActivity(), R.layout.contents_list_element, comms);
             commitsList.setAdapter(listAdapter);
         }

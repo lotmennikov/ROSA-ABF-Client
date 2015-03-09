@@ -30,36 +30,18 @@ public class ABFBuilds extends ABFQuery {
     }
 
     /*
-        Получение JSON из запроса к REST API
-        и его разбор на массив сборок
+        Получение массива сборок
      */
     @Override
     protected Boolean doInBackground(Void... params) {
         Log.d(Settings.TAG + COMMANDTAG, "Sending request...");
-        try {
-           String json = new BuildsRequest().sendRequest(Integer.toString(projectId));  //new ProjectsRequest().getProjects();
-            response = json;
-            JSONObject jsonObject = new JSONObject(json);
-            JSONArray jsonBuilds = (JSONArray)jsonObject.get("projects");
-            builds = new Build[jsonBuilds.length()];
-            String url = "";
-            int status = 0;
-            int build_id = 0 , project_id = 0 ;
-            for (int i = 0; i < jsonBuilds.length(); ++i) {
-                JSONObject proj = jsonBuilds.getJSONObject(i);
-                build_id = proj.getInt("id");
-                status = proj.getInt("status");
-                project_id = proj.getInt("project_id");
-                url = proj.getString("url");
-                builds[i] = new Build(build_id,project_id,200,status,url);
-            }
-            // TODO убрать return, распарсить сборки
-            return false;
-        } catch (Exception e) {
-            e.printStackTrace();
+        builds = new BuildsRequest().getBuilds(projectId);
+
+        if (builds != null) {
+            return true;
+        } else {
             return false;
         }
-//        return true;
     }
 
     @Override

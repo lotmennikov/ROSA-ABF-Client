@@ -8,20 +8,18 @@ public class Build {
     private int buildId;
     private int projectId;
     private int statusCode;
-    private int status;
     private String url;
 
-    public Build(int buildId, int projectId, int statusCode,int status,String url) {
+    public Build(int buildId, int projectId, int statusCode,String url) {
         this.buildId = buildId;
         this.projectId = projectId;
         this.statusCode = statusCode;
         this.url = url;
-        this.status = status;
     }
 
     public int getBuildId() { return buildId; }
     public int getProjectId() { return projectId; }
     public int getStatusCode() { return statusCode; }
     public String getUrl(){return url;}
-    public int getStatus() {return status;}
+
 }
