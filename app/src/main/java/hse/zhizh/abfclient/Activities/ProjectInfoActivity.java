@@ -336,7 +336,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
                 if (success) {
                     ppAdapter.refreshContents();
                     getCommits();
-                    getBuilds();
+                    //getBuilds();
                     Toast tst = Toast.makeText(this.getApplicationContext(), "new branch", Toast.LENGTH_SHORT);
                     tst.show();
                 } else {
@@ -362,9 +362,6 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         }
 
     }
-
-
-
 
 // -------- tabs ---------
 

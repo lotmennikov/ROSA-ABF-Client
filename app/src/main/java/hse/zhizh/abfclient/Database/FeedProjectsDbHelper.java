@@ -94,36 +94,41 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
                 ProjectsContract.FeedProjects.COLUMN_NAME_OWNER_ID,
                 ProjectsContract.FeedProjects.COLUMN_NAME_NAME,
                 ProjectsContract.FeedProjects.COLUMN_NAME_PROJECT_ID,
-                ProjectsContract.FeedProjects.COLUMN_NAME_FULLNAME
+                ProjectsContract.FeedProjects.COLUMN_NAME_FULLNAME,
+                ProjectsContract.FeedProjects.COLUMN_NAME_IS_LOCAL
         };
         String sortOrder =
                 ProjectsContract.FeedProjects._ID + " DESC";
 
         Cursor cursor = db.query(ProjectsContract.FeedProjects.TABLE_NAME,
                 projection, "id IN (?)", ids, null, null, sortOrder);
-        cursor.moveToFirst();
 
         HashMap<Integer,Project> projects = new HashMap<Integer,Project>();
 
+        if (cursor.moveToFirst()) {
+            do {
 
-        while(cursor.moveToNext()){
-            Integer project_id = cursor.getInt(
-                    cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_PROJECT_ID));
-            String git_url=cursor.
-                    getString(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_GIT_URL));
-            String fullname=cursor.
-                    getString(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_FULLNAME));
-            String description=cursor.
-                    getString(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_DESCRIPTION));
-            String name =cursor.
-                    getString(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_NAME));
-            Integer owner_id=cursor.
-                    getInt(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_OWNER_ID));
-            Project to_add = new Project(project_id,name,fullname,git_url,description,owner_id, true);
+                Integer project_id = cursor.getInt(
+                        cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_PROJECT_ID));
+                String git_url = cursor.
+                        getString(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_GIT_URL));
+                String fullname = cursor.
+                        getString(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_FULLNAME));
+                String description = cursor.
+                        getString(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_DESCRIPTION));
+                String name = cursor.
+                        getString(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_NAME));
+                Integer owner_id = cursor.
+                        getInt(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_OWNER_ID));
+                Boolean is_local = cursor.getInt(
+                        cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_IS_LOCAL)) > 0;
 
-            projects.put(project_id,to_add);
+                Project to_add = new Project(project_id, name, fullname, git_url, description, owner_id, true);
+
+                projects.put(project_id, to_add);
+            }
+            while (cursor.moveToNext());
         }
-
         return projects;
     }
 
@@ -140,7 +145,8 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
                 ProjectsContract.FeedProjects.COLUMN_NAME_OWNER_ID,
                 ProjectsContract.FeedProjects.COLUMN_NAME_NAME,
                 ProjectsContract.FeedProjects.COLUMN_NAME_PROJECT_ID,
-                ProjectsContract.FeedProjects.COLUMN_NAME_FULLNAME
+                ProjectsContract.FeedProjects.COLUMN_NAME_FULLNAME,
+                ProjectsContract.FeedProjects.COLUMN_NAME_IS_LOCAL
         };
 
 // How you want the results sorted in the resulting Cursor
@@ -157,25 +163,30 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
                 sortOrder                                 // The sort order
         );
 
-        cursor.moveToFirst();
 
         ArrayList<Project> projects = new ArrayList<Project>();
-        while(cursor.moveToNext()){
-            Integer project_id = Integer.parseInt(cursor.getString(
-                    cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_PROJECT_ID)));
-            String git_url=cursor.
-                    getString(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_GIT_URL));
-            String fullname=cursor.
-                    getString(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_FULLNAME));
-            String description=cursor.
-                    getString(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_DESCRIPTION));
-            String name =cursor.
-                    getString(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_NAME));
-            Integer owner_id=Integer.parseInt(cursor.
-                    getString(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_OWNER_ID)));
-            Project to_add = new Project(project_id,name,fullname,git_url,description,owner_id, true);
 
-            projects.add(to_add);
+        if (cursor.moveToFirst()) {
+            do {
+                Integer project_id = cursor.getInt(
+                        cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_PROJECT_ID));
+                String git_url = cursor.
+                        getString(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_GIT_URL));
+                String fullname = cursor.
+                        getString(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_FULLNAME));
+                String description = cursor.
+                        getString(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_DESCRIPTION));
+                String name = cursor.
+                        getString(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_NAME));
+                Integer owner_id = cursor.
+                        getInt(cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_OWNER_ID));
+                Boolean is_local = cursor.getInt(
+                        cursor.getColumnIndexOrThrow(ProjectsContract.FeedProjects.COLUMN_NAME_IS_LOCAL)) > 0;
+
+                Project to_add = new Project(project_id, name, fullname, git_url, description, owner_id, is_local);
+
+                projects.add(to_add);
+            } while (cursor.moveToNext());
         }
         return projects;
     }

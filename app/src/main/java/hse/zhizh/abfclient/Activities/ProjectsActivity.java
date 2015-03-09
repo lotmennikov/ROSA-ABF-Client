@@ -183,10 +183,11 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
 
     // добавление проекта в базу
     public void AddCurrentProjectToDB() {
+        Toast.makeText(getApplicationContext(), "Adding project to DB - " + Settings.currentProject.getName(), Toast.LENGTH_SHORT).show();
+        Settings.currentProject.setLocal(true);
         FeedProjectsDbHelper helper = new FeedProjectsDbHelper(this.getApplicationContext());
         helper.addProject(Settings.currentProject);
         helper.close();
-        Toast.makeText(getApplicationContext(), "Adding project to DB", Toast.LENGTH_SHORT).show();
     }
 
     // TODO связь с базой - получение проектов в базе

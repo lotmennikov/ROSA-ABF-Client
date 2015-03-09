@@ -23,8 +23,18 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:layout_marginRight="5dp"
+            android:background="#ff00dc74" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Clear DB"
+            android:id="@+id/test_cleardbButton"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
             android:background="#ff00dc74"
-            android:layout_weight="1" />
+            android:onClick="onClearDBButtonClick" />
 
         <Button
             android:layout_width="wrap_content"
@@ -36,20 +46,8 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="5dp"
             android:background="#ff00dc74"
-            android:onClick="onGetDBProjectsClick"
-            android:layout_weight="3" />
+            android:onClick="onGetDBProjectsClick" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Clear DB"
-            android:id="@+id/test_cleardbButton"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="5dp"
-            android:background="#ff00dc74"
-            android:layout_weight="1"
-            android:onClick="onClearDBButtonClick" />
     </LinearLayout>
 
     <ListView
