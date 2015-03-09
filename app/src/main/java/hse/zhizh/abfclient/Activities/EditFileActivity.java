@@ -1,9 +1,5 @@
 package hse.zhizh.abfclient.Activities;
 
-/**
- * Created by omkol_000 on 09.03.2015.
- */
-
 import android.app.Activity;
 
 import android.util.Log;
@@ -55,9 +51,10 @@ public class EditFileActivity extends Activity {
             FileInputStream fin = new FileInputStream(file);
             res = streamToString(fin);
             fin.close();
-        }
-        catch(Exception e) {
-            Log.e("edit file activity", "Some problem: " + e.toString());
+        } catch (FileNotFoundException e) {
+            Log.e("edit file activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("edit file activity", "Can not read file: " + e.toString());
         }
         fileEdit.setText(res);
 
@@ -68,7 +65,6 @@ public class EditFileActivity extends Activity {
                    editable = !editable;
                    if (editable) {
                        editFileBtn.setText("Save");
-                       //fileEdit.setEnabled(editable);
                        fileEdit.setKeyListener((KeyListener) fileEdit.getTag());
                        String displayString = "Now you can edit";
                        Toast msg = Toast.makeText(getBaseContext(), displayString,
@@ -78,6 +74,10 @@ public class EditFileActivity extends Activity {
                        editFileBtn.setText("Edit");
                        try {
                            FileUtils.writeStringToFile(file, fileEdit.getText().toString());
+                           String displayString = "File was saved";
+                           Toast msg = Toast.makeText(getBaseContext(), displayString,
+                                   Toast.LENGTH_LONG);
+                           msg.show();
                        } catch (IOException e) {
                            Log.e("edit file activity", "saving failed: " + e.toString());
                        }
@@ -86,23 +86,6 @@ public class EditFileActivity extends Activity {
                }
            }
         );
-    }
-
-    private String getStringFromFile(String filePath) {
-        String res = "";
-        try {
-            File fl = new File(filePath);
-            FileInputStream fin = new FileInputStream(fl);
-            res = streamToString(fin);
-            fin.close();
-        } catch (FileNotFoundException e) {
-            Log.e("edit file activity", "File not found: " + e.toString());
-        } catch (IOException e) {
-            Log.e("edit file activity", "Can not read file: " + e.toString());
-        } catch (Exception e) {
-            Log.e("edit file activity", "Some problem: " + e.toString());
-        }
-        return res;
     }
 
     private String streamToString(InputStream is) {
@@ -115,8 +98,8 @@ public class EditFileActivity extends Activity {
             }
             reader.close();
             return sb.toString();
-        } catch (Exception e) {
-            Log.e("edit file activity", "Some problem in StreamToString: " + e.toString());
+        } catch (IOException e) {
+            Log.e("edit file activity", "Can not read file:" + e.toString());
         }
         return "";
     }
