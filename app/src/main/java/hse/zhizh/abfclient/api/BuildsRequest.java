@@ -18,7 +18,7 @@ import hse.zhizh.abfclient.Session.SessionImpl;
 public class BuildsRequest implements ApiRequest {
     String BUILDS_URL = "https://abf.rosalinux.ru/api/v1/projects/:project_id/build_lists.json";
 
-    // внешний запрос для получения списка сборок
+    // внешний запрос для получения списка сборок по id проекта
     public Build[] getBuilds(int projectId) {
         try {
             String json = sendRequest(Integer.toString(projectId));  //new ProjectsRequest().getProjects();
