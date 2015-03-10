@@ -33,6 +33,10 @@
                 android:title="Add binary file"
                 app:showAsAction="never" />
             <item
+                android:id="@+id/action_downloadbinary"
+                android:title="Download binaries"
+                app:showAsAction="never" />
+            <item
                 android:id="@+id/action_newbuild"
                 android:title="New Build"
                 app:showAsAction="never" />

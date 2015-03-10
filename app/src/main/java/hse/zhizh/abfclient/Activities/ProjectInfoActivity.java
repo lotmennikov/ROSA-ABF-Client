@@ -1,6 +1,7 @@
 package hse.zhizh.abfclient.Activities;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,9 +12,12 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +26,7 @@ import org.apache.commons.io.output.WriterOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import hse.zhizh.abfclient.ABFQueries.ABFBuilds;
 import hse.zhizh.abfclient.ABFQueries.ABFQuery;
@@ -29,9 +34,11 @@ import hse.zhizh.abfclient.GitWrappers.GitBranch;
 import hse.zhizh.abfclient.GitWrappers.GitCommand;
 import hse.zhizh.abfclient.GitWrappers.GitCommit;
 import hse.zhizh.abfclient.GitWrappers.GitCommitList;
+import hse.zhizh.abfclient.GitWrappers.GitGetAbfFiles;
 import hse.zhizh.abfclient.GitWrappers.GitPull;
 import hse.zhizh.abfclient.GitWrappers.GitPush;
 import hse.zhizh.abfclient.GitWrappers.GitSetBranch;
+import hse.zhizh.abfclient.Model.AbfFile;
 import hse.zhizh.abfclient.Model.Build;
 import hse.zhizh.abfclient.Model.Commit;
 import hse.zhizh.abfclient.Model.Project;
@@ -61,6 +68,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
     Build[] builds;
 
     AlertDialog branchDialog;
+    Dialog downloadAbfDialog;
 
     private String[] tabLabels = new String[]{ "Commits", "Files", "Builds"};
     private ViewPager viewPager;
@@ -199,6 +207,9 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         case (R.id.action_addbinary):
             // TODO
             break;
+        case (R.id.action_downloadbinary):
+            onDownloadBinariesButtonClick(null);
+            break;
         case (R.id.action_newbuild):
             // TODO
             onNewBuildButtonClick(null);
@@ -277,6 +288,10 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
     // TODO add dialog, file chooser, jgit call
     public void onAddBinaryButtonClick(View v) {
         Toast.makeText(getApplicationContext(), "Add Binary Click", Toast.LENGTH_SHORT).show();
+    }
+
+    public void onDownloadBinariesButtonClick(View v) {
+        showDownloadBinChooser();
     }
 
     // TODO check
@@ -372,6 +387,48 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         if (gitCommand != null)
             gitCommand.cancel(false);
         super.onDestroy();
+    }
+
+
+    public void showDownloadBinChooser() {
+        GitGetAbfFiles abfFiles = new GitGetAbfFiles(repo);
+        if (abfFiles.execute()) {
+            List<AbfFile> abfFileList = abfFiles.result;
+
+            // настройка окошка
+            downloadAbfDialog = new Dialog(this);
+            downloadAbfDialog.setContentView(R.layout.dialog_listabfyml);
+            downloadAbfDialog.setTitle("Download files");
+
+            // настройка списка
+            AbfFileListAdapter abfAdapter = new AbfFileListAdapter(this,
+                    R.layout.item_abfymllist, abfFileList);
+            ListView listView = (ListView)downloadAbfDialog.findViewById(R.id.abffiles_list);
+            // настройка кнопки
+            Button downloadButton = (Button)this.getLayoutInflater().inflate(R.layout.item_abfllistfooter, null);
+            downloadButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    downloadAbfDialog.dismiss();
+                }
+            });
+
+            listView.addFooterView(downloadButton);
+            listView.setAdapter(abfAdapter);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View view,
+                                        int position, long id) {
+                    // nothing
+                }
+            });
+
+
+
+            // показ
+            downloadAbfDialog.show();
+
+        }
+
     }
 
 // -------- tabs ---------

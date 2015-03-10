@@ -47,7 +47,7 @@ public class BuildsFragment extends Fragment implements ProjectActivityEventList
                 blds = new String[builds.length];
                 String newtext;
                 for (int i = 0; i < blds.length; ++i) {
-                    newtext = builds[i].getBuildId() +  " - status: " + builds[i].getStatusCode() + "\n"
+                    newtext = builds[i].getBuildId() + " - status: " + builds[i].getStatusCode() + "\n"
                             + builds[i].getUrl();
                     blds[i] = newtext;
                 }
@@ -55,7 +55,7 @@ public class BuildsFragment extends Fragment implements ProjectActivityEventList
             } else {
                 blds = new String[0];
             }
-            Log.d(Settings.TAG + " BuildsFragment", "Setting Adapter");
+            Log.d(Settings.TAG + " BuildsFrag", "Setting Adapter");
             ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(this.getActivity(), R.layout.contents_list_element, blds);
             buildList.setAdapter(listAdapter);
         }
