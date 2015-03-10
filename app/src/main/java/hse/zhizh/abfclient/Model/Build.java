@@ -6,14 +6,20 @@ package hse.zhizh.abfclient.Model;
 public class Build {
 
     private int buildId;
-    private String message;
+    private int projectId;
+    private int statusCode;
+    private String url;
 
-    public Build(int buildId,String message) {
+    public Build(int buildId, int projectId, int statusCode,String url) {
         this.buildId = buildId;
-        this.message = message;
+        this.projectId = projectId;
+        this.statusCode = statusCode;
+        this.url = url;
     }
 
     public int getBuildId() { return buildId; }
-    public String getUrl(){return message;}
+    public int getProjectId() { return projectId; }
+    public int getStatusCode() { return statusCode; }
+    public String getUrl(){return url;}
 
 }

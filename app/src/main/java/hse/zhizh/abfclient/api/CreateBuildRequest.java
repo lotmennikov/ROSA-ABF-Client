@@ -11,6 +11,7 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
 import hse.zhizh.abfclient.Model.Build;
+import hse.zhizh.abfclient.Model.BuildResponse;
 import hse.zhizh.abfclient.Model.Platform;
 import hse.zhizh.abfclient.Model.Repo;
 import hse.zhizh.abfclient.Session.SessionImpl;
@@ -58,22 +59,22 @@ public class CreateBuildRequest implements ApiRequest {
         return SessionImpl.requestContent(con);
     }
 
-    public Build createBuildList(int project_id,String commit_hash,String update_type,int save_to_repository_id,
+    public BuildResponse createBuildList(int project_id,String commit_hash,String update_type,int save_to_repository_id,
                                  int build_for_platform_id,int include_repos,int arch_id) throws Exception{
         return parseJsonResponse(sendRequest());
 
         //TODO ДОПИЛИТЬ И РАЗОБРАТЬСЯ С @include_repos, как правильно передать массив
     }
 
-    private Build parseJsonResponse(String response){
-        Build build;
+    private BuildResponse parseJsonResponse(String response){
+        BuildResponse build;
         try {
             String json = response;
             JSONObject jsonObject = new JSONObject(json);
             JSONObject proj = (JSONObject)jsonObject.get("build_list");
             int id = proj.getInt("project_id");
             String message = proj.getString("message");
-            build = new Build(id,message);
+            build = new BuildResponse(id,message);
             return build;
         } catch (Exception e) {
             e.printStackTrace();
