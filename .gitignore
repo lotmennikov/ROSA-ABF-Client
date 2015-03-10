@@ -3,9 +3,5 @@
 .idea/*
 build/*
 local.properties
-.idea/misc.xml
-.idea/gradle.xml
 gradle/wrapper/gradle-wrapper.properties
-.idea/module.xml
-.idea/workspace.xml
-ABFClient.iml
+
