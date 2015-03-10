@@ -47,23 +47,14 @@ public class MainActivity extends ActionBarActivity {
         startActivity(project_intent);
     }
 
-    public void onProjectContentsButtonClick(View v) {
-    }
-
     public void onProjectsButtonClick(View v) {
         Intent projects_intent = new Intent(MainActivity.this, ProjectsActivity.class);
         startActivity(projects_intent);
     }
 
-    public void onCommitsButtonClick(View v) {
-    }
-
     public void onBuildInfoButtonClick(View v) {
         Intent buildinfo_intent = new Intent(MainActivity.this, NewBuildActivity.class);
         startActivity(buildinfo_intent);
-    }
-
-    public void onBuildsButtonClick(View v) {
     }
 
     @Override
@@ -81,7 +72,6 @@ public class MainActivity extends ActionBarActivity {
             // перейти к проектам
             onProjectsButtonClick(null);
         }
-
     }
 
 }

@@ -46,7 +46,6 @@ import hse.zhizh.abfclient.common.Settings;
  *  Сборки
  *  Команды
  *
- * TODO сделать вкладки
  */
 public class ProjectInfoActivity extends ActionBarActivity implements CommandResultListener, ActionBar.TabListener {
 
@@ -73,7 +72,9 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_info);
-        getSupportActionBar().setIcon(R.drawable.giticonabf);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.giticonabf1);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         branchButton = (Button)findViewById(R.id.branchButton);
         viewPager = (ViewPager)findViewById(R.id.projectInfoPager);

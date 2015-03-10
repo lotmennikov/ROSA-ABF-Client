@@ -4,6 +4,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import hse.zhizh.abfclient.R;
 /*
@@ -47,7 +48,7 @@ public class NewBuildActivity extends ActionBarActivity {
     }
 
 
-    public void onStartNewBuildClick() {
+    public void onStartNewBuildClick(View v) {
         // TODO start build
 
         this.finish();

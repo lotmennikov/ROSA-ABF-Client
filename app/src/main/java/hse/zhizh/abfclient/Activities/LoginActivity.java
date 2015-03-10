@@ -62,6 +62,9 @@ public class LoginActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.giticonabf1);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         // Set up the login form.
         mUsernameView = (EditText) findViewById(R.id.username);

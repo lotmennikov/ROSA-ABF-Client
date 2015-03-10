@@ -4,6 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import java.io.File;
+
 import hse.zhizh.abfclient.Model.Build;
 import hse.zhizh.abfclient.Model.Commit;
 
@@ -45,6 +47,13 @@ public class ProjectPagerAdapter extends FragmentPagerAdapter {
     }
 
 // ******* refresh fragments *********
+
+    public File getCurrentDir() {
+        if (contentsF != null)
+            return contentsF.getCurrentDir();
+        else
+            return null;
+    }
 
     public void refreshContents() {
         contentsF.refresh();

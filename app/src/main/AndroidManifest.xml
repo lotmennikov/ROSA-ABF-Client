@@ -13,7 +13,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/giticonabf"
+        android:icon="@drawable/giticonabf1"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         android:screenOrientation="portrait" >
