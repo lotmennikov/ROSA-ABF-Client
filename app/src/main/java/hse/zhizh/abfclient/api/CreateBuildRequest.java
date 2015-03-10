@@ -60,7 +60,7 @@ public class CreateBuildRequest implements ApiRequest {
     }
 
     public BuildResponse createBuildList(int project_id,String commit_hash,String update_type,int save_to_repository_id,
-                                 int build_for_platform_id,int include_repos,int arch_id) throws Exception{
+                                 int build_for_platform_id,int[] include_repos_id,int arch_id) throws Exception{
         return parseJsonResponse(sendRequest());
 
         //TODO ДОПИЛИТЬ И РАЗОБРАТЬСЯ С @include_repos, как правильно передать массив
