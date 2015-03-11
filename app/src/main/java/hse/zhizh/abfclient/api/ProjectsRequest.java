@@ -142,6 +142,7 @@ public class ProjectsRequest implements ApiRequest {
                 projReps[i] = new ProjectRepo(id,name);
             }
             project.setProjectRepositories(projReps);
+            project.setProjectRefs(getProjectRefs(project.getId()));
             return project;
         } catch (Exception e) {
             e.printStackTrace();
