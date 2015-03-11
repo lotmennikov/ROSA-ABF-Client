@@ -18,6 +18,8 @@ public class Project {
 
 // non-database
     private Repository repository; // repository object
+    private ProjectRepo[] ProjectRepositories; //Репозитории для проекта(необходимо для сборок)
+    private ProjectRef[] ProjectRefs;
     private boolean initialized;   // repository initialized\
 
     public Project(int id, String name, String fullname, String git_url, String description, int owner_id) {
@@ -41,9 +43,24 @@ public class Project {
         this.description = description;
         this.owner_id = owner_id;
         this.local = islocal;
-
         initialized = false;
         repository = null;
+    }
+
+    public void setProjectRepositories(ProjectRepo[] rep){
+        ProjectRepositories = rep;
+    }
+
+    public ProjectRepo[] getProjectRepositories(){
+        return ProjectRepositories;
+    }
+
+    public void setProjectRefs(ProjectRef[] rep){
+        ProjectRefs = rep;
+    }
+
+    public ProjectRef[] getProjectRefs(){
+        return ProjectRefs;
     }
 
     // called only in DBHelper

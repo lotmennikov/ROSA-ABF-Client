@@ -42,7 +42,6 @@ public class CreateBuildRequest implements ApiRequest {
                     "&save_to_repository_id="+request_args[3]+"&build_for_platform_id="+request_args[4]+
                     "&include_repos="+request_args[5]+"&arch_id="+request_args[6];
 
-            // Send post request
             con.setDoOutput(true);
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
             wr.writeBytes(urlParameters);
