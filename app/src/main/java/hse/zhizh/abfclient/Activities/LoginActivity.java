@@ -37,9 +37,11 @@ import java.util.List;
 
 import hse.zhizh.abfclient.Database.FeedProjectsDbHelper;
 import hse.zhizh.abfclient.Database.ProjectsContract;
+import hse.zhizh.abfclient.Model.BuildResponse;
 import hse.zhizh.abfclient.R;
 import hse.zhizh.abfclient.Session.Session;
 import hse.zhizh.abfclient.Session.SessionImpl;
+import hse.zhizh.abfclient.api.CreateBuildRequest;
 import hse.zhizh.abfclient.api.ProjectsRequest;
 
 
@@ -119,12 +121,15 @@ public class LoginActivity extends ActionBarActivity {
             int code=0;
             try {
                 //создание сессии и получение кода ответа при попытке создать соединение
-                SessionImpl s = new SessionImpl(mUsername, mPassword);//"creepycheese","ewqforce1");
+                SessionImpl s = new SessionImpl(mUsername, mPassword);//"creepycheese","ewqforce1")
+                //SessionImpl s = new SessionImpl("creepycheese", "ewqforce1");//"creepycheese","ewqforce1");
                 //код ответа, если 200 то ОК
                 code = s.createConnection().getResponseCode();
-                ProjectsRequest pr = new ProjectsRequest();
-                //pr.sendRequest();
-                System.out.println("RESULTS OF REQUEST: " +pr.sendRequest());
+                //TODO Удалить этот пример
+               // CreateBuildRequest pr = new CreateBuildRequest();
+               // BuildResponse resps = pr.createBuildList(118524,"f31e22b1968c795b2cf2567137102c5e512c4971","recommended",1067,376,new int[]{388},2);
+                //System.out.println(resps.getMessage());
+                //System.out.println("RESULTS OF REQUEST: " + pr.sendRequest());
                 s.requestContent(s.createConnection());
             } catch(Exception e){
                 e.printStackTrace();
