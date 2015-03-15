@@ -15,5 +15,6 @@
     <string name="app_preferences_file">abfclientprefs.xml</string>
     <string name="prompt_password_no_o">Password</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_file_chooser">FileChooserActivity</string>
 
 </resources>

@@ -64,8 +64,6 @@ public class MainActivity extends ActionBarActivity {
             String pwd = res_intent.getStringExtra("Password");
             TextView usr_lab = (TextView)findViewById(R.id.username_label);
             TextView pass_lab = (TextView)findViewById(R.id.password_label);
-            Settings.repo_password = pwd;
-            Settings.repo_username = usr;
             usr_lab.setText(usr);
             pass_lab.setText(pwd);
 

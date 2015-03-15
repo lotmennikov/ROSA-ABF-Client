@@ -43,6 +43,7 @@ import hse.zhizh.abfclient.Session.Session;
 import hse.zhizh.abfclient.Session.SessionImpl;
 import hse.zhizh.abfclient.api.CreateBuildRequest;
 import hse.zhizh.abfclient.api.ProjectsRequest;
+import hse.zhizh.abfclient.common.Settings;
 
 
 /**
@@ -70,8 +71,14 @@ public class LoginActivity extends ActionBarActivity {
 
         // Set up the login form.
         mUsernameView = (EditText) findViewById(R.id.username);
-
         mPasswordView = (EditText) findViewById(R.id.password);
+
+        String username = Settings.getLastUsername(getApplicationContext());
+        if (!username.equals("")) {
+            String password = Settings.getFromTempPasswordHolder(getApplicationContext(), username);
+            mUsernameView.setText(username);
+            mPasswordView.setText(password);
+        }
 
         Button mEmailSignInButton = (Button) findViewById(R.id.sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
@@ -80,6 +87,8 @@ public class LoginActivity extends ActionBarActivity {
                 attemptLogin();
             }
         });
+
+
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
@@ -93,7 +102,7 @@ public class LoginActivity extends ActionBarActivity {
         if (username.equals("")) { username = "lotmen"; password = "fab688"; }
         // --
 
-        Log.d("ABF Client LoginActivity", "Login Attempt");
+        Log.d(Settings.TAG + " LoginActivity", "Login Attempt");
 
         mAuthTask = new UserLoginTask(username, password);
         mAuthTask.execute((Void) null);
@@ -148,18 +157,21 @@ public class LoginActivity extends ActionBarActivity {
             Toast toast = Toast.makeText(context, "code:" + f_code, duration);
             toast.show();
             if (success) {
-                Log.d("ABF Client LoginActivity", "Login Success");
+                Log.d(Settings.TAG + " LoginActivity", "Login Success");
                 Intent login_result = new Intent();
                 login_result.putExtra("Username", mUsername);
                 login_result.putExtra("Password", mPassword);
                 setResult(RESULT_OK, login_result);
+
+                Settings.authSuccess(getApplicationContext(), mUsername, mPassword, true);
+
                 finish();
 
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
 
-                Log.d("ABF Client LoginActivity", "Login Fail");
+                Log.d(Settings.TAG + " LoginActivity", "Login Fail");
             }
         }
 

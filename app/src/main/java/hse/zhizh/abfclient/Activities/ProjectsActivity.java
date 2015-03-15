@@ -59,8 +59,6 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
     Dialog addProjectDialog;
     EditText addpGroup;
     EditText addpProject;
-    EditText addpUser;
-    EditText addpPassword;
     Button addpClone;
 
 
@@ -165,8 +163,6 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
 
         addpGroup = (EditText)addProjectDialog.findViewById(R.id.addp_groupText);
         addpProject = (EditText)addProjectDialog.findViewById(R.id.addp_projectText);
-        addpUser = (EditText)addProjectDialog.findViewById(R.id.addp_username);
-        addpPassword = (EditText)addProjectDialog.findViewById(R.id.addp_password);
         addpClone = (Button)addProjectDialog.findViewById(R.id.addp_clonebutton);
 
         addpClone.setOnClickListener(new View.OnClickListener() {

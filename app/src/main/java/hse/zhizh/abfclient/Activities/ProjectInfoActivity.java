@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +28,7 @@ import org.apache.commons.io.output.WriterOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import hse.zhizh.abfclient.ABFQueries.ABFBuilds;
@@ -34,10 +37,13 @@ import hse.zhizh.abfclient.GitWrappers.GitBranch;
 import hse.zhizh.abfclient.GitWrappers.GitCommand;
 import hse.zhizh.abfclient.GitWrappers.GitCommit;
 import hse.zhizh.abfclient.GitWrappers.GitCommitList;
+import hse.zhizh.abfclient.GitWrappers.GitDownloadAbf;
 import hse.zhizh.abfclient.GitWrappers.GitGetAbfFiles;
 import hse.zhizh.abfclient.GitWrappers.GitPull;
 import hse.zhizh.abfclient.GitWrappers.GitPush;
+import hse.zhizh.abfclient.GitWrappers.GitReset;
 import hse.zhizh.abfclient.GitWrappers.GitSetBranch;
+import hse.zhizh.abfclient.GitWrappers.GitUpload;
 import hse.zhizh.abfclient.Model.AbfFile;
 import hse.zhizh.abfclient.Model.Build;
 import hse.zhizh.abfclient.Model.Commit;
@@ -52,9 +58,17 @@ import hse.zhizh.abfclient.common.Settings;
  *  Коммиты
  *  Сборки
  *  Команды
- *
+ * * Pull
+ * * Commit
+ * * Reset
+ * * Push
+ * * New file
+ * * Add binary file
+ * * Download .abf.yml files
  */
 public class ProjectInfoActivity extends ActionBarActivity implements CommandResultListener, ActionBar.TabListener {
+
+    static final int REQUEST_FILENAME = 1;
 
     Project project;
     Repository repo;
@@ -69,12 +83,18 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
 
     AlertDialog branchDialog;
     Dialog downloadAbfDialog;
+    Dialog addBinaryDialog;
+    Dialog newFileDialog;
 
     private String[] tabLabels = new String[]{ "Commits", "Files", "Builds"};
     private ViewPager viewPager;
     private ActionBar actionBar;
     private ProjectPagerAdapter ppAdapter;
     private Button branchButton;
+
+    // dialog
+    private EditText addbin_fileedit;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,6 +216,9 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         case R.id.action_commit:
             onCommitButtonClick(null);
             return true;
+        case R.id.action_reset:
+            onResetButtonClick(null);
+            return true;
         case R.id.action_settings:
             return true;
         case (android.R.id.home):
@@ -205,13 +228,12 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
             onNewFileButtonClick(null);
             break;
         case (R.id.action_addbinary):
-            // TODO
+            onAddBinaryButtonClick(null);
             break;
         case (R.id.action_downloadbinary):
             onDownloadBinariesButtonClick(null);
             break;
         case (R.id.action_newbuild):
-            // TODO
             onNewBuildButtonClick(null);
             break;
         default:
@@ -224,7 +246,6 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
     public void onBranchButtonClick(View v) {
 
         getBranches();
-
         ArrayAdapter<String> branchesAdapter = new ArrayAdapter<String>(this, R.layout.dialog_menu_item, branches);
         AlertDialog.Builder blder = new AlertDialog.Builder(this);
         blder.setTitle("Set branch");
@@ -265,14 +286,56 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         }
     }
 
-    // TODO reset repository
+    // TODO check
     public void onResetButtonClick(View v) {
-        Toast.makeText(getApplicationContext(), "No function call", Toast.LENGTH_SHORT).show();
+        GitReset resetCommand = new GitReset(repo);
+        if (resetCommand.execute()) {
+            Toast.makeText(getApplicationContext(), "Hard Reset", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "Reset Failed", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    // TODO add dialog
+    // TODO check
     public void onNewFileButtonClick(View v) {
-        File newfile = new File(repo.getDir() + "/file.txt");
+        final File currentDir = ppAdapter.getCurrentDir();
+
+        newFileDialog = new Dialog(this);
+        newFileDialog.setContentView(R.layout.dialog_newfile);
+        newFileDialog.setTitle("New text file");
+
+        final EditText newf_filename = (EditText)newFileDialog.findViewById(R.id.newfile_filename);
+        Button newf_create = (Button)newFileDialog.findViewById(R.id.newfile_create);
+        newf_create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    String newFilename = newf_filename.getText().toString().trim();
+                    if (!newFilename.equals("")) {
+                        newFilename = currentDir.getAbsolutePath() + "/" +newFilename;
+                        File newFile = new File(newFilename);
+                        Log.d(Settings.TAG + " PInfoAct", "File: " + newFilename);
+                        if (!newFile.exists()) {
+                            if (newFile.createNewFile()) {
+                                PrintWriter pw = new PrintWriter(newFile);
+                                pw.append(" ");
+                                pw.close();
+                                Toast.makeText(getApplicationContext(), "New File", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        ppAdapter.refreshContents();
+                        newFileDialog.dismiss();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Failed to create new file", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        newFileDialog.show();
+
+/*    File newfile = new File(repo.getDir() + "/file.txt");
         try {
             PrintWriter pw = new PrintWriter(newfile);
             pw.append("\ntime:" + System.currentTimeMillis());
@@ -282,12 +345,65 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), "file was not created", Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
 
-    // TODO add dialog, file chooser, jgit call
+    // TODO jgit call
     public void onAddBinaryButtonClick(View v) {
-        Toast.makeText(getApplicationContext(), "Add Binary Click", Toast.LENGTH_SHORT).show();
+
+        // настройка окошка
+        addBinaryDialog = new Dialog(this);
+        addBinaryDialog.setContentView(R.layout.dialog_abffileupload);
+        addBinaryDialog.setTitle("Add binary file");
+
+        addbin_fileedit = (EditText)addBinaryDialog.findViewById(R.id.addbin_filepath);
+        final Button addbin_browse = (Button)addBinaryDialog.findViewById(R.id.addbin_browsebutton);
+        final Button addbin_cancel = (Button)addBinaryDialog.findViewById(R.id.addbin_cancel);
+        final Button addbin_upload = (Button)addBinaryDialog.findViewById(R.id.addbin_upload);
+
+        // Browse button
+        addbin_browse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String currentFile = addbin_fileedit.getText().toString();
+
+                Intent filechooserIntent = new Intent(ProjectInfoActivity.this, FileChooserActivity.class);
+                filechooserIntent.putExtra("Filename", currentFile);
+                //TODO check
+                startActivityForResult(filechooserIntent, REQUEST_FILENAME);
+            }
+        });
+        // Cancel button
+        addbin_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addBinaryDialog.dismiss();
+            }
+        });
+        // Upload button
+        addbin_upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO check
+                File binFile = new File(addbin_fileedit.getText().toString());
+                if (binFile.exists()) {
+                    Toast.makeText(getApplicationContext(), "ready to upload", Toast.LENGTH_SHORT).show();
+                    uploadToFileStore(binFile);
+                }
+                addBinaryDialog.dismiss();
+            }
+        });
+
+        addBinaryDialog.show();
+//        Toast.makeText(getApplicationContext(), "Add Binary Click", Toast.LENGTH_SHORT).show();
+    }
+
+    // Starting upload task
+    private void uploadToFileStore(File binFile) {
+        if (gitCommand == null) {
+            gitCommand = new GitUpload(repo, this, binFile);
+            gitCommand.execute();
+        }
     }
 
     public void onDownloadBinariesButtonClick(View v) {
@@ -338,6 +454,16 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
                 }
                 gitCommand = null;
                 break;
+            case GitCommand.UPLOAD_COMMAND:
+                if (success) {
+                    Toast tst = Toast.makeText(this.getApplicationContext(), "File was uploaded", Toast.LENGTH_SHORT);
+                    tst.show();
+                } else {
+                    Toast tst = Toast.makeText(this.getApplicationContext(), "Failed to upload file", Toast.LENGTH_SHORT);
+                    tst.show();
+                }
+                gitCommand = null;
+                break;
             case GitCommand.PUSH_COMMAND:
                 if (success) {
                     getCommits();
@@ -360,6 +486,16 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
                     Toast tst = Toast.makeText(this.getApplicationContext(), "branch set failed", Toast.LENGTH_SHORT);
                     tst.show();
                     this.finish();
+                }
+                gitCommand = null;
+                break;
+            case GitCommand.DOWNLOADABF_COMMAND:
+                if (success) {
+                    Toast tst = Toast.makeText(this.getApplicationContext(), "All files were downloaded successfully", Toast.LENGTH_SHORT);
+                    tst.show();
+                } else {
+                    Toast tst = Toast.makeText(this.getApplicationContext(), "Download failed", Toast.LENGTH_SHORT);
+                    tst.show();
                 }
                 gitCommand = null;
                 break;
@@ -391,9 +527,9 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
 
 
     public void showDownloadBinChooser() {
-        GitGetAbfFiles abfFiles = new GitGetAbfFiles(repo);
+        final GitGetAbfFiles abfFiles = new GitGetAbfFiles(repo);
         if (abfFiles.execute()) {
-            List<AbfFile> abfFileList = abfFiles.result;
+            final List<AbfFile> abfFileList = abfFiles.result;
 
             // настройка окошка
             downloadAbfDialog = new Dialog(this);
@@ -401,7 +537,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
             downloadAbfDialog.setTitle("Download files");
 
             // настройка списка
-            AbfFileListAdapter abfAdapter = new AbfFileListAdapter(this,
+            final AbfFileListAdapter abfAdapter = new AbfFileListAdapter(this,
                     R.layout.item_abfymllist, abfFileList);
             ListView listView = (ListView)downloadAbfDialog.findViewById(R.id.abffiles_list);
             // настройка кнопки
@@ -409,28 +545,48 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
             downloadButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    boolean[] checkList = abfAdapter.getChecklist();
+                    startDownloadAbf(abfFileList, checkList);
                     downloadAbfDialog.dismiss();
+
                 }
             });
 
             listView.addFooterView(downloadButton);
             listView.setAdapter(abfAdapter);
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View view,
-                                        int position, long id) {
-                    // nothing
-                }
-            });
-
 
 
             // показ
             downloadAbfDialog.show();
-
         }
 
     }
 
+    // TODO delete gitCommand==null check
+    private void startDownloadAbf(List<AbfFile> abfFiles, boolean[] checkList) {
+        List<AbfFile> selectedAbf = new ArrayList<AbfFile>();
+        for (int i = 0; i < checkList.length; ++i) {
+            if (checkList[i]) selectedAbf.add(abfFiles.get(i));
+        }
+        if (gitCommand == null) {
+            gitCommand = new GitDownloadAbf(repo, this, selectedAbf);
+            gitCommand.execute();
+            Toast.makeText(getApplicationContext(), "Starting download...", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int rcode, int rescode, Intent res_intent) {
+        if (res_intent != null) {
+            if (rescode == RESULT_OK && rcode == REQUEST_FILENAME) {
+                if (addbin_fileedit != null) {
+                    String filename = res_intent.getStringExtra("Filename");
+                    addbin_fileedit.setText(filename);
+                }
+            }
+        }
+    }
 // -------- tabs ---------
 
     @Override

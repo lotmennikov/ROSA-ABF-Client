@@ -24,56 +24,54 @@ import hse.zhizh.abfclient.R;
  */
 public class AbfFileListAdapter extends ArrayAdapter<AbfFile> {
 
-        private ArrayList<AbfFile> abfFilesList;
+    private ArrayList<AbfFile> abfFilesList;
+    private boolean[] checklist;
 
-        private ActionBarActivity activity;
+    private ActionBarActivity activity;
 
-        public AbfFileListAdapter(ActionBarActivity activity, int textViewResourceId,
-                               List<AbfFile> abfList) {
+    public AbfFileListAdapter(ActionBarActivity activity, int textViewResourceId,
+                           List<AbfFile> abfList) {
 
-            super(activity, textViewResourceId, abfList);
+        super(activity, textViewResourceId, abfList);
 
-            this.activity = activity;
-            this.abfFilesList = new ArrayList<AbfFile>();
-            this.abfFilesList.addAll(abfList);
+        this.activity = activity;
+        this.abfFilesList = new ArrayList<AbfFile>();
+        this.abfFilesList.addAll(abfList);
+        checklist = new boolean[abfFilesList.size()];
+        for (int i = 0; i < checklist.length; ++i) checklist[i] = false;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+        Log.d("ConvertView", String.valueOf(position));
+
+        if (convertView == null) {
+            LayoutInflater vi = (LayoutInflater)activity.getSystemService(
+                    Context.LAYOUT_INFLATER_SERVICE);
+
+            convertView = vi.inflate(R.layout.item_abfymllist, null);
+
+            convertView.setOnClickListener( new View.OnClickListener() {
+                public void onClick(View v) {
+                    CheckBox cb = (CheckBox) v ;
+
+                    int position = (Integer)v.getTag();
+//                        AbfFile abffile = (AbfFile)cb.getTag();
+                    checklist[position] = cb.isChecked();
+                }
+            });
         }
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        AbfFile abfFile = abfFilesList.get(position);
+        ((CheckBox)convertView).setText(abfFile.getName());
+        ((CheckBox)convertView).setChecked(checklist[position]);
+        convertView.setTag((position));
 
-            Log.d("ConvertView", String.valueOf(position));
-
-            if (convertView == null) {
-                LayoutInflater vi = (LayoutInflater)activity.getSystemService(
-                        Context.LAYOUT_INFLATER_SERVICE);
-
-                convertView = vi.inflate(R.layout.item_abfymllist, null);
-
-                convertView.setOnClickListener( new View.OnClickListener() {
-                    public void onClick(View v) {
-                        CheckBox cb = (CheckBox) v ;
-
-                        AbfFile abffile = (AbfFile)cb.getTag();
-                        Toast.makeText(activity.getApplicationContext(),
-                                "Clicked on Checkbox: " + cb.getText() +
-                                        " is " + cb.isChecked(),
-                                Toast.LENGTH_LONG).show();
-
-                    }
-                });
-
-            }
-            else {
-
-            }
-
-            AbfFile abfFile = abfFilesList.get(position);
-            ((CheckBox)convertView).setText(abfFile.getName());
-            ((CheckBox)convertView).setChecked(false);
-            convertView.setTag(abfFile);
-
-            return convertView;
-
-        }
+        return convertView;
 
     }
+
+    public boolean[] getChecklist() { return checklist; }
+
+}

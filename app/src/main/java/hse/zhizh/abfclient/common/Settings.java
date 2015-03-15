@@ -2,7 +2,9 @@ package hse.zhizh.abfclient.common;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,42 +19,32 @@ import hse.zhizh.abfclient.R;
  * Created by E-Lev on 02.02.2015.
  */
 public class Settings {
-
+    // Default App tag
     public static final String TAG = "ABF Client";
 
+    // Rest api request
+    public static final String abfApiRequest = "https://abf.rosalinux.ru/api/v1/";
 
-//    public static String repo_username = "lotmen";
-//    public static String repo_password = "fab688";
+    // default folder for user downloads from filestore
+    public static File downloadsDir;
 
+    // date formatter for the commits list
+    public static DateFormat commitDate = new SimpleDateFormat("dd.MM.yyyy");
+
+    // current user credentials
     public static String repo_username = "lotmen";
     public static String repo_password = "fab688";
 
-    // user projects
-//    public static List<Project> projects;
-
     // selected project
     public static Project currentProject;
-
-    // list of active repositories
-//    public static List<Repository> repositoryList;
-    // current repository (temp)
-//    public static Repository currentRepository;
-    // current user
-//    public static User currentUser;
 
     // getApplicationContext()
     public static Context appContext;
 
     static {
-//        repositoryList = new ArrayList<Repository>();
-//        currentUser = null;
-//        currentRepository = null;
         currentProject = null;
-//        projects = initProjects();
-//        currentProject = projects.get(0);
+        downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
     }
-
-    public static DateFormat commitDate = new SimpleDateFormat("dd.MM.yyyy");
 
 // заглушечный тупейший менеджер паролей
 
@@ -70,5 +62,26 @@ public class Settings {
                 .apply();
     }
 
+    public static void authSuccess(Context context, String username, String password, boolean remember) {
+
+        SharedPreferences shp = context.getSharedPreferences(context.getString(R.string.app_preferences_file), Context.MODE_PRIVATE);
+        shp.edit()
+                .putString("last_user", username)
+                .apply();
+
+        repo_username = username;
+        repo_password = password;
+
+        if (remember) {
+            setTempPasswordHolder(context, username, password);
+        }
+    }
+
+    public static String getLastUsername(Context context) {
+        SharedPreferences shp = context.getSharedPreferences(context.getString(R.string.app_preferences_file), Context.MODE_PRIVATE);
+        String username = shp.getString("last_user", "");
+
+        return username;
+    }
 
 }

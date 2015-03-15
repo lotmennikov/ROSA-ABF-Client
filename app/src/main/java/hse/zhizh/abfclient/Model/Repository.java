@@ -97,9 +97,10 @@ public class Repository {
     }
 
     public File getBinDir() {
-        File binPath = new File("mnt/sdcard/Android/data/hse.zhizh.abfclient/bin/" + name + "/");
-        if (!binPath.exists())
-            binPath.mkdirs();
+        File binPath = Settings.downloadsDir;
+//        File binPath = new File("mnt/sdcard/Android/data/hse.zhizh.abfclient/bin/" + name + "/");
+//        if (!binPath.exists())
+//            binPath.mkdirs();
         return binPath;
     }
 

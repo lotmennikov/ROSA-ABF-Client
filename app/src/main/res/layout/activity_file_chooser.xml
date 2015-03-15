@@ -1,0 +1,20 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="hse.zhizh.abfclient.Activities.FileChooserActivity"
+    android:orientation="vertical"
+    android:descendantFocusability="blocksDescendants"
+    android:clickable="true"
+    android:background="#ffbeeacf">
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/browserList"
+        android:layout_margin="10dp"
+        android:background="#ffe5ffe7"
+        android:descendantFocusability="blocksDescendants"/>
+
+</LinearLayout>

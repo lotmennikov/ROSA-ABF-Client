@@ -25,7 +25,7 @@ public class Download_abf_yml {
         this.repository = repository;
     }
 
-    public void download_files(List<AbfFile> files) {
+    public boolean download_files(List<AbfFile> files) {
         File binFiles = repository.getBinDir();
         if (!binFiles.exists())
             binFiles.mkdirs();
@@ -46,13 +46,18 @@ public class Download_abf_yml {
                 input.close();
             } catch (MalformedURLException e) {
                 e.printStackTrace();
+                return false;
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
+                return false;
             } catch (ProtocolException e) {
                 e.printStackTrace();
+                return false;
             } catch (IOException e) {
                 e.printStackTrace();
+                return false;
             }
         }
+        return true;
     }
 }

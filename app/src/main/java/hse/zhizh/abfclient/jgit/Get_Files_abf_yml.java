@@ -40,10 +40,10 @@ public class Get_Files_abf_yml {
                     String hash = null;
                     if (line.indexOf("\"") != -1) {
                         name = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
-                        hash = line.substring(line.indexOf(": ") + 1);
+                        hash = line.substring(line.indexOf(": ") + 2);
                     } else {
-                        name = line.substring(0, line.indexOf(": "));
-                        hash = line.substring(line.indexOf(": ") + 1);
+                        name = line.substring(line.indexOf(" ") + 2, line.indexOf(": "));
+                        hash = line.substring(line.indexOf(": ") + 2);
                     }
                     files.add(new AbfFile(name, hash, true));
                 } else if (flag == 2) {
@@ -51,10 +51,10 @@ public class Get_Files_abf_yml {
                     String hash = null;
                     if (line.indexOf("\"") != -1) {
                         name = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
-                        hash = line.substring(line.indexOf(": ") + 1);
+                        hash = line.substring(line.indexOf(": ") + 2);
                     } else {
-                        name = line.substring(0, line.indexOf(": "));
-                        hash = line.substring(line.indexOf(": ") + 1);
+                        name = line.substring(line.indexOf(" ") + 2, line.indexOf(": "));
+                        hash = line.substring(line.indexOf(": ") + 2);
                     }
                     files.add(new AbfFile(name, hash, false));
                 } else flag = 0;

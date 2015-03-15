@@ -28,7 +28,7 @@ public class Upload_abf_yml {
         this.repository = repository;
     }
 
-    public void upload_abf_yml(File fileToUpload) {
+    public boolean upload_abf_yml(File fileToUpload) {
 
          /*   String urlToConnect = "http://file-store.rosalinux.ru/api/v1/upload";
         File fileToUpload = new File("C:/test2.txt");
@@ -142,14 +142,18 @@ public class Upload_abf_yml {
 
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         } catch (JSONException e) {
             e.printStackTrace();
+            return false;
         } finally {
             try {
                 response2.close();
             } catch (IOException e) {
                 e.printStackTrace();
+                return false;
             }
         }
+        return true;
     }
 }
