@@ -59,8 +59,6 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
     Dialog addProjectDialog;
     EditText addpGroup;
     EditText addpProject;
-    EditText addpUser;
-    EditText addpPassword;
     Button addpClone;
 
 
@@ -69,7 +67,9 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_projects);
         setTitle("Projects");
-        getSupportActionBar().setIcon(R.drawable.giticonabf);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.giticonabf1);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         projectsList = (ListView)findViewById(R.id.projectsList);
 
@@ -163,8 +163,6 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
 
         addpGroup = (EditText)addProjectDialog.findViewById(R.id.addp_groupText);
         addpProject = (EditText)addProjectDialog.findViewById(R.id.addp_projectText);
-        addpUser = (EditText)addProjectDialog.findViewById(R.id.addp_username);
-        addpPassword = (EditText)addProjectDialog.findViewById(R.id.addp_password);
         addpClone = (Button)addProjectDialog.findViewById(R.id.addp_clonebutton);
 
         addpClone.setOnClickListener(new View.OnClickListener() {
@@ -401,11 +399,27 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
             case R.id.action_addproject:
                 addProjectDialog.show();
                 return true;
+            case R.id.test_cleardbButton:
+                onClearDBButtonClick(null);
+                break;
+            case R.id.test_getdbprojects:
+                onGetDBProjectsClick(null);
+                break;
+            case R.id.test_getprojects:
+                onGetProjectsButtonClick(null);
+                break;
             default:
                 break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // refresh DB list
+        getDatabaseProjects();
     }
 
 }

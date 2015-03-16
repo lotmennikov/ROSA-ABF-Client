@@ -9,6 +9,8 @@
     android:textStyle="bold"
     android:focusable="false"
     android:descendantFocusability="blocksDescendants"
-    android:focusableInTouchMode="false">
+    android:focusableInTouchMode="false"
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp">
 
 </TextView>

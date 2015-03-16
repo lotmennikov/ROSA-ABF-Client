@@ -32,7 +32,6 @@ public class Repository {
         name = "0ad";
 //        path = cntxt.getFilesDir();
         path = new File("mnt/sdcard/Android/data/hse.zhizh.abfclient/repo/");
-
         git = null;
         File projdir = new File(path.getAbsolutePath() + "/" + name + "/");
 
@@ -95,6 +94,14 @@ public class Repository {
 
     public File getDir() {
         return path;
+    }
+
+    public File getBinDir() {
+        File binPath = Settings.downloadsDir;
+//        File binPath = new File("mnt/sdcard/Android/data/hse.zhizh.abfclient/bin/" + name + "/");
+//        if (!binPath.exists())
+//            binPath.mkdirs();
+        return binPath;
     }
 
     public String getRemoteURL() {

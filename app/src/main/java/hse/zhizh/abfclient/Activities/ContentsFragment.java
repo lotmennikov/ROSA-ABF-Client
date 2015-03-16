@@ -169,4 +169,8 @@ public class ContentsFragment extends Fragment implements ProjectActivityEventLi
             setFileList();
         }
     }
+
+    public File getCurrentDir() {
+        return currentDir;
+    }
 }

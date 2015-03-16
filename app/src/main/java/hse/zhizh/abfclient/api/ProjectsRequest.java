@@ -10,6 +10,8 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
 import hse.zhizh.abfclient.Model.Project;
+import hse.zhizh.abfclient.Model.ProjectRef;
+import hse.zhizh.abfclient.Model.ProjectRepo;
 import hse.zhizh.abfclient.Session.SessionImpl;
 
 import static hse.zhizh.abfclient.Session.SessionImpl.requestContent;
@@ -73,10 +75,48 @@ public class ProjectsRequest implements ApiRequest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return parseJsonResponse(requestContent(con));
     }
 
+    public ProjectRef[] getProjectRefs(int id) throws Exception{
+        String https_url = "https://abf.rosalinux.ru/api/v1/projects/:id/refs_list.json";
+        https_url=https_url.replace(":id",Integer.toString(id));
+        URL url;
+        System.out.println("URL: "+https_url);
+        HttpsURLConnection con=null;
+        try {
+            url = new URL(https_url);
+            con = (HttpsURLConnection)url.openConnection();
+            SessionImpl.setConnectionProperties(con,"GET");
+            con.connect();
+            int code = con.getResponseCode();
+            System.out.println("code:" + code);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return parsejsonRefsList(requestContent(con));
+    }
+
+    //парсинг запроса получения ссылок проекта
+    public static ProjectRef[] parsejsonRefsList(String response){
+        ProjectRef[] refs=null;
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray arr = jsonObject.getJSONArray("refs_list");
+            refs= new ProjectRef[arr.length()];
+            for (int i = 0;i<arr.length();i++){
+                JSONObject ref = arr.getJSONObject(i);
+                JSONObject obj = ref.getJSONObject("object");
+                String sha = obj.getString("sha");
+                refs[i] = new ProjectRef(sha);
+                System.out.println(sha);
+            }
+        }
+        catch(Exception e){}
+        return refs;
+    }
     // парсинг json на один проект
     private Project parseJsonResponse(String response){
         Project project;
@@ -85,7 +125,6 @@ public class ProjectsRequest implements ApiRequest {
             JSONObject jsonObject = new JSONObject(json);
 
             JSONObject proj = (JSONObject)jsonObject.get("project");
-
             int pid = proj.getInt("id");
             String pname = proj.getString("name");
             String pfullname = proj.getString("fullname");
@@ -93,13 +132,22 @@ public class ProjectsRequest implements ApiRequest {
             String pdescription = "";
             int powner = proj.getJSONObject("owner").getInt("id");
             project = new Project(pid,pname, pfullname, pgiturl, pdescription, powner);
-
+            //Получения репозиториев проекта
+            JSONArray arr = proj.getJSONArray("repositories");
+            ProjectRepo[] projReps = new ProjectRepo[arr.length()];
+            for (int i = 0;i<arr.length();i++) {
+                JSONObject ref = arr.getJSONObject(i);
+                Integer id = ref.getInt("id");
+                String name = ref.getString("name");
+                projReps[i] = new ProjectRepo(id,name);
+            }
+            project.setProjectRepositories(projReps);
+            project.setProjectRefs(getProjectRefs(project.getId()));
             return project;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
-
     }
 
     /*

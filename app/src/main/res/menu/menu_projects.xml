@@ -6,7 +6,20 @@
         android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/test_cleardbButton"
+        android:title="Clear DB"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/test_getdbprojects"
+        android:title="Get DB Projects"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/test_getprojects"
+        android:title="Get Projects"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/action_addproject"
         android:icon="@android:drawable/ic_menu_add"
