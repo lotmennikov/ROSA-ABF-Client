@@ -6,15 +6,38 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import hse.zhizh.abfclient.ABFQueries.ABFQuery;
+import hse.zhizh.abfclient.Model.Architecture;
+import hse.zhizh.abfclient.Model.BuildResponse;
+import hse.zhizh.abfclient.Model.Platform;
+import hse.zhizh.abfclient.Model.Project;
+import hse.zhizh.abfclient.Model.ProjectRepo;
+import hse.zhizh.abfclient.Model.Repo;
 import hse.zhizh.abfclient.R;
+import hse.zhizh.abfclient.common.Settings;
+
 /*
  *
  * Configuring and starting a new build
  *
- * TODO atart the build
+ * TODO start the build
  *
  */
-public class NewBuildActivity extends ActionBarActivity {
+public class NewBuildActivity extends ActionBarActivity implements CommandResultListener {
+
+    // input
+    private Project project;
+    private Platform[] platforms;
+    private Architecture[] arches;
+
+    // selection results
+    private Platform selectedPlatform;
+    private Architecture selectedArchitecture;
+    private Repo selectedPlRepo;
+    private ProjectRepo selectedProjectRepo;
+
+    // final response
+    private BuildResponse buildResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +45,23 @@ public class NewBuildActivity extends ActionBarActivity {
         setContentView(R.layout.activity_new_build);
         getSupportActionBar().setIcon(R.drawable.giticonabf);
         setTitle("Start New Build");
+
+        project = Settings.currentProject;
+        getArches();
+        getPlatforms();
+        getProjectRepos();
+    }
+
+    private void getArches() {
+
+    }
+
+    private void getPlatforms() {
+
+    }
+
+    private void getProjectRepos() {
+
     }
 
 
@@ -49,9 +89,45 @@ public class NewBuildActivity extends ActionBarActivity {
 
 
     public void onStartNewBuildClick(View v) {
-        // TODO start build
+        //TODO obtain selections
 
+        // TODO start build
+        if (selectedArchitecture != null &&
+            selectedPlatform != null &&
+            selectedPlRepo != null &&
+            selectedProjectRepo != null &&
+            project != null) {
+
+
+
+
+        }
         this.finish();
     }
 
+
+    // Ответ на ABF API запрос получен
+    @Override
+    public void onCommandExecuted(int commandId, boolean success) {
+        switch (commandId) {
+// -------- ABF API ------------
+            case ABFQuery.ARCHES_QUERY:
+                // TODO get arches
+                if (success) {
+
+                } else {
+
+                }
+                break;
+            case ABFQuery.PLATFORMS_QUERY:
+                // TODO get platforms
+                break;
+            case ABFQuery.NEWBUILD_QUERY:
+                // TODO process response
+                break;
+            // TODO project repos
+            default:
+                break;
+        }
+    }
 }
