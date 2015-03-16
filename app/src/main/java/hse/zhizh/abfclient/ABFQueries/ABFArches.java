@@ -3,40 +3,38 @@ package hse.zhizh.abfclient.ABFQueries;
 import android.util.Log;
 
 import hse.zhizh.abfclient.Activities.CommandResultListener;
-import hse.zhizh.abfclient.Model.Platform;
+import hse.zhizh.abfclient.Model.Architecture;
 import hse.zhizh.abfclient.Model.Project;
-import hse.zhizh.abfclient.api.PlatformsRequest;
+import hse.zhizh.abfclient.api.ArchesRequest;
 import hse.zhizh.abfclient.common.Settings;
 
 /**
- * Created by E-Lev on 08.03.2015.
+ * Created by E-Lev on 16.03.2015.
  */
-public class ABFPlatforms extends ABFQuery {
-    private final String COMMANDTAG = " ABFPlatforms";
+public class ABFArches extends ABFQuery {
+
+    private final String COMMANDTAG = " ABFArches";
 
     private final CommandResultListener activity;
 
-    public Platform[] result;
+    public Architecture[] result;
 
-    public ABFPlatforms(CommandResultListener activ) {
+    public ABFArches(CommandResultListener activ) {
         this.activity = activ;
         this.result = null;
     }
 
     /*
-        Получение массива сборок
+        Получение архитектур
      */
     @Override
     protected Boolean doInBackground(Void... params) {
         Log.d(Settings.TAG, COMMANDTAG + " Sending request...");
         try {
-
-        // TODO request
-//            result = new ProjectsRequest().getProjectByOwnerAndName(groupName, projectName);
-            PlatformsRequest plReq = new PlatformsRequest();
-            Platform[] platforms = plReq.listPlatforms();
-
-            if (result != null) {
+            ArchesRequest archesRequest = new ArchesRequest();
+            Architecture[] architectures = archesRequest.getArches();
+            if (architectures != null) {
+                result = architectures;
                 return true;
             } else {
                 return false;
@@ -45,7 +43,6 @@ public class ABFPlatforms extends ABFQuery {
             e.printStackTrace();
             return false;
         }
-
     }
 
     @Override
@@ -55,9 +52,7 @@ public class ABFPlatforms extends ABFQuery {
         } else {
             Log.d(Settings.TAG, COMMANDTAG + " fail");
         }
-        activity.onCommandExecuted(PLATFORMS_QUERY, success);
+        activity.onCommandExecuted(ARCHES_QUERY, success);
     }
-
-
 }
 

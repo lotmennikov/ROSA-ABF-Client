@@ -3,40 +3,39 @@ package hse.zhizh.abfclient.ABFQueries;
 import android.util.Log;
 
 import hse.zhizh.abfclient.Activities.CommandResultListener;
-import hse.zhizh.abfclient.Model.Platform;
-import hse.zhizh.abfclient.Model.Project;
-import hse.zhizh.abfclient.api.PlatformsRequest;
+import hse.zhizh.abfclient.Model.ProjectRef;
+import hse.zhizh.abfclient.api.ProjectsRequest;
 import hse.zhizh.abfclient.common.Settings;
 
 /**
- * Created by E-Lev on 08.03.2015.
+ * Created by E-Lev on 16.03.2015.
  */
-public class ABFPlatforms extends ABFQuery {
-    private final String COMMANDTAG = " ABFPlatforms";
+public class ABFProjectRefs extends ABFQuery {
+
+    private final String COMMANDTAG = "ABF ProjectRefs";
 
     private final CommandResultListener activity;
+    private final int projectId;
 
-    public Platform[] result;
+    public ProjectRef[] result;
 
-    public ABFPlatforms(CommandResultListener activ) {
+    public ABFProjectRefs(CommandResultListener activ, int project_id) {
         this.activity = activ;
+        this.projectId = project_id;
         this.result = null;
     }
 
     /*
-        Получение массива сборок
+        Получение references проекта
      */
     @Override
     protected Boolean doInBackground(Void... params) {
         Log.d(Settings.TAG, COMMANDTAG + " Sending request...");
         try {
-
-        // TODO request
-//            result = new ProjectsRequest().getProjectByOwnerAndName(groupName, projectName);
-            PlatformsRequest plReq = new PlatformsRequest();
-            Platform[] platforms = plReq.listPlatforms();
-
-            if (result != null) {
+           ProjectsRequest refsRequest = new ProjectsRequest();
+           ProjectRef[] projectRefs = refsRequest.getProjectRefs(projectId);
+            if (projectRefs != null) {
+                result = projectRefs;
                 return true;
             } else {
                 return false;
@@ -45,7 +44,6 @@ public class ABFPlatforms extends ABFQuery {
             e.printStackTrace();
             return false;
         }
-
     }
 
     @Override
@@ -55,9 +53,6 @@ public class ABFPlatforms extends ABFQuery {
         } else {
             Log.d(Settings.TAG, COMMANDTAG + " fail");
         }
-        activity.onCommandExecuted(PLATFORMS_QUERY, success);
+        activity.onCommandExecuted(PROJECTREFS_QUERY, success);
     }
-
-
 }
-
