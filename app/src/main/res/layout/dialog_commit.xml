@@ -8,27 +8,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Commit name"
+        android:text="Summary"
         android:id="@+id/textView4" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText7"
+        android:id="@+id/commit_summary"
         android:layout_gravity="center_horizontal" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Status\n     Modified: 4 files"
-        android:id="@+id/commit_descript"
-        android:layout_gravity="center_horizontal" />
+        android:text="Status\n     Modified: ... files"
+        android:id="@+id/commit_status"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Commit"
         android:id="@+id/commit_commit"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp" />
 </LinearLayout>

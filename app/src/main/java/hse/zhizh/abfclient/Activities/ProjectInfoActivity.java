@@ -65,36 +65,37 @@ import hse.zhizh.abfclient.common.Settings;
  * * New file
  * * Add binary file
  * * Download .abf.yml files
+ * * Create build
  */
 public class ProjectInfoActivity extends ActionBarActivity implements CommandResultListener, ActionBar.TabListener {
-
+// activity request code
     static final int REQUEST_FILENAME = 1;
-
+    static final String ActivityTag = "ProjectInfoActivity";
+// project info
     Project project;
     Repository repo;
-
+// command
     GitCommand gitCommand;
     ABFQuery abfQuery;
-
-
+// arrays
     String[] branches;
     Commit[] commits;
     Build[] builds;
-
+// dialogs
     AlertDialog branchDialog;
     Dialog downloadAbfDialog;
     Dialog addBinaryDialog;
     Dialog newFileDialog;
-
+    Dialog commitDialog;
+// interface
     private String[] tabLabels = new String[]{ "Commits", "Files", "Builds"};
     private ViewPager viewPager;
     private ActionBar actionBar;
     private ProjectPagerAdapter ppAdapter;
     private Button branchButton;
 
-    // dialog
+// dialog item
     private EditText addbin_fileedit;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,6 +221,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
             onResetButtonClick(null);
             return true;
         case R.id.action_settings:
+            // TODO either remove, or provide menu
             return true;
         case (android.R.id.home):
             this.finish();
@@ -241,8 +243,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
     }
     return super.onOptionsItemSelected(item);
 }
-
-    // TODO подправить окошко
+    // Вывод диалога выбора ветки
     public void onBranchButtonClick(View v) {
 
         getBranches();
@@ -262,12 +263,26 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         branchDialog.show();
     }
 
-    // TODO check, сделать окошко
+    // TODO check
     public void onCommitButtonClick(View v) {
-        if (gitCommand == null) {
-            gitCommand = new GitCommit(repo, this, "ABF client commit");
-            gitCommand.execute();
-        }
+        commitDialog = new Dialog(this);
+        commitDialog.setContentView(R.layout.dialog_commit);
+        commitDialog.setTitle("Commit");
+
+        final EditText commitName = (EditText)commitDialog.findViewById(R.id.commit_summary);
+        final Button commitCommit = (Button)commitDialog.findViewById(R.id.commit_commit);
+        commitCommit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String summary = commitName.getText().toString();
+                if (gitCommand == null) {
+                    gitCommand = new GitCommit(repo, ProjectInfoActivity.this, summary);
+                    gitCommand.execute();
+                }
+                commitDialog.dismiss();
+            }
+        });
+        commitDialog.show();
     }
 
     // TODO check
@@ -314,12 +329,9 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
                     if (!newFilename.equals("")) {
                         newFilename = currentDir.getAbsolutePath() + "/" +newFilename;
                         File newFile = new File(newFilename);
-                        Log.d(Settings.TAG + " PInfoAct", "File: " + newFilename);
+                        Log.d(Settings.TAG, ActivityTag + " File: " + newFilename);
                         if (!newFile.exists()) {
                             if (newFile.createNewFile()) {
-                                PrintWriter pw = new PrintWriter(newFile);
-                                pw.append(" ");
-                                pw.close();
                                 Toast.makeText(getApplicationContext(), "New File", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -335,20 +347,9 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
 
         newFileDialog.show();
 
-/*    File newfile = new File(repo.getDir() + "/file.txt");
-        try {
-            PrintWriter pw = new PrintWriter(newfile);
-            pw.append("\ntime:" + System.currentTimeMillis());
-            pw.close();
-            Toast.makeText(getApplicationContext(), "file created", Toast.LENGTH_SHORT).show();
-            ppAdapter.refreshContents();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(getApplicationContext(), "file was not created", Toast.LENGTH_SHORT).show();
-        }*/
     }
 
-    // TODO jgit call
+    // Add binary file dialog
     public void onAddBinaryButtonClick(View v) {
 
         // настройка окошка
