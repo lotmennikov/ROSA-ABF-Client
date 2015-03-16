@@ -132,7 +132,7 @@ public class ProjectsRequest implements ApiRequest {
             String pdescription = "";
             int powner = proj.getJSONObject("owner").getInt("id");
             project = new Project(pid,pname, pfullname, pgiturl, pdescription, powner);
-            //Получения репозиториев проекта
+/*            //Получения репозиториев проекта
             JSONArray arr = proj.getJSONArray("repositories");
             ProjectRepo[] projReps = new ProjectRepo[arr.length()];
             for (int i = 0;i<arr.length();i++) {
@@ -142,7 +142,7 @@ public class ProjectsRequest implements ApiRequest {
                 projReps[i] = new ProjectRepo(id,name);
             }
             project.setProjectRepositories(projReps);
-            project.setProjectRefs(getProjectRefs(project.getId()));
+            project.setProjectRefs(getProjectRefs(project.getId())); */
             return project;
         } catch (Exception e) {
             e.printStackTrace();

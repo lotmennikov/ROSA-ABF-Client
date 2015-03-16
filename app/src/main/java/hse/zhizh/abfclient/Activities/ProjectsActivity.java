@@ -45,6 +45,7 @@ import hse.zhizh.abfclient.common.Settings;
  *
  */
 public class ProjectsActivity extends ActionBarActivity implements CommandResultListener {
+    static final String ActivityTag = "ProjectInfoActivity";
 
     ListView projectsList;
 
@@ -55,6 +56,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
 
     AlertDialog initDialog;
     AlertDialog deleteDialog;
+    AlertDialog retryCloneDialog;
 
     Dialog addProjectDialog;
     EditText addpGroup;
@@ -80,8 +82,6 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Toast.makeText(ProjectsActivity.this.getApplicationContext(), "Click on project " + position + projects[position].getFullname(), Toast.LENGTH_SHORT).show();
-
                 // текущий проект - выбранный
                 Settings.currentProject = projects[position];
 
@@ -101,7 +101,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
                     }
                 }
 
-                Log.d(Settings.TAG + " ProjectsActivity", "Project onClick, starting projectInfoActivity " + position);
+                Log.d(Settings.TAG, ActivityTag + " Project onClick, starting projectInfoActivity " + position);
             }
         });
         // удаление по длинному нажжатию
@@ -119,6 +119,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
         initInitDialog();
         initAddProjectDialog();
         initDeleteDialog();
+        initRetryDialog();
 
         getDatabaseProjects();
     }
@@ -219,7 +220,33 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
 
     }
 
-    // локальный инит - только если в базе
+    // диалог повторного клонирования
+    private void initRetryDialog() {
+        AlertDialog.Builder blder = new AlertDialog.Builder(this);
+        blder.setTitle("Clone Failed. Retry?");
+
+        // init
+        blder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        // clone
+        blder.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // запуск клонирования
+                cloneCommand = new GitClone(Settings.currentProject.getRepo(), ProjectsActivity.this);
+                cloneCommand.execute();
+                // TODO показать крутяшку
+            }
+        });
+        retryCloneDialog = blder.create();
+    }
+
+        // локальный инит - только если в базе
     private boolean InitCurrentProjectRepository() {
         GitInit initCommand = new GitInit(Settings.currentProject.getRepo());
         if (initCommand.execute()) { // норм
@@ -306,6 +333,8 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
                         // переход к проекту
                         startProjectActivity();
                     } else {
+                        // попробовать ещё
+                        retryCloneDialog.show();
                         Toast tst = Toast.makeText(this.getApplicationContext(), "Clone Failed", Toast.LENGTH_SHORT);
                         tst.show();
                     }
@@ -370,7 +399,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
         ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(this, R.layout.contents_list_element, proj);
         projectsList.setAdapter(listAdapter);
 
-        Log.d(Settings.TAG + " ProjectsActivity", "Setting Listener");
+        Log.d(Settings.TAG, ActivityTag + " Setting Listener");
     }
 
 
