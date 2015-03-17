@@ -110,13 +110,52 @@ public class ProjectsRequest implements ApiRequest {
                 JSONObject ref = arr.getJSONObject(i);
                 JSONObject obj = ref.getJSONObject("object");
                 String sha = obj.getString("sha");
-                refs[i] = new ProjectRef(sha);
+                String ref_name = obj.getString("ref");
+                refs[i] = new ProjectRef(sha,ref_name);
                 System.out.println(sha);
             }
         }
         catch(Exception e){}
         return refs;
     }
+
+    public ProjectRepo[] projectReposRequest(int id) throws Exception{
+        String https_url = "https://abf.rosalinux.ru/api/v1/projects/:id.json";
+        https_url=https_url.replace(":id",Integer.toString(id));
+        URL url;
+        System.out.println("URL: "+https_url);
+        HttpsURLConnection con=null;
+        try {
+            url = new URL(https_url);
+            con = (HttpsURLConnection)url.openConnection();
+            SessionImpl.setConnectionProperties(con,"GET");
+            con.connect();
+            int code = con.getResponseCode();
+            System.out.println("code:" + code);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return parseProjectReposResponse(requestContent(con));
+    }
+
+
+    private ProjectRepo[] parseProjectReposResponse(String response) throws Exception{
+        String json = response;
+        JSONObject jsonObject = new JSONObject(json);
+        JSONObject proj = (JSONObject)jsonObject.get("project");
+        JSONArray arr = proj.getJSONArray("repositories");
+        ProjectRepo[] projReps = new ProjectRepo[arr.length()];
+        for (int i = 0;i<arr.length();i++) {
+            JSONObject ref = arr.getJSONObject(i);
+            Integer id = ref.getInt("id");
+            String name = ref.getString("name");
+            projReps[i] = new ProjectRepo(id,name);
+        }
+        return projReps;
+    }
+
     // парсинг json на один проект
     private Project parseJsonResponse(String response){
         Project project;
@@ -149,6 +188,8 @@ public class ProjectsRequest implements ApiRequest {
             return null;
         }
     }
+
+
 
     /*
     Получение всех проектов

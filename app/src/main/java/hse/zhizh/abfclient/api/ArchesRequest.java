@@ -46,7 +46,7 @@ public class ArchesRequest implements ApiRequest {
         try {
             String response = sendRequest();
             JSONObject jsonObject = new JSONObject(response);
-            JSONArray jsonProjects = (JSONArray)jsonObject.get("projects");
+            JSONArray jsonProjects = (JSONArray)jsonObject.get("architectures");
             arches = new Architecture[jsonProjects.length()];
             String name="";
             int id =0;

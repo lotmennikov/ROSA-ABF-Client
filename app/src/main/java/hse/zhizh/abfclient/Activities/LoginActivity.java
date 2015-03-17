@@ -37,11 +37,14 @@ import java.util.List;
 
 import hse.zhizh.abfclient.Database.FeedProjectsDbHelper;
 import hse.zhizh.abfclient.Database.ProjectsContract;
+import hse.zhizh.abfclient.Model.Architecture;
 import hse.zhizh.abfclient.Model.BuildResponse;
 import hse.zhizh.abfclient.R;
 import hse.zhizh.abfclient.Session.Session;
 import hse.zhizh.abfclient.Session.SessionImpl;
+import hse.zhizh.abfclient.api.ArchesRequest;
 import hse.zhizh.abfclient.api.CreateBuildRequest;
+import hse.zhizh.abfclient.api.PlatformsRequest;
 import hse.zhizh.abfclient.api.ProjectsRequest;
 import hse.zhizh.abfclient.common.Settings;
 
@@ -134,12 +137,18 @@ public class LoginActivity extends ActionBarActivity {
                 //SessionImpl s = new SessionImpl("creepycheese", "ewqforce1");//"creepycheese","ewqforce1");
                 //код ответа, если 200 то ОК
                 code = s.createConnection().getResponseCode();
-                //TODO Удалить этот пример
+                //TODO Удалить этот пример BUILD LIST
+
                // CreateBuildRequest pr = new CreateBuildRequest();
                // BuildResponse resps = pr.createBuildList(118524,"f31e22b1968c795b2cf2567137102c5e512c4971","recommended",1067,376,new int[]{388},2);
                 //System.out.println(resps.getMessage());
-                //System.out.println("RESULTS OF REQUEST: " + pr.sendRequest());
-                s.requestContent(s.createConnection());
+               //System.out.println("RESULTS OF REQUEST: " + pr.sendRequest());
+                //Architecture[] ar = new ArchesRequest().getArches();
+                //System.out.println(ar.length); - Test Arches - OK
+                //System.out.println(new PlatformsRequest().listPlatforms().length); Test platforms - OK
+                //System.out.println(new ProjectsRequest().getProjectRefs(388));
+                //System.out.println(new ProjectsRequest().projectReposRequest(118524)[0].getName());
+                        s.requestContent(s.createConnection());
             } catch(Exception e){
                 e.printStackTrace();
             }

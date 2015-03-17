@@ -7,10 +7,12 @@ package hse.zhizh.abfclient.Model;
  */
 public class ProjectRef {
     private String sha;
+    private String ref;
 
-    public ProjectRef(String sha){
-        this.sha = sha;
+    public ProjectRef(String sha,String ref){
+        this.sha = sha; this.ref = ref;
     }
 
+    public String getRef() {return ref;}
     public String getSha(){ return sha;}
 }

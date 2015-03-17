@@ -77,7 +77,7 @@ public class PlatformsRequest implements ApiRequest {
     }
 
     public Platform[] listPlatforms() throws Exception{
-        return parseJsonListPlatforms(sendRequest());
+        return parseJsonListPlatforms(sendRequestPlatformsForBuild());
     }
 
     private Platform[] parseJsonListPlatforms(String response){
