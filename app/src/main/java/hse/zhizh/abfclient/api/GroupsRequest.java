@@ -37,8 +37,10 @@ public class GroupsRequest {
             System.out.println("code:" + code);
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            return null;
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
 
         return SessionImpl.requestContent(con);

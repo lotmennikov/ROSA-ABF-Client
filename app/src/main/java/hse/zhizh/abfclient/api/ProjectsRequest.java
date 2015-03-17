@@ -48,8 +48,10 @@ public class ProjectsRequest implements ApiRequest {
             System.out.println("code:" + code);
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            return null;
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
 
         return requestContent(con);
@@ -72,8 +74,10 @@ public class ProjectsRequest implements ApiRequest {
             System.out.println("code:" + code);
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            return null;
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
         return parseJsonResponse(requestContent(con));
     }
@@ -93,8 +97,10 @@ public class ProjectsRequest implements ApiRequest {
             System.out.println("code:" + code);
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            return null;
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
         return parsejsonRefsList(requestContent(con));
     }
@@ -115,7 +121,10 @@ public class ProjectsRequest implements ApiRequest {
                 System.out.println(sha);
             }
         }
-        catch(Exception e){}
+        catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
         return refs;
     }
 
@@ -198,7 +207,8 @@ public class ProjectsRequest implements ApiRequest {
         try {
             return sendRequest();
         } catch(Exception e) {
-            return "[]";
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -232,8 +242,10 @@ public class ProjectsRequest implements ApiRequest {
             System.out.println("code:" + code);
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            return null;
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
 
         return requestContent(con);
