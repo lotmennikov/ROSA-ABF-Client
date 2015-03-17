@@ -11,6 +11,7 @@
     android:descendantFocusability="blocksDescendants"
     android:focusableInTouchMode="false"
     android:paddingTop="2dp"
-    android:paddingBottom="2dp">
+    android:paddingBottom="2dp"
+    android:paddingLeft="5dp">
 
 </TextView>

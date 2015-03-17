@@ -33,10 +33,10 @@ public class ABFProjectRepos  extends ABFQuery {
     protected Boolean doInBackground(Void... params) {
         Log.d(Settings.TAG, COMMANDTAG + " Sending request...");
         try {
-            // TODO request
-//            ProjectsRequest projRequest = new ProjectsRequest();
-//            Project project = projRequest.getProject(String.valueOf(projectId));
-            if (result != null) {
+            ProjectsRequest reposRequest = new ProjectsRequest();
+            ProjectRepo[] repos = reposRequest.projectReposRequest(projectId);
+            if (repos != null) {
+                result = repos;
                 return true;
             } else {
                 return false;
