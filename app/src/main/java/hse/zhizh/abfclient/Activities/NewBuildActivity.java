@@ -2,9 +2,11 @@ package hse.zhizh.abfclient.Activities;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EdgeEffect;
 import android.widget.EditText;
@@ -56,6 +58,7 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
     // final response
     private BuildResponse buildResponse;
 
+    // queries
     private ABFPlatforms platformsQuery;
     private ABFArches archesQuery;
     private ABFProjectRefs refsQuery;
@@ -75,7 +78,9 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_build);
-        getSupportActionBar().setIcon(R.drawable.giticonabf);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.giticonabf1);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
         setTitle("Start New Build");
 
         project = Settings.currentProject;
@@ -86,6 +91,7 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
         platformsSpinner = (Spinner)findViewById(R.id.newb_platfspinner);
         archesSpinner = (Spinner)findViewById(R.id.newb_archspinner);
         updateSpinner = (Spinner)findViewById(R.id.newb_updatespinner);
+        plReposSpinner = (Spinner)findViewById(R.id.newb_platfrepospinner);
 
         projectName.setText(project.getFullname());
 
@@ -110,10 +116,8 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
         refsQuery = new ABFProjectRefs(this, project.getId());
         refsQuery.execute();
 
-//        reposQuery = new ABFProjectRepos(this, project.getId());
-//        reposQuery.execute();
-
-
+        reposQuery = new ABFProjectRepos(this, project.getId());
+        reposQuery.execute();
     }
 
     private void setArchesList() {
@@ -126,21 +130,83 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
     }
 
     private void setRefsList() {
-        String[] refsNames = new String[refs.length];
-        for (int i = 0; i <refs.length; ++i)
-            refsNames[i] = refs[i].getSha();
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.contents_list_element, refsNames);
-        arrayAdapter.setDropDownViewResource(R.layout.contents_list_element);
-        refsSpinner.setAdapter(arrayAdapter);
+        try {
+            String[] refsNames = new String[refs.length];
+            for (int i = 0; i < refs.length; ++i)
+                refsNames[i] = refs[i].getRef();
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.contents_list_element, refsNames);
+            arrayAdapter.setDropDownViewResource(R.layout.contents_list_element);
+            refsSpinner.setAdapter(arrayAdapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.contents_list_element, new String[0]);
+            refsSpinner.setAdapter(arrayAdapter);
+            Toast.makeText(getApplicationContext(),"Internal error", Toast.LENGTH_SHORT).show();
+//            this.finish();
+        }
     }
 
+    private void setReposList() {
+        try {
+            String[] reposNames = new String[repos.length];
+            for (int i = 0; i < repos.length; ++i)
+                reposNames[i] = repos[i].getName();
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.contents_list_element, reposNames);
+            arrayAdapter.setDropDownViewResource(R.layout.contents_list_element);
+            reposSpinner.setAdapter(arrayAdapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(),"Internal error", Toast.LENGTH_SHORT).show();
+//            this.finish();
+        }
+    }
+
+    // setting platform and platform repositories spinners
     private void setPlatformsList() {
-        String[] platformsNames = new String[platforms.length];
-        for (int i = 0; i < platforms.length; ++i)
-            platformsNames[i] = platforms[i].getMessage();
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.contents_list_element, platformsNames);
-        arrayAdapter.setDropDownViewResource(R.layout.contents_list_element);
-        platformsSpinner.setAdapter(arrayAdapter);
+        try {
+            // setting platform spinner
+            final String[] platformsNames = new String[platforms.length];
+            for (int i = 0; i < platforms.length; ++i)
+                platformsNames[i] = platforms[i].getMessage();
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.contents_list_element, platformsNames);
+            arrayAdapter.setDropDownViewResource(R.layout.contents_list_element);
+            platformsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    selectedPlatform = platforms[platformsSpinner.getSelectedItemPosition()];
+                    String[] plReposNames = new String[selectedPlatform.getRepos().length];
+                    for (int i = 0; i < plReposNames.length; ++i)
+                        plReposNames[i] = selectedPlatform.getRepos()[i].getName();
+
+                    ArrayAdapter<String> aAdapter = new ArrayAdapter<String>(NewBuildActivity.this, R.layout.contents_list_element, plReposNames);
+                    aAdapter.setDropDownViewResource(R.layout.contents_list_element);
+                    plReposSpinner.setAdapter(aAdapter);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    selectedPlatform = null;
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(NewBuildActivity.this, R.layout.contents_list_element, new String[0]);
+                    refsSpinner.setAdapter(arrayAdapter);
+                }
+            });
+            platformsSpinner.setAdapter(arrayAdapter);
+
+            // setting selected platform repositories spinner
+            selectedPlatform = platforms[0];
+            String[] plReposNames = new String[selectedPlatform.getRepos().length];
+            for (int i = 0; i < plReposNames.length; ++i)
+                plReposNames[i] = selectedPlatform.getRepos()[i].getName();
+
+            arrayAdapter = new ArrayAdapter<String>(this, R.layout.contents_list_element, plReposNames);
+            arrayAdapter.setDropDownViewResource(R.layout.contents_list_element);
+            plReposSpinner.setAdapter(arrayAdapter);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "Internal error", Toast.LENGTH_SHORT).show();
+//            this.finish();
+        }
     }
 
     @Override
@@ -167,8 +233,16 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
 
 
     public void onStartNewBuildClick(View v) {
-        //TODO obtain selections
-
+        try {
+            selectedPlatform = platforms[platformsSpinner.getSelectedItemPosition()];
+            selectedArchitecture = arches[archesSpinner.getSelectedItemPosition()];
+            selectedProjectRepo = repos[reposSpinner.getSelectedItemPosition()];
+            selectedRef = refs[refsSpinner.getSelectedItemPosition()];
+            selectedPlRepo = selectedPlatform.getRepos()[plReposSpinner.getSelectedItemPosition()];
+            updateType = updateTypes[updateSpinner.getSelectedItemPosition()];
+        } catch (Exception e) {
+            Log.d(Settings.TAG, "Something is not selected");
+        }
         // TODO start build
         if (selectedArchitecture != null &&
             selectedPlatform != null &&
@@ -231,6 +305,7 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
                 // TODO
                 if (success) {
                     repos = reposQuery.result;
+                    setReposList();
                     Toast.makeText(this, "ProjectRepos were received", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "ProjectRepos were not received", Toast.LENGTH_SHORT).show();

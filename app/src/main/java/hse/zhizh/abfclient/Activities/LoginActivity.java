@@ -105,7 +105,7 @@ public class LoginActivity extends ActionBarActivity {
         if (username.equals("")) { username = "lotmen"; password = "fab688"; }
         // --
 
-        Log.d(Settings.TAG + " LoginActivity", "Login Attempt");
+        Log.d(Settings.TAG, "LoginActivity" + " Login Attempt");
 
         mAuthTask = new UserLoginTask(username, password);
         mAuthTask.execute((Void) null);
@@ -166,21 +166,24 @@ public class LoginActivity extends ActionBarActivity {
             Toast toast = Toast.makeText(context, "code:" + f_code, duration);
             toast.show();
             if (success) {
-                Log.d(Settings.TAG + " LoginActivity", "Login Success");
-                Intent login_result = new Intent();
+                Log.d(Settings.TAG," LoginActivity" + " Login Success");
+
+                Intent projects_intent = new Intent(LoginActivity.this, ProjectsActivity.class);
+                startActivityForResult(projects_intent, 1);
+                /*Intent login_result = new Intent();
                 login_result.putExtra("Username", mUsername);
                 login_result.putExtra("Password", mPassword);
                 setResult(RESULT_OK, login_result);
 
                 Settings.authSuccess(getApplicationContext(), mUsername, mPassword, true);
 
-                finish();
+                finish();*/
 
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
 
-                Log.d(Settings.TAG + " LoginActivity", "Login Fail");
+                Log.d(Settings.TAG, "LoginActivity" + " Login Fail");
             }
         }
 
@@ -188,6 +191,11 @@ public class LoginActivity extends ActionBarActivity {
         protected void onCancelled() {
             mAuthTask = null;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int rcode, int rescode, Intent res_intent) {
+        this.finish(); // just finish
     }
 
 }

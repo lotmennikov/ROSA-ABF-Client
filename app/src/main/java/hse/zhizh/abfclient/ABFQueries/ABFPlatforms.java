@@ -30,13 +30,11 @@ public class ABFPlatforms extends ABFQuery {
     protected Boolean doInBackground(Void... params) {
         Log.d(Settings.TAG, COMMANDTAG + " Sending request...");
         try {
-
-        // TODO request
-//            result = new ProjectsRequest().getProjectByOwnerAndName(groupName, projectName);
             PlatformsRequest plReq = new PlatformsRequest();
             Platform[] platforms = plReq.listPlatforms();
 
-            if (result != null) {
+            if (platforms != null) {
+                result = platforms;
                 return true;
             } else {
                 return false;

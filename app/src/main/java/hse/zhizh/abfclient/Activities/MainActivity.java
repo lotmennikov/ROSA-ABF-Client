@@ -59,8 +59,9 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onActivityResult(int rcode, int rescode, Intent res_intent) {
+        this.finish(); // just exit
         if (res_intent != null) {
-            String usr = res_intent.getStringExtra("Username");
+/*            String usr = res_intent.getStringExtra("Username");
             String pwd = res_intent.getStringExtra("Password");
             TextView usr_lab = (TextView)findViewById(R.id.username_label);
             TextView pass_lab = (TextView)findViewById(R.id.password_label);
@@ -68,7 +69,7 @@ public class MainActivity extends ActionBarActivity {
             pass_lab.setText(pwd);
 
             // перейти к проектам
-            onProjectsButtonClick(null);
+            onProjectsButtonClick(null);*/
         }
     }
 
