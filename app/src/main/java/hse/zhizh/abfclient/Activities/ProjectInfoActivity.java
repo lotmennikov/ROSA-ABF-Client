@@ -70,6 +70,7 @@ import hse.zhizh.abfclient.common.Settings;
 public class ProjectInfoActivity extends ActionBarActivity implements CommandResultListener, ActionBar.TabListener {
 // activity request code
     static final int REQUEST_FILENAME = 1;
+    static final int REQUEST_NEWBUILD = 2;
     static final String ActivityTag = "ProjectInfoActivity";
 // project info
     Project project;
@@ -96,6 +97,8 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
 
 // dialog item
     private EditText addbin_fileedit;
+
+    boolean refreshBuildMessage = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -415,7 +418,14 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
     public void onNewBuildButtonClick(View v) {
         Toast.makeText(getApplicationContext(), "New Build", Toast.LENGTH_SHORT).show();
         Intent newbuildIntent = new Intent(ProjectInfoActivity.this, NewBuildActivity.class);
-        startActivity(newbuildIntent);
+        startActivityForResult(newbuildIntent, REQUEST_NEWBUILD);
+    }
+
+
+    public void onRefreshBuildsClick(View v) {
+        Log.d(Settings.TAG, "ProjectInfoActivity: Refresh Click");
+        refreshBuildMessage = true;
+        getBuilds();
     }
 
     // если вклалка не обрабатывает, можно закрывать
@@ -427,7 +437,6 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
 
 
 // Команды с асинхронным выполнением
-    // TODO Вставить ветки, гитовые команды
     @Override
     public void onCommandExecuted(int commandID, boolean success) {
         switch (commandID) {
@@ -504,6 +513,10 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
             case ABFQuery.BUILDS_QUERY:
                 if (success) {
                     builds = ((ABFBuilds)abfQuery).builds;
+                    if (refreshBuildMessage) {
+                        refreshBuildMessage = false;
+                        Toast.makeText(this.getApplicationContext(), "Builds refreshed", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     builds = null;
                     Toast.makeText(this.getApplicationContext(), "No builds!", Toast.LENGTH_SHORT).show();
@@ -585,6 +598,9 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
                     String filename = res_intent.getStringExtra("Filename");
                     addbin_fileedit.setText(filename);
                 }
+            }
+            if (rescode == RESULT_OK && rcode == REQUEST_NEWBUILD) {
+                getBuilds();
             }
         }
     }

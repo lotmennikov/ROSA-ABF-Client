@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import hse.zhizh.abfclient.Model.Build;
@@ -34,6 +35,9 @@ public class BuildsFragment extends Fragment implements ProjectActivityEventList
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(R.layout.fragment_builds, container, false);
         buildList = (ListView)fragmentView.findViewById(R.id.buildList);
+        // настройка кнопки
+        Button refreshButton = (Button)this.getActivity().getLayoutInflater().inflate(R.layout.item_buildlistfooter, null);
+        buildList.addFooterView(refreshButton);
 
         setBuildsList();
         return fragmentView;
@@ -57,6 +61,7 @@ public class BuildsFragment extends Fragment implements ProjectActivityEventList
             }
             Log.d(Settings.TAG + " BuildsFrag", "Setting Adapter");
             ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(this.getActivity(), R.layout.contents_list_element, blds);
+
             buildList.setAdapter(listAdapter);
         }
     }

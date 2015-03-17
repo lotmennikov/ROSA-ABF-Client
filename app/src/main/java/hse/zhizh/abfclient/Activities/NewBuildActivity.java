@@ -1,5 +1,6 @@
 package hse.zhizh.abfclient.Activities;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -45,7 +46,7 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
     private ProjectRef[] refs;
     private ProjectRepo[] repos;
 
-    private String[] updateTypes = new String[]{ "recommended", "bugfix" };
+    private String[] updateTypes = new String[]{ "recommended", "bugfix", "security", "enhancement", "newpackage" };
 
     // selection results
     private Platform selectedPlatform;
@@ -95,12 +96,17 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
 
         projectName.setText(project.getFullname());
 
+        // update spinner
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.contents_list_element, updateTypes);
         arrayAdapter.setDropDownViewResource(R.layout.contents_list_element);
         updateSpinner.setAdapter(arrayAdapter);
+
+        // empty spinners
+        arrayAdapter = new ArrayAdapter<String>(this, R.layout.contents_list_element, new String[0]);
         archesSpinner.setAdapter(arrayAdapter);
         reposSpinner.setAdapter(arrayAdapter);
         platformsSpinner.setAdapter(arrayAdapter);
+        plReposSpinner.setAdapter(arrayAdapter);
         refsSpinner.setAdapter(arrayAdapter);
 
         sendAPIRequests();
@@ -234,12 +240,20 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
 
     public void onStartNewBuildClick(View v) {
         try {
-            selectedPlatform = platforms[platformsSpinner.getSelectedItemPosition()];
-            selectedArchitecture = arches[archesSpinner.getSelectedItemPosition()];
-            selectedProjectRepo = repos[reposSpinner.getSelectedItemPosition()];
-            selectedRef = refs[refsSpinner.getSelectedItemPosition()];
-            selectedPlRepo = selectedPlatform.getRepos()[plReposSpinner.getSelectedItemPosition()];
-            updateType = updateTypes[updateSpinner.getSelectedItemPosition()];
+            int platformInd = platformsSpinner.getSelectedItemPosition();
+            int plreposInd = plReposSpinner.getSelectedItemPosition();
+            int refsInd = refsSpinner.getSelectedItemPosition();
+            int reposInd = reposSpinner.getSelectedItemPosition();
+            int archesInd = archesSpinner.getSelectedItemPosition();
+            int updateInd = updateSpinner.getSelectedItemPosition();
+            if (platformInd >= 0 && plreposInd>=0 && refsInd>=0 && reposInd >=0 && archesInd >=0 && updateInd >= 0) {
+                selectedPlatform = platforms[platformInd];
+                selectedArchitecture = arches[archesInd];
+                selectedProjectRepo = repos[reposInd];
+                selectedRef = refs[refsInd];
+                selectedPlRepo = selectedPlatform.getRepos()[plreposInd];
+                updateType = updateTypes[updateInd];
+            }
         } catch (Exception e) {
             Log.d(Settings.TAG, "Something is not selected");
         }
@@ -248,21 +262,32 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
             selectedPlatform != null &&
             selectedPlRepo != null &&
             selectedProjectRepo != null &&
-            project != null) {
-/*
+            selectedRef != null &&
+            project != null &&
+            updateType != null) {
+
+            Log.d(Settings.TAG, "New Build:" +
+                              "\nArchitecture:" + selectedArchitecture.getName() +
+                              "\nPlatform: " + selectedPlatform.getMessage() +
+                              "\nPlatformRepo: " + selectedPlRepo.getName() +
+                              "\nProjectRepo: " + selectedProjectRepo.getName() +
+                              "\nProjectRef: " + selectedRef.getRef() +
+                              "\nUpdateType: " + selectedPlatform.getMessage()
+            );
+
             newBuildQuery = new ABFNewBuild(this,
                                             project.getId(),
                                             selectedRef.getSha(),
                                             updateType,
                                             selectedProjectRepo.getId(),
                                             selectedPlatform.getId(),
-                                            new int[] { selectedProjectRepo.getId() },
+                                            new int[] { selectedPlRepo.getId() },
                                             selectedArchitecture.getId());
 
             newBuildQuery.execute();
-*/
+
+            Toast.makeText(this, "Sending Build Request...", Toast.LENGTH_SHORT).show();
         }
-        this.finish();
     }
 
 
@@ -312,7 +337,19 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
                 }
                 break;
             case ABFQuery.NEWBUILD_QUERY:
-                // TODO process response
+                Intent resultIntent = new Intent();
+                if (success) {
+                    // TODO Replace with dialog
+                    Toast.makeText(getApplicationContext(), "BuildID: " + newBuildQuery.result.getBuildId() + "\n"
+                                                                        + newBuildQuery.result.getMessage(),
+                                                                        Toast.LENGTH_LONG).show();
+                    setResult(RESULT_OK, resultIntent);
+                    this.finish();
+                } else {
+                    Toast.makeText(getApplicationContext(), "BuildRequest Failed", Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK, resultIntent);
+                    this.finish();
+                }
                 break;
             default:
                 break;

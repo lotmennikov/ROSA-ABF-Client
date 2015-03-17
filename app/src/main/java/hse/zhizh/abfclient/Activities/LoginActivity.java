@@ -167,6 +167,7 @@ public class LoginActivity extends ActionBarActivity {
             toast.show();
             if (success) {
                 Log.d(Settings.TAG," LoginActivity" + " Login Success");
+                Settings.authSuccess(getApplicationContext(), mUsername, mPassword, true);
 
                 Intent projects_intent = new Intent(LoginActivity.this, ProjectsActivity.class);
                 startActivityForResult(projects_intent, 1);
@@ -175,7 +176,6 @@ public class LoginActivity extends ActionBarActivity {
                 login_result.putExtra("Password", mPassword);
                 setResult(RESULT_OK, login_result);
 
-                Settings.authSuccess(getApplicationContext(), mUsername, mPassword, true);
 
                 finish();*/
 
