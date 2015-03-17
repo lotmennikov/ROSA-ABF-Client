@@ -116,7 +116,7 @@ public class ProjectsRequest implements ApiRequest {
                 JSONObject ref = arr.getJSONObject(i);
                 JSONObject obj = ref.getJSONObject("object");
                 String sha = obj.getString("sha");
-                String ref_name = obj.getString("ref");
+                String ref_name = ref.getString("ref");
                 refs[i] = new ProjectRef(sha,ref_name);
                 System.out.println(sha);
             }
