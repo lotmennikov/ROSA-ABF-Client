@@ -15,7 +15,6 @@ public class BuildResponse {
     public int getBuildId() {
         return buildId;
     }
-    public String getUrl(){ return "https://abf.io/build_lists/" + buildId; }
     public String getMessage() {
         return message;
     }
