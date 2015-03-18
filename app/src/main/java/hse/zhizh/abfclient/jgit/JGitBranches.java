@@ -154,7 +154,7 @@ public class JGitBranches {
         }
         for (Iterator<RevCommit> iterator = walk.iterator(); iterator.hasNext();) {
             RevCommit rev = iterator.next();
-            commits.add(new Commit(rev.getCommitterIdent().getName(), rev.getName(), rev.getCommitterIdent().getWhen(), false));
+            commits.add(new Commit(rev.getFullMessage(), rev.getName(), rev.getCommitterIdent().getName(), rev.getCommitterIdent().getWhen(), false));
          /*   System.out.println(rev.getCommitterIdent().getName());
             System.out.println(rev.getFullMessage());
             Date d = rev.getCommitterIdent().getWhen();*/
@@ -167,7 +167,7 @@ public class JGitBranches {
         }
         for (Iterator<RevCommit> iterator = walk.iterator(); iterator.hasNext();) {
             RevCommit rev = iterator.next();
-            commits.add(new Commit(rev.getCommitterIdent().getName(), rev.getName(), rev.getCommitterIdent().getWhen(), true));
+            commits.add(new Commit(rev.getFullMessage(), rev.getName(), rev.getCommitterIdent().getName(), rev.getCommitterIdent().getWhen(), true));
           /*  System.out.println(rev.getCommitterIdent().getName());
             System.out.println(rev.getFullMessage());
             Date d = rev.getCommitterIdent().getWhen();*/

@@ -1,13 +1,23 @@
 package hse.zhizh.abfclient.jgit;
 
-import org.apache.commons.codec.binary.Base64;
+//import org.apache.commons.codec.binary.Base64;
+import android.util.Base64;
+
+//import org.apache.http.HttpEntity;
+//import org.apache.http.HttpResponse;
+//import org.apache.http.client.HttpClient;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
@@ -23,12 +33,14 @@ import hse.zhizh.abfclient.common.Settings;
  * Created by Administrator on 3/7/2015.
  */
 public class Upload_abf_yml {
-    Repository repository;
+    private Repository repository;
+    private int statusCode;
     public Upload_abf_yml(Repository repository) {
         this.repository = repository;
     }
 
-    public boolean upload_abf_yml(File fileToUpload) {
+
+    public int upload_abf_yml(File fileToUpload) {
 
          /*   String urlToConnect = "http://file-store.rosalinux.ru/api/v1/upload";
         File fileToUpload = new File("C:/test2.txt");
@@ -87,15 +99,26 @@ public class Upload_abf_yml {
         }
         System.out.println(responseCode); // Should be 200*/
 
+        //HttpClient client = new DefaultHttpClient();
         CloseableHttpClient httpclient = HttpClients.createDefault();
+        InputStreamEntity reqEntity = null;
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         builder.addPart("file", new FileBody(fileToUpload));
+       /* try {
+            reqEntity = new InputStreamEntity(
+                    new FileInputStream(fileToUpload), -1);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        reqEntity.setContentType("binary/octet-stream");
+        reqEntity.setChunked(true); // Send in multiple parts if needed*/
         HttpPost request = new HttpPost("http://file-store.rosalinux.ru/api/v1/upload");
         request.setEntity(builder.build());
-        String encoding = new Base64().encodeAsString(new String(Settings.repo_username + ":" + Settings.repo_password).getBytes());
+        String encoding = Base64.encodeToString(new String(Settings.repo_username + ":" + Settings.repo_password).getBytes(), Base64.NO_WRAP);
         request.setHeader("Authorization", encoding);
         CloseableHttpResponse response2 = null;
+        Header[] headers = request.getAllHeaders();
         try {
             response2 = httpclient.execute(request);
         } catch (IOException e) {
@@ -119,6 +142,7 @@ public class Upload_abf_yml {
                 hash = ((JSONArray)json.get("sha1_hash")).getString(0);
                 hash = hash.substring(1, hash.indexOf('\'', 1));
             } else if (response2.getStatusLine().getStatusCode() == 201) {
+                statusCode = 201;
                 System.out.println("File uploaded successfully!");
                 hash = json.getString("sha1_hash");
                 File abf_yml_file = new File(repository.getDir().toString() +"/.abf.yml");
@@ -135,25 +159,26 @@ public class Upload_abf_yml {
                 bw.write("  \"" + fileToUpload.getName() + "\": " + hash);
                 bw.close();
             } else {
+                statusCode = response2.getStatusLine().getStatusCode();
                 System.out.println("Unknown response code!");
+                return -1;
             }
 //TODO где этот метод лежит??
 //            EntityUtils.consume(entity2);
 
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
+            return -1;
         } catch (JSONException e) {
             e.printStackTrace();
-            return false;
+            return -1;
         } finally {
-            try {
-                response2.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
+        try {
+            response2.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return true;
+    }
+        return statusCode;
     }
 }
