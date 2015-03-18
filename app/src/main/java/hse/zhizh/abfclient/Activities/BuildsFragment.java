@@ -60,7 +60,7 @@ public class BuildsFragment extends Fragment implements ProjectActivityEventList
                 blds = new String[0];
             }
             Log.d(Settings.TAG + " BuildsFrag", "Setting Adapter");
-            ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(this.getActivity(), R.layout.contents_list_element, blds);
+            ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(this.getActivity(), R.layout.item_buildlist, blds);
 
             buildList.setAdapter(listAdapter);
         }
