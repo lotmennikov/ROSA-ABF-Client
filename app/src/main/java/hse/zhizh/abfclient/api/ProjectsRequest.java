@@ -202,8 +202,9 @@ public class ProjectsRequest implements ApiRequest {
             String pname = proj.getString("name");
             String pfullname = proj.getString("fullname");
             String pgiturl = proj.getString("git_url");
-            if(pgiturl.contains("@")){
-
+            if(!pgiturl.contains("@")){
+                System.out.println("replacing");
+                pgiturl=pgiturl.replace("abf.",Settings.repo_username+"@abf.");
             }
             String pdescription = "";
             int powner = proj.getJSONObject("owner").getInt("id");
