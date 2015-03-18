@@ -45,8 +45,8 @@ public class CommitsFragment extends Fragment implements ProjectActivityEventLis
                 comms = new String[commits.length];
                 String newtext;
                 for (int i = 0; i < comms.length; ++i) {
-                    newtext = commits[i].getHash() + (commits[i].isPushed() ? "" : " (not pushed)") + "\n"
-                            + commits[i].getName() + "\n"
+                    newtext = commits[i].getName() + (commits[i].isPushed() ? "" : "\n (not pushed)") + "\n"
+                            + commits[i].getCommitter() + "\n"
                             + Settings.commitDate.format(commits[i].getDate());
                     comms[i] = newtext;
                 }
@@ -54,7 +54,7 @@ public class CommitsFragment extends Fragment implements ProjectActivityEventLis
             } else {
                 comms = new String[0];
             }
-            Log.d(Settings.TAG + " CommitsFragment", "Setting Adapter");
+            Log.d(Settings.TAG, "CommitsFragment" + "Setting Adapter");
             ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(this.getActivity(), R.layout.contents_list_element, comms);
             commitsList.setAdapter(listAdapter);
         }
