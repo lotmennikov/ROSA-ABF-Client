@@ -13,6 +13,7 @@ import hse.zhizh.abfclient.Model.Project;
 import hse.zhizh.abfclient.Model.ProjectRef;
 import hse.zhizh.abfclient.Model.ProjectRepo;
 import hse.zhizh.abfclient.Session.SessionImpl;
+import hse.zhizh.abfclient.common.Settings;
 
 import static hse.zhizh.abfclient.Session.SessionImpl.requestContent;
 
@@ -92,7 +93,7 @@ public class ProjectsRequest implements ApiRequest {
         try {
             url = new URL(https_url);
             con = (HttpsURLConnection)url.openConnection();
-            SessionImpl.setConnectionProperties(con,"GET");
+            new SessionImpl(Settings.repo_username,Settings.repo_password).setConnectionProperties(con, "GET");
             con.connect();
             int code = con.getResponseCode();
             System.out.println("code:" + code);
@@ -201,6 +202,9 @@ public class ProjectsRequest implements ApiRequest {
             String pname = proj.getString("name");
             String pfullname = proj.getString("fullname");
             String pgiturl = proj.getString("git_url");
+            if(pgiturl.contains("@")){
+
+            }
             String pdescription = "";
             int powner = proj.getJSONObject("owner").getInt("id");
             project = new Project(pid,pname, pfullname, pgiturl, pdescription, powner);
