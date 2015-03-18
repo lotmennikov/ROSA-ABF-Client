@@ -1,32 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="#ffbeeacf">
-
-    <GridLayout
+    android:background="#ffbeeacf"
+    android:gravity="top|left">
+    <EditText
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/editFileText"
+        android:layout_margin="5dp"
+        android:text="text"
+        android:gravity="top|left" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Edit"
-            android:id="@+id/buttonEditSave"
-            android:layout_row="0"
-            android:layout_column="0"
-            android:layout_gravity="right"
-            android:layout_margin="5dp" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inputType="textMultiLine"
-            android:ems="10"
-            android:id="@+id/editFileText"
-            android:gravity="top|left"
-            android:layout_row="1"
-            android:layout_column="0"
-            android:text="la la la "
-            android:layout_margin="5dp"/>
-    </GridLayout>
 </LinearLayout>
