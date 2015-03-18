@@ -15,7 +15,6 @@ public class BuildResponse {
     public int getBuildId() {
         return buildId;
     }
-
     public String getMessage() {
         return message;
     }

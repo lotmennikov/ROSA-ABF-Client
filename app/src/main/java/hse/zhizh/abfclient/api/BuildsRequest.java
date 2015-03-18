@@ -33,7 +33,7 @@ public class BuildsRequest implements ApiRequest {
                 build_id = proj.getInt("id");
                 status = proj.getInt("status");
                 project_id = proj.getInt("project_id");
-                url = proj.getString("url");
+                url = "https://abf.io/build_lists/" + build_id;
                 builds[i] = new Build(build_id, project_id, status, url);
             }
 

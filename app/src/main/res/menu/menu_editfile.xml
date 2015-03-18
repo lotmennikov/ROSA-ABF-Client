@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="hse.zhizh.abfclient.Activities.EditFileActivity">
+    <item android:id="@+id/action_editwithapp"
+          android:title="Other app"
+          android:icon = "@android:drawable/ic_menu_agenda"
+          android:orderInCategory="100"
+          app:showAsAction="always"/>
+    <item android:id="@+id/action_editfile"
+          android:title="Edit"
+          android:icon = "@android:drawable/ic_menu_edit"
+          android:orderInCategory="100"
+          app:showAsAction="always"/>
+</menu>

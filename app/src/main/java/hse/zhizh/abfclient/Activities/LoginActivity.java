@@ -9,6 +9,7 @@ import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -133,26 +134,27 @@ public class LoginActivity extends ActionBarActivity {
         }
 
         @Override
+        protected void onPreExecute() {
+            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    mAuthTask.cancel(true);
+                    dialog.dismiss();
+                    Log.d(Settings.TAG, "LoginActivity:" + " login cancelled");
+                }
+            });
+        }
+
+        @Override
         protected Boolean doInBackground(Void... params) {
             int code=0;
             try {
                 //создание сессии и получение кода ответа при попытке создать соединение
-                SessionImpl s = new SessionImpl(mUsername, mPassword);//"creepycheese","ewqforce1")
-                //SessionImpl s = new SessionImpl("creepycheese", "ewqforce1");//"creepycheese","ewqforce1");
+                SessionImpl s = new SessionImpl(mUsername, mPassword);
+
                 //код ответа, если 200 то ОК
                 code = s.createConnection().getResponseCode();
-                //TODO Удалить этот пример BUILD LIST
-
-               // CreateBuildRequest pr = new CreateBuildRequest();
-               // BuildResponse resps = pr.createBuildList(118524,"f31e22b1968c795b2cf2567137102c5e512c4971","recommended",1067,376,new int[]{388},2);
-                //System.out.println(resps.getMessage());
-               //System.out.println("RESULTS OF REQUEST: " + pr.sendRequest());
-                //Architecture[] ar = new ArchesRequest().getArches();
-                //System.out.println(ar.length); - Test Arches - OK
-                //System.out.println(new PlatformsRequest().listPlatforms().length); Test platforms - OK
-                //System.out.println(new ProjectsRequest().getProjectRefs(388));
-                //System.out.println(new ProjectsRequest().projectReposRequest(118524)[0].getName());
-                        s.requestContent(s.createConnection());
+                //s.requestContent(s.createConnection());
             } catch(Exception e){
                 e.printStackTrace();
             }
@@ -166,7 +168,6 @@ public class LoginActivity extends ActionBarActivity {
             progressDialog.dismiss();
             mAuthTask = null;
             Context context = getApplicationContext();
-            CharSequence text = "Hello toast!";
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(context, "code:" + f_code, duration);
             toast.show();
@@ -176,13 +177,6 @@ public class LoginActivity extends ActionBarActivity {
 
                 Intent projects_intent = new Intent(LoginActivity.this, ProjectsActivity.class);
                 startActivityForResult(projects_intent, 1);
-                /*Intent login_result = new Intent();
-                login_result.putExtra("Username", mUsername);
-                login_result.putExtra("Password", mPassword);
-                setResult(RESULT_OK, login_result);
-
-
-                finish();*/
 
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
@@ -198,6 +192,7 @@ public class LoginActivity extends ActionBarActivity {
             mAuthTask = null;
         }
     }
+
 
     @Override
     protected void onActivityResult(int rcode, int rescode, Intent res_intent) {

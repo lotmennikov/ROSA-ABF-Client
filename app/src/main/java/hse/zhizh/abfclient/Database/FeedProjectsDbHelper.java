@@ -83,6 +83,21 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
         return new String[]{str.substring(0, str.length()-1)};
     }
 
+
+    /*
+    Есть-ли проект с данным id в базе
+     */
+    public boolean checkIfExists(int id)
+    {
+        String sql = "SELECT * FROM mash WHERE projectd_id = '" + id + "'";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor data = db.rawQuery(sql, null);
+        if (data.moveToFirst()) {
+           return true;
+        } else {
+            return false;
+        }
+    }
     //ids=new String[] {"2,3"} as example
     public HashMap<Integer,Project> readProjectsWithIds(int[] int_ids){
         String[] ids = toStringArrConverterHelper(int_ids);

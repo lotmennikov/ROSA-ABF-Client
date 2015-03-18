@@ -67,6 +67,12 @@
             android:label="@string/title_activity_file_chooser"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name=".Activities.EditFileActivity"
+            android:label="@string/title_activity_edit_file"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>
