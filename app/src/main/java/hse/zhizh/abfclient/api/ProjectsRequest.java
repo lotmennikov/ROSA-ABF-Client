@@ -58,6 +58,30 @@ public class ProjectsRequest implements ApiRequest {
     }
 
 
+    /*
+    Проверка проекта на существование
+     */
+    public boolean isProjectExist(int id) throws Exception{
+        String https_url = "https://abf.rosalinux.ru/api/v1/projects/:id.json";
+        https_url=https_url.replace(":id",Integer.toString(id));
+        URL url;
+        System.out.println("URL: "+https_url);
+        HttpsURLConnection con=null;
+        try {
+            url = new URL(https_url);
+            con = (HttpsURLConnection)url.openConnection();
+            SessionImpl.setConnectionProperties(con,"GET");
+            con.connect();
+            int code = con.getResponseCode();
+            System.out.println("code:" + code);
+            return code == 200;
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+       return false;
+    }
 
     public Project getProjectByOwnerAndName(String owner, String name) throws Exception{
         String https_url = "https://abf.rosalinux.ru/api/v1/projects/get_id.json?name=:name&owner=:owner";
