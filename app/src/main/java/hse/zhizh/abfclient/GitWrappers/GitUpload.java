@@ -19,10 +19,12 @@ public class GitUpload extends GitCommand {
     private final Repository mRepo;
     private final CommandResultListener activity;
     private final File binFile;
+    public String result;
 
     public GitUpload(Repository rep, CommandResultListener activ, File binFile) {
         mRepo = rep;
         activity = activ;
+        result = "";
         this.binFile = binFile;
     }
 
@@ -32,8 +34,13 @@ public class GitUpload extends GitCommand {
         Log.d(Settings.TAG + COMMANDTAG, "procedure begin...");
         try {
             Upload_abf_yml uploadAbf = new Upload_abf_yml(mRepo);
+            int rescode = uploadAbf.upload_abf_yml(binFile);
+            if (rescode != -1) {
+                if (rescode == 422)
+                    result = "File has already been in filestore";
+                else
+                    result = "Uploaded";
 
-            if (uploadAbf.upload_abf_yml(binFile)) {
                 Log.d(Settings.TAG + COMMANDTAG, "procedure ends with no exception...");
                 return true;
             } else

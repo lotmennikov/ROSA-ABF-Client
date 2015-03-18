@@ -466,7 +466,8 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
                 break;
             case GitCommand.UPLOAD_COMMAND:
                 if (success) {
-                    Toast tst = Toast.makeText(this.getApplicationContext(), "File was uploaded", Toast.LENGTH_SHORT);
+                    String message = ((GitUpload)gitCommand).result;
+                    Toast tst = Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_SHORT);
                     tst.show();
                 } else {
                     Toast tst = Toast.makeText(this.getApplicationContext(), "Failed to upload file", Toast.LENGTH_SHORT);
