@@ -2,6 +2,7 @@ package hse.zhizh.abfclient.Activities;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
@@ -41,7 +42,6 @@ import hse.zhizh.abfclient.common.Settings;
  * Добавление и клонирование нового проекта
  * Удаление репозитория проекта с устройства
  *
- * TODO упорядочить базу, внешний вид
  *
  */
 public class ProjectsActivity extends ActionBarActivity implements CommandResultListener {
@@ -57,6 +57,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
     AlertDialog initDialog;
     AlertDialog deleteDialog;
     AlertDialog retryCloneDialog;
+    ProgressDialog progressDialog;
 
     Dialog addProjectDialog;
     EditText addpGroup;
@@ -120,6 +121,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
         initAddProjectDialog();
         initDeleteDialog();
         initRetryDialog();
+        progressDialog = new ProgressDialog(this);
 
         getDatabaseProjects();
     }
@@ -147,8 +149,10 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
                 // clone
                 cloneCommand = new GitClone(Settings.currentProject.getRepo(), ProjectsActivity.this);
                 cloneCommand.execute();
+                progressDialog.setTitle("Cloning project...");
+                if (!progressDialog.isShowing()) progressDialog.show();
                 // ждём клонирования
-                // TODO показать крутяшку
+
             }
         });
         initDialog = blder.create();
@@ -170,15 +174,19 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
             @Override
             public void onClick(View v) {
                 // TODO Clone только здесь
+                String groupName = addpGroup.getText().toString();
+                String projectName = addpProject.getText().toString();
                 if (abfQuery == null) {
                     abfQuery = new ABFProjectID(ProjectsActivity.this,
-                            addpProject.getText().toString(),
-                            addpGroup.getText().toString());
+                            projectName,
+                            groupName);
                     abfQuery.execute();
+                    progressDialog.setTitle("Retrieving project info...");
+                    if (!progressDialog.isShowing()) progressDialog.show();
                 } else
                     Toast.makeText(getApplicationContext(), "AbfQuery not finished", Toast.LENGTH_SHORT).show();
 
-                Toast.makeText(getApplicationContext(), "Clone Click", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Clone Project:" + groupName + "/" + projectName, Toast.LENGTH_SHORT).show();
                 addProjectDialog.dismiss();
             }
         });
@@ -240,18 +248,19 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
                 // запуск клонирования
                 cloneCommand = new GitClone(Settings.currentProject.getRepo(), ProjectsActivity.this);
                 cloneCommand.execute();
-                // TODO показать крутяшку
+                progressDialog.setTitle("Cloning project...");
+                if (!progressDialog.isShowing()) progressDialog.show();
             }
         });
         retryCloneDialog = blder.create();
     }
 
-        // локальный инит - только если в базе
+    // локальный инит - только если в базе
     private boolean InitCurrentProjectRepository() {
         GitInit initCommand = new GitInit(Settings.currentProject.getRepo());
         if (initCommand.execute()) { // норм
             Settings.currentProject.init();
-            Toast.makeText(getApplicationContext(), "Init", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), "Init", Toast.LENGTH_SHORT).show();
             return true;
         } else {
             Toast.makeText(getApplicationContext(), "Init Failed", Toast.LENGTH_SHORT).show();
@@ -267,7 +276,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
 
     // добавление проекта в базу
     public void AddCurrentProjectToDB() {
-        Toast.makeText(getApplicationContext(), "Adding project to DB - " + Settings.currentProject.getName(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(), "Adding project to DB - " + Settings.currentProject.getName(), Toast.LENGTH_SHORT).show();
         Settings.currentProject.setLocal(true);
         FeedProjectsDbHelper helper = new FeedProjectsDbHelper(this.getApplicationContext());
         helper.addProject(Settings.currentProject);
@@ -324,6 +333,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
 // ************ JGIt ***************
                 // клонирование
                 case GitCommand.CLONE_COMMAND:
+                    progressDialog.dismiss();
                     if (success) {
                         Settings.currentProject.init(); // set initialized to true
                         Toast tst = Toast.makeText(this.getApplicationContext(), "Cloned", Toast.LENGTH_SHORT);
@@ -367,12 +377,14 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
                         // запуск клонирования
                         cloneCommand = new GitClone(Settings.currentProject.getRepo(), ProjectsActivity.this);
                         cloneCommand.execute();
-                        // TODO показать крутяшку
+                        progressDialog.setTitle("Cloning project...");
+                        if (!progressDialog.isShowing()) progressDialog.show();
 
 
                         Toast tst = Toast.makeText(this.getApplicationContext(), "Cloning ProjectID: " + Settings.currentProject.getId(), Toast.LENGTH_SHORT);
                         tst.show();
                     } else {
+                        progressDialog.dismiss();
                         Toast tst = Toast.makeText(this.getApplicationContext(), "GetProjectID Failed", Toast.LENGTH_SHORT);
                         tst.show();
                     }

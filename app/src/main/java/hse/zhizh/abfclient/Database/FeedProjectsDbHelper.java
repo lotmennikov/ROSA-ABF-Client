@@ -23,11 +23,11 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + ProjectsContract.FeedProjects.TABLE_NAME + " (" +
                     ProjectsContract.FeedProjects._ID + " INTEGER PRIMARY KEY," +
                     ProjectsContract.FeedProjects.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
-                    ProjectsContract.FeedProjects.COLUMN_NAME_PROJECT_ID + "INTEGER" + COMMA_SEP +
+                    ProjectsContract.FeedProjects.COLUMN_NAME_PROJECT_ID + " INTEGER" + COMMA_SEP +
                     ProjectsContract.FeedProjects.COLUMN_NAME_DESCRIPTION +  TEXT_TYPE + COMMA_SEP +
                     ProjectsContract.FeedProjects.COLUMN_NAME_FULLNAME + TEXT_TYPE + COMMA_SEP +
                     ProjectsContract.FeedProjects.COLUMN_NAME_GIT_URL + TEXT_TYPE + COMMA_SEP +
-                    ProjectsContract.FeedProjects.COLUMN_NAME_OWNER_ID + "INTEGER"+COMMA_SEP+
+                    ProjectsContract.FeedProjects.COLUMN_NAME_OWNER_ID + " INTEGER" + COMMA_SEP+
                     ProjectsContract.FeedProjects.COLUMN_NAME_IS_LOCAL + " BOOLEAN "+ ")";
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + ProjectsContract.FeedProjects.TABLE_NAME;

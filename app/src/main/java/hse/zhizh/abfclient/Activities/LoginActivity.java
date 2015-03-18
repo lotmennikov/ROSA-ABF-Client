@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.CursorLoader;
@@ -63,6 +64,7 @@ public class LoginActivity extends ActionBarActivity {
     EditText mPasswordView;
     View mLoginFormView;
     View mProgressView;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +93,8 @@ public class LoginActivity extends ActionBarActivity {
             }
         });
 
-
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Logging in...");
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
@@ -109,6 +112,7 @@ public class LoginActivity extends ActionBarActivity {
 
         mAuthTask = new UserLoginTask(username, password);
         mAuthTask.execute((Void) null);
+        progressDialog.show();
     }
 
 
@@ -159,6 +163,7 @@ public class LoginActivity extends ActionBarActivity {
 
         @Override
         protected void onPostExecute(final Boolean success) {
+            progressDialog.dismiss();
             mAuthTask = null;
             Context context = getApplicationContext();
             CharSequence text = "Hello toast!";
@@ -189,6 +194,7 @@ public class LoginActivity extends ActionBarActivity {
 
         @Override
         protected void onCancelled() {
+            progressDialog.dismiss();
             mAuthTask = null;
         }
     }

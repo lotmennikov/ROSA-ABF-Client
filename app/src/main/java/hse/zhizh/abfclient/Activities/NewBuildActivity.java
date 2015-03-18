@@ -1,5 +1,6 @@
 package hse.zhizh.abfclient.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -65,6 +66,7 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
     private ABFProjectRefs refsQuery;
     private ABFProjectRepos reposQuery;
     private ABFNewBuild newBuildQuery;
+    private int countQueries;
 
     // interface
     EditText projectName;
@@ -74,6 +76,7 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
     Spinner plReposSpinner;
     Spinner updateSpinner;
     Spinner archesSpinner;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +96,9 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
         archesSpinner = (Spinner)findViewById(R.id.newb_archspinner);
         updateSpinner = (Spinner)findViewById(R.id.newb_updatespinner);
         plReposSpinner = (Spinner)findViewById(R.id.newb_platfrepospinner);
+        progressDialog = new ProgressDialog(this);
 
+        progressDialog.setTitle("Loading...");
         projectName.setText(project.getFullname());
 
         // update spinner
@@ -113,17 +118,24 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
     }
 
     private void sendAPIRequests() {
+        progressDialog.show();
+        countQueries = 0;
+
         archesQuery = new ABFArches(this);
         archesQuery.execute();
+        ++countQueries;
 
         platformsQuery = new ABFPlatforms(this);
         platformsQuery.execute();
+        ++countQueries;
 
         refsQuery = new ABFProjectRefs(this, project.getId());
         refsQuery.execute();
+        ++countQueries;
 
         reposQuery = new ABFProjectRepos(this, project.getId());
         reposQuery.execute();
+        ++countQueries;
     }
 
     private void setArchesList() {
@@ -257,7 +269,6 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
         } catch (Exception e) {
             Log.d(Settings.TAG, "Something is not selected");
         }
-        // TODO start build
         if (selectedArchitecture != null &&
             selectedPlatform != null &&
             selectedPlRepo != null &&
@@ -297,43 +308,55 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
         switch (commandId) {
 // -------- ABF API ------------
             case ABFQuery.ARCHES_QUERY:
-                // TODO get arches
                 if (success) {
                     arches = archesQuery.result;
                     setArchesList();
-                    Toast.makeText(this, "Architectures were received", Toast.LENGTH_SHORT).show();
+                    --countQueries;
+                    if (countQueries <= 0)
+                        progressDialog.dismiss();
                 } else {
-                    Toast.makeText(this, "Architectures were not received", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Architectures have not been received", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                    this.finish();
                 }
                 break;
             case ABFQuery.PLATFORMS_QUERY:
-                // TODO get platforms
                 if (success) {
                     platforms = platformsQuery.result;
                     setPlatformsList();
-                    Toast.makeText(this, "Platforms were received", Toast.LENGTH_SHORT).show();
+                    --countQueries;
+                    if (countQueries <= 0)
+                        progressDialog.dismiss();
                 } else {
-                    Toast.makeText(this, "Platforms were not received", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Platforms have not been received", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                    this.finish();
                 }
                 break;
             case ABFQuery.PROJECTREFS_QUERY:
-                // TODO
                 if (success) {
                     refs = refsQuery.result;
                     setRefsList();
-                    Toast.makeText(this, "ProjectRefs were received", Toast.LENGTH_SHORT).show();
+                    --countQueries;
+                    if (countQueries <= 0)
+                        progressDialog.dismiss();
                 } else {
-                    Toast.makeText(this, "ProjectRefs were not received", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "ProjectRefs have not been received", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                    this.finish();
                 }
                 break;
             case ABFQuery.PROJECTREPOS_QUERY:
-                // TODO
                 if (success) {
                     repos = reposQuery.result;
                     setReposList();
-                    Toast.makeText(this, "ProjectRepos were received", Toast.LENGTH_SHORT).show();
+                    --countQueries;
+                    if (countQueries <= 0)
+                        progressDialog.dismiss();
                 } else {
-                    Toast.makeText(this, "ProjectRepos were not received", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "ProjectRepos have not been received", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                    this.finish();
                 }
                 break;
             case ABFQuery.NEWBUILD_QUERY:
