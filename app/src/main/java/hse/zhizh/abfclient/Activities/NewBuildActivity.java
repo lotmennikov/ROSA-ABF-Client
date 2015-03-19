@@ -294,7 +294,8 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
                                             selectedPlatform.getId(),
                                             new int[] { selectedPlRepo.getId() },
                                             selectedArchitecture.getId());
-
+            progressDialog.show();
+            // Sends build request
             newBuildQuery.execute();
 
             Toast.makeText(this, "Sending Build Request...", Toast.LENGTH_SHORT).show();
@@ -361,8 +362,8 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
                 break;
             case ABFQuery.NEWBUILD_QUERY:
                 Intent resultIntent = new Intent();
+                if (progressDialog.isShowing()) progressDialog.dismiss();
                 if (success) {
-                    // TODO Replace with dialog
                     Toast.makeText(getApplicationContext(), "BuildID: " + newBuildQuery.result.getBuildId() + "\n"
                                                                         + newBuildQuery.result.getMessage(),
                                                                         Toast.LENGTH_LONG).show();

@@ -2,6 +2,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="hse.zhizh.abfclient.Activities.ProjectInfoActivity">
+    <item android:id="@+id/action_refreshbuilds"
+        android:title="Refresh builds"
+        android:icon = "@drawable/ic_menu_refresh"
+        android:orderInCategory="100"
+        app:showAsAction="always"/>
+
     <item android:id="@+id/action_settings"
           android:title="Actions"
           android:icon = "@android:drawable/ic_menu_more"

@@ -291,15 +291,12 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
             h.close();
             projects = projectsList.toArray(new Project[projectsList.size()]);
             setProjectsList();
-            Toast.makeText(getApplicationContext(), projectsList.size() + " projects in DB", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), projectsList.size() + " projects in DB", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
             h.close();
-            h = new FeedProjectsDbHelper(getBaseContext());
-            h.deleteAll();
-            h.close();
+            Toast.makeText(getApplicationContext(), "Database Read Error", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     // получение проектов по ABF
