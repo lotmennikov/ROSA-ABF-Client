@@ -6,8 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import hse.zhizh.abfclient.Model.Project;
@@ -28,6 +31,7 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
                     ProjectsContract.FeedProjects.COLUMN_NAME_FULLNAME + TEXT_TYPE + COMMA_SEP +
                     ProjectsContract.FeedProjects.COLUMN_NAME_GIT_URL + TEXT_TYPE + COMMA_SEP +
                     ProjectsContract.FeedProjects.COLUMN_NAME_OWNER_ID + " INTEGER" + COMMA_SEP+
+                    ProjectsContract.FeedProjects.COLUMN_NAME_VIEWED_AT + " DATETIME" + COMMA_SEP+
                     ProjectsContract.FeedProjects.COLUMN_NAME_IS_LOCAL + " BOOLEAN "+ ")";
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + ProjectsContract.FeedProjects.TABLE_NAME;
@@ -66,6 +70,7 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
         values.put(ProjectsContract.FeedProjects.COLUMN_NAME_GIT_URL,project.getGitUrl() );
         values.put(ProjectsContract.FeedProjects.COLUMN_NAME_DESCRIPTION,project.getDescription() );
         values.put(ProjectsContract.FeedProjects.COLUMN_NAME_IS_LOCAL,project.isLocal() );
+        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_VIEWED_AT,getDateTime() );
 
         long newRowId;
         newRowId = db.insert(
@@ -113,7 +118,7 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
                 ProjectsContract.FeedProjects.COLUMN_NAME_IS_LOCAL
         };
         String sortOrder =
-                ProjectsContract.FeedProjects._ID + " DESC";
+                ProjectsContract.FeedProjects.COLUMN_NAME_VIEWED_AT + " DESC";
 
         Cursor cursor = db.query(ProjectsContract.FeedProjects.TABLE_NAME,
                 projection, "id IN (?)", ids, null, null, sortOrder);
@@ -166,7 +171,7 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
 
 // How you want the results sorted in the resulting Cursor
         String sortOrder =
-                ProjectsContract.FeedProjects._ID + " DESC";
+                ProjectsContract.FeedProjects.COLUMN_NAME_VIEWED_AT + " DESC";
 
         Cursor cursor = db.query(
                 ProjectsContract.FeedProjects.TABLE_NAME,  // The table to query
@@ -231,22 +236,24 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
 
 
     //Обновляет ряд с project_id, возвращает кол-во обноленных записей
-    public int updateProject(String project_id,String fullname, String name, String description,String git_url,String owner_id,boolean is_local){
+    public int updateProjectViewedAt(Project project){
         SQLiteDatabase db = this.getReadableDatabase();
 
 // New value for one column
         ContentValues values = new ContentValues();
-        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_FULLNAME,fullname );
-        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_NAME,name );
-        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_OWNER_ID,owner_id );
-        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_GIT_URL,git_url );
-        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_DESCRIPTION,description );
-        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_IS_LOCAL,is_local );
+        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_FULLNAME,project.getFullname() );
+        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_NAME,project.getName() );
+        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_OWNER_ID,project.getOwnerId() );
+        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_GIT_URL,project.getGitUrl() );
+        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_DESCRIPTION,project.getDescription() );
+        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_IS_LOCAL,project.isLocal() );
+        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_VIEWED_AT,getDateTime() );
+
 
 
 // Which row to update, based on the ID
         String selection = ProjectsContract.FeedProjects.COLUMN_NAME_PROJECT_ID + " IS ?";
-        String[] selectionArgs = { project_id};
+        String[] selectionArgs = { Integer.toString(project.getId())};
 
         int count = db.update(
                 ProjectsContract.FeedProjects.TABLE_NAME,
@@ -256,4 +263,11 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
         return count;
     }
 
+    //получение текущей даты
+    private String getDateTime() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
 }

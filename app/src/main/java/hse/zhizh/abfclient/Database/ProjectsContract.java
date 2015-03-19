@@ -22,6 +22,7 @@ public final class ProjectsContract {
         public static final String COLUMN_NAME_GIT_URL = "git_url";
         public static final String COLUMN_NAME_OWNER_ID = "owner_id";
         public static final String COLUMN_NAME_IS_LOCAL = "is_local";
+        public static final String COLUMN_NAME_VIEWED_AT = "viewed_at";
 
     }
 
