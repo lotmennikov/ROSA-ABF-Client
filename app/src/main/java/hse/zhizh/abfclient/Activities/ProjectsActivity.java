@@ -272,6 +272,8 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
     // переход к проекту
     private void startProjectActivity() {
         Intent projectinfo_intent = new Intent(ProjectsActivity.this, ProjectInfoActivity.class);
+        FeedProjectsDbHelper helper = new FeedProjectsDbHelper(getApplicationContext());
+        helper.updateProjectViewedAt(Settings.currentProject);
         startActivity(projectinfo_intent);
     }
 

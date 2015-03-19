@@ -118,7 +118,7 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
                 ProjectsContract.FeedProjects.COLUMN_NAME_IS_LOCAL
         };
         String sortOrder =
-                ProjectsContract.FeedProjects._ID + " DESC";
+                ProjectsContract.FeedProjects.COLUMN_NAME_VIEWED_AT + " DESC";
 
         Cursor cursor = db.query(ProjectsContract.FeedProjects.TABLE_NAME,
                 projection, "id IN (?)", ids, null, null, sortOrder);
@@ -166,13 +166,12 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
                 ProjectsContract.FeedProjects.COLUMN_NAME_NAME,
                 ProjectsContract.FeedProjects.COLUMN_NAME_PROJECT_ID,
                 ProjectsContract.FeedProjects.COLUMN_NAME_FULLNAME,
-                ProjectsContract.FeedProjects.COLUMN_NAME_IS_LOCAL,
-                ProjectsContract.FeedProjects.COLUMN_NAME_VIEWED_AT
+                ProjectsContract.FeedProjects.COLUMN_NAME_IS_LOCAL
         };
 
 // How you want the results sorted in the resulting Cursor
         String sortOrder =
-                ProjectsContract.FeedProjects.COLUMN_NAME_VIEWED_AT + " DESC";
+                ProjectsContract.FeedProjects._ID + " DESC";
 
         Cursor cursor = db.query(
                 ProjectsContract.FeedProjects.TABLE_NAME,  // The table to query
@@ -248,7 +247,7 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
         values.put(ProjectsContract.FeedProjects.COLUMN_NAME_GIT_URL,project.getGitUrl() );
         values.put(ProjectsContract.FeedProjects.COLUMN_NAME_DESCRIPTION,project.getDescription() );
         values.put(ProjectsContract.FeedProjects.COLUMN_NAME_IS_LOCAL,project.isLocal() );
-        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_VIEWED_AT,getDateTime());
+        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_VIEWED_AT,getDateTime() );
 
 
 
