@@ -20,6 +20,7 @@ import hse.zhizh.abfclient.Model.Repository;
  */
 public class Decompress_abf_yml {
     Repository repository;
+    public String errorMessage;
     public Decompress_abf_yml(Repository repository) {
         this.repository = repository;
     }
@@ -59,8 +60,10 @@ public class Decompress_abf_yml {
             }
             input.close();
         } catch (FileNotFoundException e) {
+            errorMessage = e.getMessage();
             e.printStackTrace();
         } catch (IOException e) {
+            errorMessage = e.getMessage();
             e.printStackTrace();
         }
     }

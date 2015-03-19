@@ -18,7 +18,9 @@ import hse.zhizh.abfclient.common.Settings;
 public class JGitClone {
 
     Repository repository;
+    public String errorMessage;
     UsernamePasswordCredentialsProvider auth;
+
     public JGitClone(Repository repository) {
         this.repository = repository;
         String username = Settings.repo_username;
@@ -48,21 +50,27 @@ public class JGitClone {
             repository.setGit(cloneCommand.call());
             System.err.println("Clone procedure ends with no exception...");
         } catch (InvalidRemoteException e) {
+            errorMessage = e.getMessage();
             e.printStackTrace();
             return false;
         } catch (TransportException e) {
+            errorMessage = e.getMessage();
             e.printStackTrace();
             return false;
         } catch (GitAPIException e) {
+            errorMessage = e.getMessage();
             e.printStackTrace();
             return false;
         } catch (JGitInternalException e) {
+            errorMessage = e.getMessage();
             e.printStackTrace();
             return false;
         } catch (OutOfMemoryError e) {
+            errorMessage = e.getMessage();
             e.printStackTrace();
             return false;
         } catch (RuntimeException e) {
+            errorMessage = e.getMessage();
             e.printStackTrace();
             return false;
         }

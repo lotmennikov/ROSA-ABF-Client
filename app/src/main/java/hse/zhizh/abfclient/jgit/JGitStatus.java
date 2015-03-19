@@ -13,7 +13,7 @@ import hse.zhizh.abfclient.Model.Repository;
 public class JGitStatus {
 
     Repository repository;
-
+    public String errorMessage;
     private StringBuffer mResult = new StringBuffer();
 
     public JGitStatus(Repository repository) {
@@ -29,12 +29,15 @@ public class JGitStatus {
             org.eclipse.jgit.api.Status status = repository.getGit().status().call();
             convertStatus(status);
         } catch (NoWorkTreeException e) {
+            errorMessage = e.getMessage();
             e.printStackTrace();
             return false;
         } catch (GitAPIException e) {
+            errorMessage = e.getMessage();
             e.printStackTrace();
             return false;
         } catch (Throwable e) {
+            errorMessage = e.getMessage();
             e.printStackTrace();
             return false;
         }

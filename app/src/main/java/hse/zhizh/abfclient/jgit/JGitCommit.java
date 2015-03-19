@@ -13,6 +13,7 @@ import hse.zhizh.abfclient.Model.Repository;
 public class JGitCommit {
 
     Repository repository;
+    public String errorMessage;
     public JGitCommit(Repository repository) {
         this.repository = repository;
     }
@@ -28,6 +29,7 @@ public class JGitCommit {
             add_all.call();
             cc.call();
         } catch (Exception e) {
+            errorMessage = e.getMessage();
             return false;
         }
         return true;

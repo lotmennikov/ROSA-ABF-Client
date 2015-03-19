@@ -12,8 +12,11 @@ import hse.zhizh.abfclient.common.Settings;
  * Created by Administrator on 3/6/2015.
  */
 public class JGitPull {
+
     Repository repository;
+    public String errorMessage;
     UsernamePasswordCredentialsProvider auth;
+
     public JGitPull(Repository repository) {
         this.repository = repository;
         String username = Settings.repo_username;
@@ -40,15 +43,15 @@ public class JGitPull {
         try {
             pullCommand.call();
         } catch (TransportException e) {
-            e.printStackTrace();
-            return false;
-        } catch (Exception e) {
+            errorMessage = e.getMessage();
             e.printStackTrace();
             return false;
         } catch (OutOfMemoryError e) {
+            errorMessage = e.getMessage();
             e.printStackTrace();
             return false;
         } catch (Throwable e) {
+            errorMessage = e.getMessage();
             e.printStackTrace();
             return false;
         }

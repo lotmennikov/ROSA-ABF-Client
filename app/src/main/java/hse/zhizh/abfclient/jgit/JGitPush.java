@@ -11,6 +11,7 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import java.io.File;
 import java.util.Collection;
 
+import hse.zhizh.abfclient.GitWrappers.GitCommand;
 import hse.zhizh.abfclient.Model.Repository;
 import hse.zhizh.abfclient.common.Settings;
 
@@ -20,8 +21,10 @@ import hse.zhizh.abfclient.common.Settings;
 public class JGitPush {
 
     Repository repository;
+    public String errorMessage;
     UsernamePasswordCredentialsProvider auth;
     private StringBuffer resultMsg = new StringBuffer();
+
     public JGitPush(Repository repository) {
         this.repository = repository;
         String username = Settings.repo_username;
@@ -37,7 +40,7 @@ public class JGitPush {
     public boolean pushRepo(boolean pushAll) {
         Git git = repository.getGit();
         PushCommand pushCommand = git.push().setPushTags()
-                //   .setProgressMonitor(new RepoCloneMonitor())
+                  // .setProgressMonitor(BasicProgressMonitor())
                 .setRemote(repository.getRemoteURL());
         if (pushAll) {
             pushCommand.setPushAll();
@@ -57,6 +60,7 @@ public class JGitPush {
                 }
             }
         } catch (Exception e) {
+            errorMessage = e.getMessage();
             e.printStackTrace();
             return false;
         }
@@ -130,6 +134,8 @@ public class JGitPush {
         try {
             git.add().addFilepattern(f.getAbsolutePath()).call();
         } catch (GitAPIException e) {
+            errorMessage = e.getMessage();
+            e.printStackTrace();
             return false;
         }
         return true;

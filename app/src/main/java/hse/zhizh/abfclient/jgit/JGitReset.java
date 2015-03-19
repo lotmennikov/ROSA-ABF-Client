@@ -8,7 +8,10 @@ import hse.zhizh.abfclient.Model.Repository;
  * Created by Administrator on 3/6/2015.
  */
 public class JGitReset {
+
     Repository repository;
+    public String errorMessage;
+
     public JGitReset(Repository repository) {
         this.repository = repository;
     }
@@ -18,8 +21,12 @@ public class JGitReset {
         try {
             repository.getGit().reset().setMode(ResetCommand.ResetType.HARD).call();
         } catch (Exception e) {
+            errorMessage = e.getMessage();
+            e.printStackTrace();
             return false;
         } catch (Throwable e) {
+            errorMessage = e.getMessage();
+            e.printStackTrace();
             return false;
         }
         return true;

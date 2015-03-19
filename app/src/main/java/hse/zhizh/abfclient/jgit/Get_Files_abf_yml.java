@@ -16,6 +16,7 @@ import hse.zhizh.abfclient.Model.Repository;
  */
 public class Get_Files_abf_yml {
     Repository repository;
+    public String errorMessage;
     public Get_Files_abf_yml(Repository repository) {
         this.repository = repository;
     }
@@ -63,8 +64,10 @@ public class Get_Files_abf_yml {
 
 
         } catch (FileNotFoundException e) {
+            errorMessage = e.getMessage();
             e.printStackTrace();
         } catch (IOException e) {
+            errorMessage = e.getMessage();
             e.printStackTrace();
         }
         return files;

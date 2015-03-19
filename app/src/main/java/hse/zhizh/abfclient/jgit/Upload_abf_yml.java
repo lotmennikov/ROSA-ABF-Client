@@ -33,8 +33,11 @@ import hse.zhizh.abfclient.common.Settings;
  * Created by Administrator on 3/7/2015.
  */
 public class Upload_abf_yml {
+
     private Repository repository;
+    public String errorMessage;
     private int statusCode;
+
     public Upload_abf_yml(Repository repository) {
         this.repository = repository;
     }
@@ -122,6 +125,7 @@ public class Upload_abf_yml {
         try {
             response2 = httpclient.execute(request);
         } catch (IOException e) {
+            errorMessage = e.getMessage();
             e.printStackTrace();
         }
         try {
@@ -167,15 +171,18 @@ public class Upload_abf_yml {
 //            EntityUtils.consume(entity2);
 
         } catch (IOException e) {
+            errorMessage = e.getMessage();
             e.printStackTrace();
             return -1;
         } catch (JSONException e) {
+            errorMessage = e.getMessage();
             e.printStackTrace();
             return -1;
         } finally {
         try {
             response2.close();
         } catch (IOException e) {
+            errorMessage = e.getMessage();
             e.printStackTrace();
         }
     }

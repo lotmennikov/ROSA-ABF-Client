@@ -13,6 +13,7 @@ import hse.zhizh.abfclient.Model.Repository;
 public class JGitInit {
 
     Repository repository;
+    public String errorMessage;
     public JGitInit(Repository repository) {
         this.repository = repository;
     }
@@ -27,6 +28,7 @@ public class JGitInit {
             repository.setGit(git);
             return true;
         } catch (IOException e) {
+            errorMessage = e.getMessage();
             e.printStackTrace();
             return false;
         }

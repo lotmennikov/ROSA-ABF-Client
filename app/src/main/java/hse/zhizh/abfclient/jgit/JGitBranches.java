@@ -22,6 +22,7 @@ public class JGitBranches {
     private static final int COMMIT_TYPE_REMOTE = 3;
 
     Repository repository;
+    public String errorMessage;
 
     public JGitBranches(Repository repository) {
         this.repository = repository;
@@ -47,6 +48,7 @@ public class JGitBranches {
                 branchList.add(name);
             }
         } catch (GitAPIException e) {
+            errorMessage = e.getMessage();
             e.printStackTrace();
         }
         return branchList.toArray(new String[branchList.size()]);
@@ -78,6 +80,7 @@ public class JGitBranches {
                 repository.getGit().checkout().setCreateBranch(true).setName(splits[3])
                         .setStartPoint(branchName).call();
             } catch (GitAPIException e) {
+                errorMessage = e.getMessage();
                 e.printStackTrace();
                 return false;
             }
@@ -89,6 +92,7 @@ public class JGitBranches {
                         .setStartPoint(branchName).setName(splits[3])
                         .setForce(true).call();
             } catch (GitAPIException e) {
+                errorMessage = e.getMessage();
                 e.printStackTrace();
                 return false;
             }
@@ -97,6 +101,7 @@ public class JGitBranches {
             try {
                 repository.getGit().checkout().setName(branchName).call();
             } catch (GitAPIException e) {
+                errorMessage = e.getMessage();
                 e.printStackTrace();
                 return false;
             }
@@ -133,23 +138,27 @@ public class JGitBranches {
         try {
             from = repo.resolve(repo.getFullBranch());
         } catch (IOException e1) {
+            errorMessage = e1.getMessage();
             e1.printStackTrace();
         }
         ObjectId to = null;
         try {
             to = repo.resolve("refs/remotes/origin/" + repo.getBranch());
         } catch (IOException e1) {
+            errorMessage = e1.getMessage();
             e1.printStackTrace();
         }
 
         try {
             walk.markStart(walk.parseCommit(from));
         } catch (IOException e1) {
+            errorMessage = e1.getMessage();
             e1.printStackTrace();
         }
         try {
             walk.markUninteresting(walk.parseCommit(to));
         } catch (IOException e1) {
+            errorMessage = e1.getMessage();
             e1.printStackTrace();
         }
         for (Iterator<RevCommit> iterator = walk.iterator(); iterator.hasNext();) {
@@ -163,6 +172,7 @@ public class JGitBranches {
         try {
             walk.markStart(walk.parseCommit(to));
         } catch (IOException e1) {
+            errorMessage = e1.getMessage();
             e1.printStackTrace();
         }
         for (Iterator<RevCommit> iterator = walk.iterator(); iterator.hasNext();) {
