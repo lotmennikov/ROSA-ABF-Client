@@ -70,6 +70,7 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
         values.put(ProjectsContract.FeedProjects.COLUMN_NAME_GIT_URL,project.getGitUrl() );
         values.put(ProjectsContract.FeedProjects.COLUMN_NAME_DESCRIPTION,project.getDescription() );
         values.put(ProjectsContract.FeedProjects.COLUMN_NAME_IS_LOCAL,project.isLocal() );
+        values.put(ProjectsContract.FeedProjects.COLUMN_NAME_VIEWED_AT,getDateTime() );
 
         long newRowId;
         newRowId = db.insert(
@@ -165,12 +166,13 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
                 ProjectsContract.FeedProjects.COLUMN_NAME_NAME,
                 ProjectsContract.FeedProjects.COLUMN_NAME_PROJECT_ID,
                 ProjectsContract.FeedProjects.COLUMN_NAME_FULLNAME,
-                ProjectsContract.FeedProjects.COLUMN_NAME_IS_LOCAL
+                ProjectsContract.FeedProjects.COLUMN_NAME_IS_LOCAL,
+                ProjectsContract.FeedProjects.COLUMN_NAME_VIEWED_AT
         };
 
 // How you want the results sorted in the resulting Cursor
         String sortOrder =
-                ProjectsContract.FeedProjects._ID + " DESC";
+                ProjectsContract.FeedProjects.COLUMN_NAME_VIEWED_AT + " DESC";
 
         Cursor cursor = db.query(
                 ProjectsContract.FeedProjects.TABLE_NAME,  // The table to query
