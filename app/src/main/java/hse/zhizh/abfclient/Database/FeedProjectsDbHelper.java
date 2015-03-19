@@ -171,7 +171,7 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
 
 // How you want the results sorted in the resulting Cursor
         String sortOrder =
-                ProjectsContract.FeedProjects._ID + " DESC";
+                ProjectsContract.FeedProjects.COLUMN_NAME_VIEWED_AT + " DESC";
 
         Cursor cursor = db.query(
                 ProjectsContract.FeedProjects.TABLE_NAME,  // The table to query
