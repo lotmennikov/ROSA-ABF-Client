@@ -3,11 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="hse.zhizh.abfclient.Activities.ProjectsActivity">
     <item
-        android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        app:showAsAction="never"/>
-    <item
         android:id="@+id/test_cleardbButton"
         android:title="Clear DB"
         app:showAsAction="never" />
@@ -24,6 +19,6 @@
         android:id="@+id/action_addproject"
         android:icon="@android:drawable/ic_menu_add"
         android:title="Add project"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
 </menu>

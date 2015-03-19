@@ -75,6 +75,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         projectsList = (ListView)findViewById(R.id.projectsList);
+        projectsList.setEmptyView(findViewById(R.id.projects_empty));
 
         abfQuery = null;
 

@@ -9,11 +9,19 @@
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="fill_parent"
         android:id="@+id/projectsList"
         android:layout_margin="10dp"
         android:background="#ffe5ffe7"
         android:descendantFocusability="blocksDescendants"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="No projects"
+        android:id="@+id/projects_empty"
+        android:layout_margin="10dp"
+        android:background="#ffe5ffe7"
+        android:padding="10dp" />
 </LinearLayout>
 

@@ -32,6 +32,7 @@ public class CommitsFragment extends Fragment implements ProjectActivityEventLis
 
         View fragmentView = inflater.inflate(R.layout.fragment_commits, container, false);
         commitsList = (ListView)fragmentView.findViewById(R.id.commitsList);
+        commitsList.setEmptyView(fragmentView.findViewById(R.id.commits_empty));
         setCommitsList();
 
         return fragmentView;

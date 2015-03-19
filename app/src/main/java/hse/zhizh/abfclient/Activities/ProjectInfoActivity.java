@@ -116,6 +116,12 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         actionBar = getSupportActionBar();
         ppAdapter = new ProjectPagerAdapter(getSupportFragmentManager());
         progressDialog = new ProgressDialog(this);
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                Toast.makeText(getApplicationContext(), "Task is not finished", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         viewPager.setAdapter(ppAdapter);
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -462,11 +468,11 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
     @Override
     public void onCommandExecuted(int commandID, boolean success) {
         switch (commandID) {
-// -------- JGIT ------------
+//  -------- JGIT ------------
             case GitCommand.COMMIT_COMMAND:
                 if (success) {
                     getCommits();
-                    Toast tst = Toast.makeText(this.getApplicationContext(), "Commit", Toast.LENGTH_SHORT);
+                    Toast tst = Toast.makeText(this.getApplicationContext(), "Committed", Toast.LENGTH_SHORT);
                     tst.show();
                 } else {
                     Toast tst = Toast.makeText(this.getApplicationContext(), "Commit Failed", Toast.LENGTH_SHORT);
@@ -516,10 +522,10 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
                 if (success) {
                     ppAdapter.refreshContents();
                     getCommits();
-                    Toast tst = Toast.makeText(this.getApplicationContext(), "new branch", Toast.LENGTH_SHORT);
+                    Toast tst = Toast.makeText(this.getApplicationContext(), "Checkout", Toast.LENGTH_SHORT);
                     tst.show();
                 } else {
-                    Toast tst = Toast.makeText(this.getApplicationContext(), "branch set failed", Toast.LENGTH_SHORT);
+                    Toast tst = Toast.makeText(this.getApplicationContext(), "Checkout failed", Toast.LENGTH_SHORT);
                     tst.show();
                     this.finish();
                 }
@@ -536,7 +542,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
                 if (progressDialog.isShowing()) progressDialog.dismiss();
                 gitCommand = null;
                 break;
-// ---------- ABF -----------------
+//  ---------- ABF -----------------
             case ABFQuery.BUILDS_QUERY:
                 if (success) {
                     builds = ((ABFBuilds)abfQuery).builds;
@@ -609,12 +615,10 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         for (int i = 0; i < checkList.length; ++i) {
             if (checkList[i]) selectedAbf.add(abfFiles.get(i));
         }
-        if (gitCommand == null) {
-            gitCommand = new GitDownloadAbf(repo, this, selectedAbf);
-            progressDialog.setTitle("Downloading files...");
-            progressDialog.show();
-            gitCommand.execute();
-        } Toast.makeText(getApplicationContext(), "Unfinished git request", Toast.LENGTH_SHORT).show();
+        gitCommand = new GitDownloadAbf(repo, this, selectedAbf);
+        progressDialog.setTitle("Downloading files...");
+        progressDialog.show();
+        gitCommand.execute();
     }
 
 
@@ -632,7 +636,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
             }
         }
     }
-// -------- tabs ---------
+//  -------- tabs ---------
 
     @Override
     public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {

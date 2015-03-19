@@ -1,17 +1,22 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="hse.zhizh.abfclient.Activities.BuildsFragment">
+    tools:context="hse.zhizh.abfclient.Activities.BuildsFragment"
+    android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
-
-
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/buildList"
-        android:headerDividersEnabled="false"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-</RelativeLayout>
+        <ListView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/buildList"
+            android:headerDividersEnabled="false"
+            android:layout_margin="5dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="No builds"
+            android:id="@+id/builds_empty"
+            android:layout_margin="5dp"
+            android:padding="5dp" />
+</LinearLayout>

@@ -36,7 +36,7 @@ public class BuildsFragment extends Fragment implements ProjectActivityEventList
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(R.layout.fragment_builds, container, false);
         buildList = (ListView)fragmentView.findViewById(R.id.buildList);
-
+        buildList.setEmptyView(fragmentView.findViewById(R.id.builds_empty));
         setBuildsList();
         return fragmentView;
     }

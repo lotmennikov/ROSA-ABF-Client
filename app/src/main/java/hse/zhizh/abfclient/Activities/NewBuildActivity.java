@@ -35,7 +35,6 @@ import hse.zhizh.abfclient.common.Settings;
  *
  * Configuring and starting a new build
  *
- * TODO start the build
  *
  */
 public class NewBuildActivity extends ActionBarActivity implements CommandResultListener {
