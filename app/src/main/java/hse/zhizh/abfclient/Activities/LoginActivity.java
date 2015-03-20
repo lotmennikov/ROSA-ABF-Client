@@ -105,10 +105,6 @@ public class LoginActivity extends ActionBarActivity {
         String username = mUsernameView.getText().toString();
         String password = mPasswordView.getText().toString();
 
-        // -- TODO remove
-        if (username.equals("")) { username = "lotmen"; password = "fab688"; }
-        // --
-
         Log.d(Settings.TAG, "LoginActivity" + " Login Attempt");
 
         mAuthTask = new UserLoginTask(username, password);
