@@ -274,6 +274,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
         Intent projectinfo_intent = new Intent(ProjectsActivity.this, ProjectInfoActivity.class);
         FeedProjectsDbHelper helper = new FeedProjectsDbHelper(getApplicationContext());
         helper.updateProjectViewedAt(Settings.currentProject);
+        helper.close();
         startActivity(projectinfo_intent);
     }
 
@@ -345,7 +346,8 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
                     } else {
                         // попробовать ещё
                         retryCloneDialog.show();
-                        Toast tst = Toast.makeText(this.getApplicationContext(), "Clone Failed", Toast.LENGTH_SHORT);
+                        String message = "Clone Failed" + ((cloneCommand.errorMessage != null) ? ": " + cloneCommand.errorMessage : "");
+                        Toast tst = Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_SHORT);
                         tst.show();
                     }
                     break;

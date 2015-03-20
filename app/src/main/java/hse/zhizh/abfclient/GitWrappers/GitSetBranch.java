@@ -17,11 +17,13 @@ public class GitSetBranch extends GitCommand {
     private final Repository mRepo;
     private final CommandResultListener activity;
     private final String branchname;
+    public String errorMessage;
 
     public GitSetBranch(Repository rep, CommandResultListener activ, String branchname) {
         mRepo = rep;
         activity = activ;
         this.branchname = branchname;
+        errorMessage = null;
     }
 
     // Асинхронное выполнение
@@ -34,10 +36,13 @@ public class GitSetBranch extends GitCommand {
             if (branches.checkout(branchname)) { // JGitQuery.cloneRepo(mRepo)) {
                 Log.d(Settings.TAG + COMMANDTAG, "procedure ends with no exception...");
                 return true;
-            } else
+            } else {
+                errorMessage = branches.errorMessage;
                 return false;
+            }
         } catch (Exception e) {
             e.printStackTrace();
+            errorMessage = e.getMessage();
             return false;
         }
     }

@@ -21,6 +21,7 @@ public class GitClone extends GitCommand {
     public GitClone(Repository rep, CommandResultListener activ) {
         mRepo = rep;
         activity = activ;
+        errorMessage = null;
     }
 
     // Асинхронное выполнение клонирования
@@ -29,18 +30,19 @@ public class GitClone extends GitCommand {
         Log.d(Settings.TAG, "Clone procedure begin...");
         // очистка папки
         mRepo.Clear();
-
+        JGitClone clone = new JGitClone(mRepo);
         try {
-            JGitClone clone = new JGitClone(mRepo);
-
             // вызов JGit
             if (clone.cloneRepo()) {
                 Log.d(Settings.TAG, "Clone procedure ends with no exception...");
                 return true;
-            } else
+            } else {
+                errorMessage = clone.errorMessage;
                 return false;
+            }
         } catch (Exception e) {
             e.printStackTrace();
+            errorMessage = e.getMessage();
             return false;
         }
     }

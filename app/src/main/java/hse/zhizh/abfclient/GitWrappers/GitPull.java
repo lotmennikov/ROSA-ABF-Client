@@ -20,6 +20,7 @@ public class GitPull extends GitCommand {
     public GitPull(Repository rep, CommandResultListener activ) {
         mRepo = rep;
         activity = activ;
+        errorMessage = null;
     }
 
     // Асинхронное выполнение
@@ -32,10 +33,13 @@ public class GitPull extends GitCommand {
             if (pull.pullRepo()) {
                 Log.d(Settings.TAG + COMMANDTAG, "procedure ends with no exception...");
                 return true;
-            } else
+            } else {
+                errorMessage = pull.errorMessage;
                 return false;
+            }
         } catch (Exception e) {
             e.printStackTrace();
+            errorMessage = e.getMessage();
             return false;
         }
     }

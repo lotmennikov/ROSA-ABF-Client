@@ -46,7 +46,7 @@ public class CommitsFragment extends Fragment implements ProjectActivityEventLis
                 comms = new String[commits.length];
                 String newtext;
                 for (int i = 0; i < comms.length; ++i) {
-                    newtext = commits[i].getName() + (commits[i].isPushed() ? "" : "\n (not pushed)") + "\n"
+                    newtext = commits[i].getName() + "\n"// (commits[i].isPushed() ? "" : "\n (not pushed)") + "\n"
                             + commits[i].getCommitter() + "\n"
                             + Settings.commitDate.format(commits[i].getDate());
                     comms[i] = newtext;

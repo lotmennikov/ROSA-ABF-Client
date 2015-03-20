@@ -21,9 +21,11 @@ public class GitCommitList {
 
     private final Repository mRepo;
     public Commit[] result;
+    public String errorMessage;
 
     public GitCommitList(Repository repo) {
         mRepo = repo;
+        errorMessage = null;
     }
 
     // get commits list
@@ -34,14 +36,16 @@ public class GitCommitList {
             if (commits != null) {
                 result = commits.toArray(new Commit[commits.size()]);
 
-                Log.d(Settings.TAG + COMMANDTAG, "list received");
+                Log.d(Settings.TAG, COMMANDTAG + " success");
                 return true;
             } else {
-                Log.e(Settings.TAG + COMMANDTAG, "fail");
+                errorMessage = branches.errorMessage;
+                Log.e(Settings.TAG, COMMANDTAG + " fail");
                 return false;
             }
         } catch (Exception e) {
             e.printStackTrace();
+            errorMessage = e.getMessage();
             return false;
         }
     }

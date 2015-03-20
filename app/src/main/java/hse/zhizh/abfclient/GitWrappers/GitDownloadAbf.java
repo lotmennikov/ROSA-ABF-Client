@@ -39,10 +39,13 @@ public class GitDownloadAbf extends GitCommand {
             if (downloadAbf.download_files(abfFiles)) {
                 Log.d(Settings.TAG + COMMANDTAG, "procedure ends with no exception...");
                 return true;
-            } else
+            } else {
+                errorMessage = downloadAbf.errorMessage;
                 return false;
+            }
         } catch (Exception e) {
             e.printStackTrace();
+            errorMessage = e.getMessage();
             return false;
         }
     }

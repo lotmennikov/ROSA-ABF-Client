@@ -169,8 +169,7 @@ public class LoginActivity extends ActionBarActivity {
             mAuthTask = null;
             Context context = getApplicationContext();
             int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context, "code:" + f_code, duration);
-            toast.show();
+            if (!success) Toast.makeText(context, "code:" + f_code, duration).show();
             if (success) {
                 Log.d(Settings.TAG," LoginActivity" + " Login Success");
                 Settings.authSuccess(getApplicationContext(), mUsername, mPassword, true);

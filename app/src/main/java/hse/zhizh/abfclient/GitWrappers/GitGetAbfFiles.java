@@ -20,16 +20,19 @@ public class GitGetAbfFiles {
     private final Repository mRepo;
 
     public List<AbfFile> result;
+    public String errorMessage;
 
     public GitGetAbfFiles(Repository repo) {
         mRepo = repo;
         result = null;
+        errorMessage = null;
     }
 
     // init repository locally
     public boolean execute() {
         try {
-            List<AbfFile> abfFileList = new Get_Files_abf_yml(mRepo).getFiles();
+            Get_Files_abf_yml getfiles = new Get_Files_abf_yml(mRepo);
+            List<AbfFile> abfFileList = getfiles.getFiles();
 
             if (abfFileList != null) {
                 result = abfFileList;
@@ -37,11 +40,13 @@ public class GitGetAbfFiles {
                 Log.d(Settings.TAG + COMMANDTAG, "git abffiles received");
                 return true;
             } else {
+                errorMessage = getfiles.errorMessage;
                 Log.e(Settings.TAG + COMMANDTAG, "git abffiles was not received");
                 return false;
             }
         } catch (Exception e) {
             e.printStackTrace();
+            errorMessage = e.getMessage();
             return false;
         }
     }

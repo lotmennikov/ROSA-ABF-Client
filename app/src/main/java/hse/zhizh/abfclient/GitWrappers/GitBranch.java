@@ -12,10 +12,12 @@ public class GitBranch {
 
     private final Repository mRepo;
     public String[] result;
+    public String errorMessage;
 
     public GitBranch(Repository rep) {
         mRepo = rep;
         result = null;
+        errorMessage = null;
     }
 
     // выполнение запроса
@@ -26,8 +28,10 @@ public class GitBranch {
         result = branches.getBranches();
         if (result != null)
             return true;
-        else
+        else {
+            errorMessage = branches.errorMessage;
             return false;
+        }
     }
 
 }

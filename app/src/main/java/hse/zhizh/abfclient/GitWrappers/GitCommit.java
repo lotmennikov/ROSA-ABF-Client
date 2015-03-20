@@ -23,6 +23,7 @@ public class GitCommit extends GitCommand {
         this.mRepo = rep;
         this.activity = activ;
         this.commitMessage = commitMessage;
+        errorMessage = null;
     }
 
     // Асинхронное выполнение
@@ -37,10 +38,13 @@ public class GitCommit extends GitCommand {
                 Log.d(Settings.TAG + COMMANDTAG, "procedure ends with no exception...");
                 return true;
 
-            } else
+            } else {
+                errorMessage = pull.errorMessage;
                 return false;
+            }
         } catch (Exception e) {
             e.printStackTrace();
+            errorMessage = e.getMessage();
             return false;
         }
     }

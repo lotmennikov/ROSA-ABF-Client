@@ -43,10 +43,13 @@ public class GitUpload extends GitCommand {
 
                 Log.d(Settings.TAG + COMMANDTAG, "procedure ends with no exception...");
                 return true;
-            } else
+            } else {
+                errorMessage = uploadAbf.errorMessage;
                 return false;
+            }
         } catch (Exception e) {
             e.printStackTrace();
+            errorMessage = e.getMessage();
             return false;
         }
     }

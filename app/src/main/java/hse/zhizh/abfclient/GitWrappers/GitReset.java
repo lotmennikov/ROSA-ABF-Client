@@ -14,9 +14,11 @@ public class GitReset {
     private final String COMMANDTAG = "Git Reset";
 
     private final Repository mRepo;
+    public String errorMessage;
 
     public GitReset(Repository repo) {
         mRepo = repo;
+        errorMessage = null;
     }
 
     // reset repository
@@ -28,11 +30,13 @@ public class GitReset {
                 Log.d(Settings.TAG + COMMANDTAG, "reset success");
                 return true;
             } else {
+                errorMessage = reset.errorMessage;
                 Log.e(Settings.TAG + COMMANDTAG, "reset failed");
                 return false;
             }
         } catch (Exception e) {
             e.printStackTrace();
+            errorMessage = e.getMessage();
             return false;
         }
     }
