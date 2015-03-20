@@ -60,6 +60,7 @@ public class Upload_abf_yml {
         } catch (IOException e) {
             errorMessage = e.getMessage();
             e.printStackTrace();
+            return false;
         }
         try {
             System.out.println(response2.getStatusLine());

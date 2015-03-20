@@ -7,14 +7,14 @@
     android:orientation="vertical"
     android:descendantFocusability="blocksDescendants"
     android:clickable="true"
-    android:background="#ffbeeacf">
+    android:background="@color/common_deepbackground">
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/browserList"
         android:layout_margin="10dp"
-        android:background="#ffe5ffe7"
+        android:background="@color/common_frontbackground"
         android:descendantFocusability="blocksDescendants"/>
 
 </LinearLayout>

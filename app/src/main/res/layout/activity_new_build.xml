@@ -3,14 +3,14 @@
     android:layout_height="match_parent"
     tools:context="hse.zhizh.abfclient.Activities.NewBuildActivity"
     android:nestedScrollingEnabled="false"
-    android:background="#ffbeeacf">
+    android:background="@color/common_deepbackground">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/scrollView"
         android:fillViewport="false"
-        android:background="#ffe5ffe7"
+        android:background="@color/common_frontbackground"
         android:padding="3dp"
         android:layout_margin="10dp">
 

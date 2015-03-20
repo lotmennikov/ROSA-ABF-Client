@@ -34,17 +34,12 @@ public class GitUpload extends GitCommand {
         Log.d(Settings.TAG + COMMANDTAG, "procedure begin...");
         try {
             Upload_abf_yml uploadAbf = new Upload_abf_yml(mRepo);
-            int rescode = uploadAbf.upload_abf_yml(binFile);
-            if (rescode != -1) {
-                if (rescode == 422)
-                    result = "File has already been in filestore";
-                else
-                    result = "Uploaded";
-
+            if (uploadAbf.upload_abf_yml(binFile)) {
+                result = uploadAbf.getStatusMessage();
                 Log.d(Settings.TAG + COMMANDTAG, "procedure ends with no exception...");
                 return true;
             } else {
-                errorMessage = uploadAbf.errorMessage;
+                errorMessage = (uploadAbf.getStatusMessage() != null ? uploadAbf.getStatusMessage() : uploadAbf.getErrorMessage());
                 return false;
             }
         } catch (Exception e) {

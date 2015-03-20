@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="mbutton_normal_start">#99dd76</color>
+    <color name="mbutton_normal_end">#7cd347</color>
+    <color name="mbutton_pressed">#60d39f</color>
+    <color name="mbutton_focused">#60d39f</color>
+
+    <color name="common_frontbackground">#ffe5ffe7</color>
+    <color name="common_deepbackground">#ffbeeacf</color>
+
+</resources>

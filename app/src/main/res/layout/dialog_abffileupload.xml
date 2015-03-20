@@ -8,7 +8,8 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_margin="5dp">
+        android:layout_margin="5dp"
+        android:background="@color/common_frontbackground">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -28,7 +29,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="..."
-                android:id="@+id/addbin_browsebutton" />
+                android:id="@+id/addbin_browsebutton"
+                style="@style/MergeButton" />
 
         </LinearLayout>
 
@@ -43,14 +45,16 @@
                 android:layout_height="wrap_content"
                 android:text="Cancel"
                 android:id="@+id/addbin_cancel"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                style="@style/MergeButton" />
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Upload"
                 android:id="@+id/addbin_upload"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                style="@style/MergeButton" />
         </LinearLayout>
 
     </LinearLayout>
