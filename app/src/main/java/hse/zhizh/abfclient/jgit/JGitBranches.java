@@ -116,23 +116,6 @@ public class JGitBranches {
         RevWalk walk;
         ArrayList<Commit> commits = new ArrayList<Commit>();
         org.eclipse.jgit.lib.Repository repo = git.getRepository();
-    /*    try {
-            String s1 = repository.getBranch();
-            String s2 = repository.getFullBranch();
-            Set<String> s3 = repository.getRemoteNames();
-            // String s4 = repository.getRemoteName(Constants.R_R);
-            List<Ref> refs = git.branchList().setListMode(ListBranchCommand.ListMode.REMOTE).call();
-            StoredConfig config = repository.getConfig();
-            Set<String> remotes = config.getSubsections("remote");
-            String url = config.getString("remote", remotes.toArray()[0].toString(), "url");
-            if (url != null) {
-                System.out.println("Origin comes from " + url);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (GitAPIException e) {
-            e.printStackTrace();
-        }*/
         walk = new RevWalk(repo);
         ObjectId from = null;
         try {
@@ -164,9 +147,6 @@ public class JGitBranches {
         for (Iterator<RevCommit> iterator = walk.iterator(); iterator.hasNext();) {
             RevCommit rev = iterator.next();
             commits.add(new Commit(rev.getFullMessage(), rev.getName(), rev.getCommitterIdent().getName(), rev.getCommitterIdent().getWhen(), false));
-         /*   System.out.println(rev.getCommitterIdent().getName());
-            System.out.println(rev.getFullMessage());
-            Date d = rev.getCommitterIdent().getWhen();*/
         }
         walk.dispose();
         try {
@@ -178,25 +158,7 @@ public class JGitBranches {
         for (Iterator<RevCommit> iterator = walk.iterator(); iterator.hasNext();) {
             RevCommit rev = iterator.next();
             commits.add(new Commit(rev.getFullMessage(), rev.getName(), rev.getCommitterIdent().getName(), rev.getCommitterIdent().getWhen(), true));
-          /*  System.out.println(rev.getCommitterIdent().getName());
-            System.out.println(rev.getFullMessage());
-            Date d = rev.getCommitterIdent().getWhen();*/
         }
-        /*try {
-            Iterable<RevCommit> commits = null;
-            try {
-                commits = git.log().call();
-            } catch (GitAPIException e) {
-                e.printStackTrace();
-            }
-
-            for (RevCommit commit : commits) {
-                System.out.println(commit.getAuthorIdent().getName());
-                System.out.println(commit.getFullMessage());
-            }
-        } catch(Exception e) {
-
-        }*/
         return commits;
     }
 }

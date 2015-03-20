@@ -13,6 +13,8 @@ import java.net.URLConnection;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import hse.zhizh.abfclient.common.Settings;
+
 public class SessionImpl implements Session {
     private String username;
     private String userpass;
@@ -61,12 +63,16 @@ public class SessionImpl implements Session {
         URL url;
         HttpsURLConnection con=null;
         try {
+            String encoding = Base64.encodeToString(new String(username + ":" + userpass).getBytes(), Base64.NO_WRAP);
+            encoding = "Basic " + encoding;
             url = new URL(https_url);
             con = (HttpsURLConnection)url.openConnection();
-            setConnectionProperties(con,"GET");
+          //  setConnectionProperties(con,"GET");
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Authorization", encoding);
             con.connect();
             int code = con.getResponseCode();
-            System.out.println("code:" + code);
+            System.out.println("code: " + code);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -80,9 +86,9 @@ public class SessionImpl implements Session {
     @con-соединение
      */
     public static void setConnectionProperties(HttpsURLConnection con,String requestMethod) throws  Exception{
-        con.setAllowUserInteraction(true);
+      //  con.setAllowUserInteraction(true);
         con.setRequestMethod(requestMethod);
-        con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
+       // con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
     }
     /*
     Инициализация сессии с указанным именем пользователя и паролем
@@ -91,7 +97,7 @@ public class SessionImpl implements Session {
     public SessionImpl (String username,String userpass){
         this.username=username;
         this.userpass=userpass;
-        authenticate();
+     //   authenticate();
     }
     /*
     Функция для строкового представления ответа от сервера
