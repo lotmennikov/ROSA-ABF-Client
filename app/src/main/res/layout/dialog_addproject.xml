@@ -8,8 +8,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="5dp"
-        android:background="@color/common_frontbackground">
+        android:layout_margin="5dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,7 +48,7 @@
                 android:text="Clone Project"
                 android:id="@+id/addp_clonebutton"
                 android:layout_weight="1"
-                style="@style/MergeButton" />
+                style="@style/AbfButton" />
         </LinearLayout>
 
     </LinearLayout>

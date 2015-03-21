@@ -26,7 +26,8 @@
         android:layout_gravity="bottom|left"
         android:onClick="onBranchButtonClick"
         android:paddingTop="10dp"
-        android:paddingBottom="10dp" />
+        android:paddingBottom="10dp"
+        style="@style/MergeButton" />
 
 </LinearLayout>
 

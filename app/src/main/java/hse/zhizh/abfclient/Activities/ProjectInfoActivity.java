@@ -44,6 +44,7 @@ import hse.zhizh.abfclient.GitWrappers.GitPull;
 import hse.zhizh.abfclient.GitWrappers.GitPush;
 import hse.zhizh.abfclient.GitWrappers.GitReset;
 import hse.zhizh.abfclient.GitWrappers.GitSetBranch;
+import hse.zhizh.abfclient.GitWrappers.GitStatus;
 import hse.zhizh.abfclient.GitWrappers.GitUpload;
 import hse.zhizh.abfclient.Model.AbfFile;
 import hse.zhizh.abfclient.Model.Build;
@@ -293,6 +294,14 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
 
         final EditText commitName = (EditText)commitDialog.findViewById(R.id.commit_summary);
         final Button commitCommit = (Button)commitDialog.findViewById(R.id.commit_commit);
+        final TextView statusView = (TextView)commitDialog.findViewById(R.id.commit_status);
+        GitStatus statuscom = new GitStatus(repo);
+        String status = "Status: \n";
+        if (statuscom.execute()) {
+            status += statuscom.result;
+        }
+        statusView.setText(status);
+
         commitCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -591,7 +600,8 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
                     R.layout.item_abfymllist, abfFileList);
             ListView listView = (ListView)downloadAbfDialog.findViewById(R.id.abffiles_list);
             // настройка кнопки
-            Button downloadButton = (Button)this.getLayoutInflater().inflate(R.layout.item_abfllistfooter, null);
+            View footer = this.getLayoutInflater().inflate(R.layout.item_abfllistfooter, null);
+            Button downloadButton = (Button)footer.findViewById(R.id.abffiles_downloadbutton);
             downloadButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -602,7 +612,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
                 }
             });
 
-            listView.addFooterView(downloadButton);
+            listView.addFooterView(footer);
             listView.setAdapter(abfAdapter);
 
 

@@ -28,7 +28,11 @@
                 app:showAsAction="never" />
             <item
                 android:id="@+id/action_reset"
-                android:title="Reset"
+                android:title="Hard reset"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_stageall"
+                android:title="Add all to stage"
                 app:showAsAction="never" />
             <item
                 android:id="@+id/action_newfile"

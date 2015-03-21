@@ -29,12 +29,12 @@ public class GitSetBranch extends GitCommand {
     // Асинхронное выполнение
     @Override
     protected Boolean doInBackground(Void... params) {
-        Log.d(Settings.TAG + COMMANDTAG, "procedure begin...");
+        Log.d(Settings.TAG, COMMANDTAG + " procedure begin...");
         try {
             JGitBranches branches = new JGitBranches(mRepo);
 
             if (branches.checkout(branchname)) { // JGitQuery.cloneRepo(mRepo)) {
-                Log.d(Settings.TAG + COMMANDTAG, "procedure ends with no exception...");
+                Log.d(Settings.TAG, COMMANDTAG + " procedure ends with no exception...");
                 return true;
             } else {
                 errorMessage = branches.errorMessage;
@@ -50,9 +50,9 @@ public class GitSetBranch extends GitCommand {
     @Override
     protected void onPostExecute(final Boolean success) {
         if (success) {
-            Log.d(Settings.TAG + COMMANDTAG, "success");
+            Log.d(Settings.TAG, COMMANDTAG + " success");
         } else {
-            Log.d(Settings.TAG + COMMANDTAG, "Fail");
+            Log.d(Settings.TAG, COMMANDTAG + " Fail");
         }
         activity.onCommandExecuted(SETBRANCH_COMMAND, success);
     }

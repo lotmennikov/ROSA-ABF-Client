@@ -2,7 +2,11 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:buttonStyle">@style/MergeButton</item>
+        <item name="android:buttonStyle">@style/AbfButton</item>
+    </style>
+
+    <style name="AbfButton" parent="@android:style/Widget.Button">
+        <item name="android:background">@drawable/abfbutton</item>
     </style>
 
     <style name="MergeButton" parent="@android:style/Widget.Button">
