@@ -26,6 +26,7 @@ public class GitUpload extends GitCommand {
         activity = activ;
         result = "";
         this.binFile = binFile;
+        this.errorMessage = null;
     }
 
     // Асинхронное выполнение

@@ -17,7 +17,6 @@ public class GitSetBranch extends GitCommand {
     private final Repository mRepo;
     private final CommandResultListener activity;
     private final String branchname;
-    public String errorMessage;
 
     public GitSetBranch(Repository rep, CommandResultListener activ, String branchname) {
         mRepo = rep;
