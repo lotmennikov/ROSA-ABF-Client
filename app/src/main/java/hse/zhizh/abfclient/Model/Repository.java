@@ -24,33 +24,10 @@ public class Repository {
 
     public Git git;
 
-    // selected branch
-    public String currentBranch;
-
-    // default repository
-    public Repository(Context cntxt) {
-        name = "0ad";
-//        path = cntxt.getFilesDir();
-        path = new File("mnt/sdcard/Android/data/hse.zhizh.abfclient/repo/");
-        git = null;
-        File projdir = new File(path.getAbsolutePath() + "/" + name + "/");
-
-        if (projdir.exists()) {
-            try {
-                FileUtils.deleteDirectory(projdir);
-            } catch (Exception e) {
-                Log.d("ABF-Client", "Directory had not been deleted! :" + projdir.getAbsolutePath());
-            }
-        }
-        path = projdir;
-        url = "https://abf.io/lotmen/0ad.git";
-    }
-
     //repository from project info
-    public Repository(Context cntxt, String name, String git_url) {
+    public Repository(String name, String git_url) {
         this.name = name;
-//        this.path = cntxt.getFilesDir();
-        this.path = new File("mnt/sdcard/Android/data/hse.zhizh.abfclient/repo/");
+        this.path = new File(Settings.repo_path);
         File projdir = new File(this.path.getAbsolutePath() + "/" + this.name + "/");
         this.path = projdir;
         this.url = git_url;
@@ -67,7 +44,6 @@ public class Repository {
         return null;
     }
 
-    // initGitLocally
     public Git getGit() {
         return git;
     }
@@ -98,9 +74,6 @@ public class Repository {
 
     public File getBinDir() {
         File binPath = Settings.downloadsDir;
-//        File binPath = new File("mnt/sdcard/Android/data/hse.zhizh.abfclient/bin/" + name + "/");
-//        if (!binPath.exists())
-//            binPath.mkdirs();
         return binPath;
     }
 

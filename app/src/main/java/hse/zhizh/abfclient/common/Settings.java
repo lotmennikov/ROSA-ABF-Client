@@ -31,9 +31,12 @@ public class Settings {
     // date formatter for the commits list
     public static DateFormat commitDate = new SimpleDateFormat("dd.MM.yyyy");
 
+    //default directory for repositories
+    public static final String repo_path = "mnt/sdcard/Android/data/hse.zhizh.abfclient/repo/";
+
     // current user credentials
-    public static String repo_username = "lotmen";
-    public static String repo_password = "fab688";
+    public static String repo_username = null;
+    public static String repo_password = null;
 
     // selected project
     public static Project currentProject;

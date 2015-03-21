@@ -483,7 +483,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
                     tst.show();
                 } else {
                     String message = "Commit Failed" + ((gitCommand.errorMessage != null) ? ": " + gitCommand.errorMessage : "");
-                    Toast tst = Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_SHORT);
+                    Toast tst = Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_LONG);
                     tst.show();
                 }
                 gitCommand = null;
@@ -496,7 +496,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
                     tst.show();
                 } else {
                     String message = "Pull Failed" + ((gitCommand.errorMessage != null) ? ": " + gitCommand.errorMessage : "");
-                    Toast tst = Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_SHORT);
+                    Toast tst = Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_LONG);
                     tst.show();
                 }
                 if (progressDialog.isShowing()) progressDialog.dismiss();
@@ -509,7 +509,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
                     tst.show();
                 } else {
                     String message = "Failed to upload file" + ((gitCommand.errorMessage != null) ? ": " + gitCommand.errorMessage : "");
-                    Toast tst = Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_SHORT);
+                    Toast tst = Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_LONG);
                     tst.show();
                 }
                 if (progressDialog.isShowing()) progressDialog.dismiss();
@@ -522,7 +522,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
                     tst.show();
                 } else {
                     String message = "Push Failed" + ((gitCommand.errorMessage != null) ? ": " + gitCommand.errorMessage : "");
-                    Toast tst = Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_SHORT);
+                    Toast tst = Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_LONG);
                     tst.show();
                 }
                 if (progressDialog.isShowing()) progressDialog.dismiss();
@@ -537,9 +537,8 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
                     tst.show();
                 } else {
                     String message = "Checkout failed" + ((gitCommand.errorMessage != null) ? ": " + gitCommand.errorMessage : "");
-                    Toast tst = Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_SHORT);
+                    Toast tst = Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_LONG);
                     tst.show();
-                    this.finish();
                 }
                 gitCommand = null;
                 break;
@@ -549,7 +548,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
                     tst.show();
                 } else {
                     String message = "Download Failed" + ((gitCommand.errorMessage != null) ? ": " + gitCommand.errorMessage : "");
-                    Toast tst = Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_SHORT);
+                    Toast tst = Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_LONG);
                     tst.show();
                 }
                 if (progressDialog.isShowing()) progressDialog.dismiss();

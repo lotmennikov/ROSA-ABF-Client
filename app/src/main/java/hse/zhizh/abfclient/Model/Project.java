@@ -70,7 +70,17 @@ public class Project {
 
     // Creating repository object. WITHOUT INITIALIZATION!
     public void createRepo() {
-        repository = new Repository(Settings.appContext, this.name, this.git_url);
+        repository = new Repository(this.name, this.git_url);
+    }
+
+    public void eraseRepo() {
+        if (this.repository == null) {
+            createRepo();
+        }
+        this.repository.Clear();
+        this.repository = null;
+        initialized = false;
+        local = false;
     }
 
     // must be called only after successful JGitInit or JGitClone

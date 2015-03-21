@@ -217,9 +217,9 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
                 helper.deleteProject(projectID);
                 helper.close();
 
-                // TODO удаление с устройства
+                Settings.currentProject.eraseRepo();
                 Settings.currentProject = null;
-                Toast.makeText(getApplicationContext(), "Project was removed from the DB, but not from the device", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Project has been removed", Toast.LENGTH_SHORT).show();
                 // refresh list
                 getDatabaseProjects();
 
@@ -347,7 +347,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
                         // попробовать ещё
                         retryCloneDialog.show();
                         String message = "Clone Failed" + ((cloneCommand.errorMessage != null) ? ": " + cloneCommand.errorMessage : "");
-                        Toast tst = Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_SHORT);
+                        Toast tst = Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_LONG);
                         tst.show();
                     }
                     break;

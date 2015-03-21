@@ -174,7 +174,7 @@ public class LoginActivity extends ActionBarActivity {
                 startActivityForResult(projects_intent, 1);
 
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.setError(getString(R.string.error_invalid_credentials));
                 mPasswordView.requestFocus();
 
                 Log.d(Settings.TAG, "LoginActivity" + " Login Fail");
