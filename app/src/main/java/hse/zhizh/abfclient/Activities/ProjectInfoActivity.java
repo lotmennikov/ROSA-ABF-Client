@@ -123,6 +123,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
                 Toast.makeText(getApplicationContext(), "Task is not finished", Toast.LENGTH_SHORT).show();
             }
         });
+        progressDialog.setCancelable(false);
 
         viewPager.setAdapter(ppAdapter);
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -276,10 +277,10 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         blder.setAdapter(branchesAdapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                GitSetBranch setBranch = new GitSetBranch(repo, ProjectInfoActivity.this, branches[which]);
+                gitCommand = new GitSetBranch(repo, ProjectInfoActivity.this, branches[which]);
                 String[] nameparts = branches[which].split("/");
                 branchButton.setText(nameparts[nameparts.length-1]);
-                setBranch.execute();
+                gitCommand.execute();
             }
         });
         branchDialog = blder.create();

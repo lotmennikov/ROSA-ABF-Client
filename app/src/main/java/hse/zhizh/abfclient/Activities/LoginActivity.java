@@ -109,7 +109,6 @@ public class LoginActivity extends ActionBarActivity {
 
         mAuthTask = new UserLoginTask(username, password);
         mAuthTask.execute((Void) null);
-        progressDialog.show();
     }
 
 
@@ -139,6 +138,7 @@ public class LoginActivity extends ActionBarActivity {
                     Log.d(Settings.TAG, "LoginActivity:" + " login cancelled");
                 }
             });
+            progressDialog.show();
         }
 
         @Override
