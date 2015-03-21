@@ -46,7 +46,7 @@ public class Settings {
         downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
     }
 
-// заглушечный тупейший менеджер паролей
+// заглушечный тупейший менеджер паролей (но для других приложений недоступен)
 
     public static String getFromTempPasswordHolder(Context context, String username) {
        // SharedPreferences prefs = context.getSharedPreferences("")

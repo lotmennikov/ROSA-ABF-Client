@@ -41,6 +41,8 @@ public class ContentsFragment extends Fragment implements ProjectActivityEventLi
 
     private Context context;
 
+    private CharSequence[] fileMenu = new CharSequence[] { "Add to stage" , "Delete" };
+
     public ContentsFragment() {
         setRepository();
     }
@@ -97,40 +99,64 @@ public class ContentsFragment extends Fragment implements ProjectActivityEventLi
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 if (!files[position].isDirectory()) {
-                    AlertDialog deleteDialog;
-                    final File delFile = files[position];
-                    // проходим в другую папку
-                    AlertDialog.Builder blder = new AlertDialog.Builder(ContentsFragment.this.getActivity());
-                    blder.setTitle("Delete File?");
+                    final File selectedFile = files[position];
+                    AlertDialog fileDialog;
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setItems(fileMenu, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // The 'which' argument contains the index position
+                                    // of the selected item
+                                    if (which == 0) {
+                                        Log.d(Settings.TAG, "ContentsFragment" + " Add to stage file " + selectedFile.getName());
+                                    }
+                                    if (which == 1) {
+                                        showDeleteDialog(selectedFile);
+                                    }
+                                }
+                            });
+                    fileDialog = builder.create();
+                    fileDialog.show();
 
-                    // delete file
-                    blder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            delFile.delete();
-                            setFileList();
-
-                            Log.d(Settings.TAG + " ContentsFragment", "Deleting file " + delFile.getName());
-                            Toast.makeText(ContentsFragment.this.getActivity(), "File has been deleted", Toast.LENGTH_SHORT).show();
-
-                            dialog.dismiss();
-                        }
-                    });
-
-                    // cancel deletion
-                    blder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    deleteDialog = blder.create();
-                    deleteDialog.show();
                 }
+
                 return true;
             }
 
         });
+
+    }
+
+    private void showDeleteDialog(File file) {
+
+        AlertDialog deleteDialog;
+        final File delFile = file;
+        // проходим в другую папку
+        AlertDialog.Builder blder = new AlertDialog.Builder(ContentsFragment.this.getActivity());
+        blder.setTitle("Delete File?");
+
+        // delete file
+        blder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                delFile.delete();
+                setFileList();
+
+                Log.d(Settings.TAG, "ContentsFragment" + " Deleting file " + delFile.getName());
+                Toast.makeText(ContentsFragment.this.getActivity(), "File has been deleted", Toast.LENGTH_SHORT).show();
+
+                dialog.dismiss();
+            }
+        });
+
+        // cancel deletion
+        blder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        deleteDialog = blder.create();
+        deleteDialog.show();
 
     }
 
