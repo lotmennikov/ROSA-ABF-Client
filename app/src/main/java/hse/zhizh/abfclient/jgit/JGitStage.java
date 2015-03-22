@@ -1,8 +1,10 @@
 package hse.zhizh.abfclient.jgit;
 
+
 import org.eclipse.jgit.api.AddCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Constants;
 
 import java.io.File;
 
@@ -39,6 +41,18 @@ public class JGitStage {
         AddCommand add_all = git.add().addFilepattern("."); // add all files to stage
         try {
             add_all.call();
+        } catch (GitAPIException e) {
+            errorMessage = e.getMessage();
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean unstage(File f) {
+        Git git = repository.getGit();
+        try {
+            git.reset().setRef(Constants.HEAD).addPath(f.getAbsolutePath()).call();
         } catch (GitAPIException e) {
             errorMessage = e.getMessage();
             e.printStackTrace();

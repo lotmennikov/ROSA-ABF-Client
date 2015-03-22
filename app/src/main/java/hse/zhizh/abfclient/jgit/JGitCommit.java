@@ -19,11 +19,11 @@ public class JGitCommit {
     }
 
 
-    public boolean commitChanges(String commitMessage) {
+    public boolean commitChanges(String commitMessage, String committerName, String committerEmail, boolean stageAll, boolean isAmend) {
         Git git = repository.getGit();
-        CommitCommand cc = git.commit().setMessage(commitMessage);
-        //  CommitCommand cc = git.commit().setAll(stageAll).setMessage(commitMessage);
-
+        CommitCommand cc = git.commit()
+                .setCommitter(committerName, committerEmail).setAll(stageAll)
+                .setAmend(isAmend).setMessage(commitMessage);
         try {
             cc.call();
         } catch (Exception e) {
