@@ -93,7 +93,9 @@ public class ProjectsRequest implements ApiRequest {
         try {
             url = new URL(https_url);
             con = (HttpsURLConnection)url.openConnection();
-            new SessionImpl(Settings.repo_username,Settings.repo_password).setConnectionProperties(con, "GET");
+          //  new SessionImpl(Settings.repo_username,Settings.repo_password).setConnectionProperties(con, "GET");
+            SessionImpl.authenticate(con);
+            SessionImpl.setConnectionProperties(con,"GET");
             con.connect();
             int code = con.getResponseCode();
             System.out.println("code:" + code);
@@ -116,6 +118,7 @@ public class ProjectsRequest implements ApiRequest {
         try {
             url = new URL(https_url);
             con = (HttpsURLConnection)url.openConnection();
+            SessionImpl.authenticate(con);
             SessionImpl.setConnectionProperties(con,"GET");
             con.connect();
             int code = con.getResponseCode();
@@ -162,6 +165,7 @@ public class ProjectsRequest implements ApiRequest {
         try {
             url = new URL(https_url);
             con = (HttpsURLConnection)url.openConnection();
+            SessionImpl.authenticate(con);
             SessionImpl.setConnectionProperties(con,"GET");
             con.connect();
             int code = con.getResponseCode();
@@ -265,6 +269,7 @@ public class ProjectsRequest implements ApiRequest {
         try {
             url = new URL(https_url);
             con = (HttpsURLConnection)url.openConnection();
+            SessionImpl.authenticate(con);
             SessionImpl.setConnectionProperties(con,"DELETE");
             con.connect();
             int code = con.getResponseCode();

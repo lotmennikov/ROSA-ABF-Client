@@ -27,7 +27,7 @@ public class JGitStage {
         Git git = repository.getGit();
 
         try {
-            git.add().addFilepattern(f.getAbsolutePath()).call();
+            git.add().addFilepattern(getRelativePath(f)).call();
         } catch (GitAPIException e) {
             errorMessage = e.getMessage();
             e.printStackTrace();
@@ -52,12 +52,18 @@ public class JGitStage {
     public boolean unstage(File f) {
         Git git = repository.getGit();
         try {
-            git.reset().setRef(Constants.HEAD).addPath(f.getAbsolutePath()).call();
+            git.reset().setRef(Constants.HEAD).addPath(getRelativePath(f)).call();
         } catch (GitAPIException e) {
             errorMessage = e.getMessage();
             e.printStackTrace();
             return false;
         }
         return true;
+    }
+
+    private String getRelativePath(File f) {
+        File base = repository.getDir();
+        String relative = base.toURI().relativize(f.toURI()).getPath();
+        return relative;
     }
 }

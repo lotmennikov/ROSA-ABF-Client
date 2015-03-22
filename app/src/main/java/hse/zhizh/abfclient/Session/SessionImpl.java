@@ -16,8 +16,8 @@ import javax.net.ssl.HttpsURLConnection;
 import hse.zhizh.abfclient.common.Settings;
 
 public class SessionImpl implements Session {
-    private String username;
-    private String userpass;
+    private static String username;
+    private static String userpass;
 
     //метод для вывода результата запроса
     private void print_content(HttpsURLConnection con){
@@ -47,12 +47,15 @@ public class SessionImpl implements Session {
     }
 
     //Действие аутентефикации(задает имя пользователя и пароль по умолчанию для соединений)
-    private void authenticate(){
-        Authenticator.setDefault(new Authenticator() {
+    public static void authenticate(HttpsURLConnection con){
+    /*    Authenticator.setDefault(new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(username,userpass.toCharArray());
             }
-        });
+        });*/
+        String encoding = Base64.encodeToString(new String(username + ":" + userpass).getBytes(), Base64.NO_WRAP);
+        encoding = "Basic " + encoding;
+        con.setRequestProperty("Authorization", encoding);
     }
 
     /*
@@ -63,13 +66,14 @@ public class SessionImpl implements Session {
         URL url;
         HttpsURLConnection con=null;
         try {
-            String encoding = Base64.encodeToString(new String(username + ":" + userpass).getBytes(), Base64.NO_WRAP);
-            encoding = "Basic " + encoding;
+          /*  String encoding = Base64.encodeToString(new String(username + ":" + userpass).getBytes(), Base64.NO_WRAP);
+            encoding = "Basic " + encoding;*/
             url = new URL(https_url);
             con = (HttpsURLConnection)url.openConnection();
-          //  setConnectionProperties(con,"GET");
-            con.setRequestMethod("GET");
-            con.setRequestProperty("Authorization", encoding);
+            authenticate(con);
+            setConnectionProperties(con,"GET");
+           // con.setRequestMethod("GET");
+          //  con.setRequestProperty("Authorization", encoding);
             con.connect();
             int code = con.getResponseCode();
             System.out.println("code: " + code);
@@ -97,7 +101,7 @@ public class SessionImpl implements Session {
     public SessionImpl (String username,String userpass){
         this.username=username;
         this.userpass=userpass;
-     //   authenticate();
+      //  authenticate();
     }
     /*
     Функция для строкового представления ответа от сервера

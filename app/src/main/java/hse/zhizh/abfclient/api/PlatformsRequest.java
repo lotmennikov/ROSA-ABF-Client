@@ -38,6 +38,7 @@ public class PlatformsRequest implements ApiRequest {
         try {
             url = new URL(https_url);
             con = (HttpsURLConnection)url.openConnection();
+            SessionImpl.authenticate(con);
             SessionImpl.setConnectionProperties(con, "GET");
             con.connect();
             int code = con.getResponseCode();
@@ -59,6 +60,7 @@ public class PlatformsRequest implements ApiRequest {
         try {
             url = new URL(https_url);
             con = (HttpsURLConnection)url.openConnection();
+            SessionImpl.authenticate(con);
             SessionImpl.setConnectionProperties(con, "GET");
             con.connect();
             int code = con.getResponseCode();

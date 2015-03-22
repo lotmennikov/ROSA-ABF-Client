@@ -36,6 +36,7 @@ public class CreateBuildRequest implements ApiRequest {
         try {
             url = new URL(https_url);
             con = (HttpsURLConnection)url.openConnection();
+            SessionImpl.authenticate(con);
             SessionImpl.setConnectionProperties(con,"POST");
 //            String urlParameters = "build_list[project_id]=118524" +
 //                    "&build_list[commit_hash]=f31e22b1968c795b2cf2567137102c5e512c4971" +
