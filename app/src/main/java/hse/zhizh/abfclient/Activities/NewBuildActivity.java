@@ -250,13 +250,7 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     selectedPlatform = platforms[platformsSpinner.getSelectedItemPosition()];
-                    String[] plReposNames = new String[selectedPlatform.getRepos().length];
-                    for (int i = 0; i < plReposNames.length; ++i)
-                        plReposNames[i] = selectedPlatform.getRepos()[i].getName();
-
-                    ArrayAdapter<String> aAdapter = new ArrayAdapter<String>(NewBuildActivity.this, R.layout.contents_list_element, plReposNames);
-                    aAdapter.setDropDownViewResource(R.layout.contents_list_element);
-                    plReposSpinner.setAdapter(aAdapter);
+                    setPlReposList();
                 }
 
                 @Override
@@ -277,25 +271,35 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
                         break;
                     }
             }
-            // setting selected platform repositories spinner
-            String[] plReposNames = new String[selectedPlatform.getRepos().length];
-            for (int i = 0; i < plReposNames.length; ++i)
-                plReposNames[i] = selectedPlatform.getRepos()[i].getName();
+            setPlReposList();
 
-            arrayAdapter = new ArrayAdapter<String>(this, R.layout.contents_list_element, plReposNames);
-            arrayAdapter.setDropDownViewResource(R.layout.contents_list_element);
-            plReposSpinner.setAdapter(arrayAdapter);
-            if (buildprefs[1] != null) {
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "Internal error", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void setPlReposList() {
+        try {
+            if (selectedPlatform != null) {
+                String[] plReposNames = new String[selectedPlatform.getRepos().length];
                 for (int i = 0; i < plReposNames.length; ++i)
-                    if (plReposNames[i].equals(buildprefs[1])) {
-                        plReposSpinner.setSelection(i);
-                        break;
-                    }
+                    plReposNames[i] = selectedPlatform.getRepos()[i].getName();
+
+                ArrayAdapter<String> aAdapter = new ArrayAdapter<String>(this, R.layout.contents_list_element, plReposNames);
+                aAdapter.setDropDownViewResource(R.layout.contents_list_element);
+                plReposSpinner.setAdapter(aAdapter);
+                if (buildprefs[1] != null) {
+                    for (int i = 0; i < plReposNames.length; ++i)
+                        if (plReposNames[i].equals(buildprefs[1])) {
+                            plReposSpinner.setSelection(i);
+                            break;
+                        }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), "Internal error", Toast.LENGTH_SHORT).show();
-//            this.finish();
         }
     }
 
