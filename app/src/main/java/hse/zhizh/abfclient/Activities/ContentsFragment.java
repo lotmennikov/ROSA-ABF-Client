@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import java.io.File;
 
+import hse.zhizh.abfclient.GitWrappers.GitStage;
 import hse.zhizh.abfclient.Model.Repository;
 import hse.zhizh.abfclient.R;
 import hse.zhizh.abfclient.common.Settings;
@@ -41,7 +42,7 @@ public class ContentsFragment extends Fragment implements ProjectActivityEventLi
 
     private Context context;
 
-    private CharSequence[] fileMenu = new CharSequence[] { "Add to stage" , "Delete" };
+    private CharSequence[] fileMenu = new CharSequence[] { "Add to stage", "Unstage" , "Delete" };
 
     public ContentsFragment() {
         setRepository();
@@ -106,11 +107,28 @@ public class ContentsFragment extends Fragment implements ProjectActivityEventLi
                                 public void onClick(DialogInterface dialog, int which) {
                                     // The 'which' argument contains the index position
                                     // of the selected item
-                                    if (which == 0) {
-                                        Log.d(Settings.TAG, "ContentsFragment" + " Add to stage file " + selectedFile.getName());
-                                    }
-                                    if (which == 1) {
-                                        showDeleteDialog(selectedFile);
+                                    switch (which) {
+                                        case 0: {
+                                            Log.d(Settings.TAG, "ContentsFragment" + " Add to stage file " + selectedFile.getName());
+                                            GitStage gitStage = new GitStage(repo);
+                                            if (gitStage.execute(selectedFile, true)) {
+                                                Toast.makeText(getActivity(), "Staged file", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                            break;
+                                        case 1: {
+                                            Log.d(Settings.TAG, "ContentsFragment" + " Unstage file " + selectedFile.getName());
+                                            GitStage gitStage = new GitStage(repo);
+                                            if (gitStage.execute(selectedFile, false)) {
+                                                Toast.makeText(getActivity(), "Unstaged file", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                            break;
+                                        case 2:
+                                            showDeleteDialog(selectedFile);
+                                            break;
+                                        default:
+                                            break;
                                     }
                                 }
                             });

@@ -9,9 +9,10 @@
         android:inputType="textMultiLine"
         android:ems="10"
         android:id="@+id/editFileText"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         android:text="text"
         android:gravity="top|left"
-        android:background="@color/common_frontbackground" />
+        android:background="@color/common_frontbackground"
+        android:padding="5dp" />
 
 </LinearLayout>

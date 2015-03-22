@@ -19,10 +19,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.games.leaderboard.LeaderboardEntity;
 
 import org.apache.commons.io.output.WriterOutputStream;
 
@@ -44,6 +47,7 @@ import hse.zhizh.abfclient.GitWrappers.GitPull;
 import hse.zhizh.abfclient.GitWrappers.GitPush;
 import hse.zhizh.abfclient.GitWrappers.GitReset;
 import hse.zhizh.abfclient.GitWrappers.GitSetBranch;
+import hse.zhizh.abfclient.GitWrappers.GitStage;
 import hse.zhizh.abfclient.GitWrappers.GitStatus;
 import hse.zhizh.abfclient.GitWrappers.GitUpload;
 import hse.zhizh.abfclient.Model.AbfFile;
@@ -227,46 +231,47 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
     // обработчик кнопочек меню
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-    // Handle action bar item clicks here. The action bar will
-    // automatically handle clicks on the Home/Up button, so long
-    // as you specify a parent activity in AndroidManifest.xml.
-    int id = item.getItemId();
-    switch (id) {
-        case R.id.action_pull:
-            onPullButtonClick(null);
-            return true;
-        case R.id.action_push:
-            onPushButtonClick(null);
-            return true;
-        case R.id.action_commit:
-            onCommitButtonClick(null);
-            return true;
-        case R.id.action_reset:
-            onResetButtonClick(null);
-            return true;
-        case (android.R.id.home):
-            this.finish();
-            return true;
-        case (R.id.action_newfile):
-            onNewFileButtonClick(null);
-            break;
-        case (R.id.action_addbinary):
-            onAddBinaryButtonClick(null);
-            break;
-        case (R.id.action_downloadbinary):
-            onDownloadBinariesButtonClick(null);
-            break;
-        case (R.id.action_newbuild):
-            onNewBuildButtonClick(null);
-            break;
-        case (R.id.action_refreshbuilds):
-            getBuilds();
-            break;
-        default:
-            break;
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_pull:
+                onPullButtonClick(null);
+                return true;
+            case R.id.action_push:
+                onPushButtonClick(null);
+                return true;
+            case R.id.action_commit:
+                onCommitButtonClick(null);
+                return true;
+            case R.id.action_reset:
+                onResetButtonClick(null);
+                return true;
+            case (android.R.id.home):
+                this.finish();
+                return true;
+            case R.id.action_stageall:
+                onStageAllClick(null);
+                return true;
+            case (R.id.action_newfile):
+                onNewFileButtonClick(null);
+                return true;
+            case (R.id.action_addbinary):
+                onAddBinaryButtonClick(null);
+                return true;
+            case (R.id.action_downloadbinary):
+                onDownloadBinariesButtonClick(null);
+                return true;
+            case (R.id.action_newbuild):
+                onNewBuildButtonClick(null);
+                return true;
+            case (R.id.action_refreshbuilds):
+                getBuilds();
+                return true;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
-    return super.onOptionsItemSelected(item);
-}
+
     // Вывод диалога выбора ветки
     public void onBranchButtonClick(View v) {
 
@@ -296,6 +301,10 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         final EditText commitName = (EditText)commitDialog.findViewById(R.id.commit_summary);
         final Button commitCommit = (Button)commitDialog.findViewById(R.id.commit_commit);
         final TextView statusView = (TextView)commitDialog.findViewById(R.id.commit_status);
+        final CheckBox stageCheck = (CheckBox)commitDialog.findViewById(R.id.commit_stage);
+        final CheckBox amendCheck = (CheckBox)commitDialog.findViewById(R.id.commit_amend);
+        stageCheck.setChecked(false);
+        amendCheck.setChecked(false);
         GitStatus statuscom = new GitStatus(repo);
         String status = "Status: \n";
         if (statuscom.execute()) {
@@ -307,8 +316,10 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
             @Override
             public void onClick(View v) {
                 String summary = commitName.getText().toString();
+                boolean amend = amendCheck.isChecked();
+                boolean stage = stageCheck.isChecked();
                 if (gitCommand == null) {
-                    gitCommand = new GitCommit(repo, ProjectInfoActivity.this, summary);
+                    gitCommand = new GitCommit(repo, ProjectInfoActivity.this, summary, stage, amend);
                     gitCommand.execute();
                 }
                 commitDialog.dismiss();
@@ -337,7 +348,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         }
     }
 
-    // Reset
+    // Hard Reset
     public void onResetButtonClick(View v) {
         GitReset resetCommand = new GitReset(repo);
         if (resetCommand.execute()) {
@@ -435,14 +446,6 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         } else Toast.makeText(getApplicationContext(), "Unfinished git request", Toast.LENGTH_SHORT).show();
     }
 
-    // Starting upload task
-    private void uploadToFileStore(File binFile) {
-            gitCommand = new GitUpload(repo, this, binFile);
-            progressDialog.setTitle("Uploading...");
-            progressDialog.show();
-            gitCommand.execute();
-    }
-
     public void onDownloadBinariesButtonClick(View v) {
         if (gitCommand == null) {
             showDownloadBinChooser();
@@ -456,11 +459,18 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         startActivityForResult(newbuildIntent, REQUEST_NEWBUILD);
     }
 
-
+    // sends request for build list
     public void onRefreshBuildsClick(View v) {
         Log.d(Settings.TAG, "ProjectInfoActivity: Refresh Click");
         refreshBuildMessage = true;
         getBuilds();
+    }
+
+    public void onStageAllClick(View v) {
+        GitStage stageCom = new GitStage(repo);
+        if (stageCom.execute()) {
+            Toast.makeText(this, "Staged", Toast.LENGTH_SHORT).show();
+        }
     }
 
     // если вклалка не обрабатывает, можно закрывать
@@ -469,7 +479,6 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         if (!((ProjectActivityEventListener)ppAdapter.getItem(viewPager.getCurrentItem())).onBackPressed())
             this.finish();
     }
-
 
 // Команды с асинхронным выполнением
     @Override
@@ -576,6 +585,21 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
     }
 
     @Override
+    protected void onActivityResult(int rcode, int rescode, Intent res_intent) {
+        if (res_intent != null) {
+            if (rescode == RESULT_OK && rcode == REQUEST_FILENAME) {
+                if (addbin_fileedit != null) {
+                    String filename = res_intent.getStringExtra("Filename");
+                    addbin_fileedit.setText(filename);
+                }
+            }
+            if (rescode == RESULT_OK && rcode == REQUEST_NEWBUILD) {
+                getBuilds();
+            }
+        }
+    }
+
+    @Override
     public void onDestroy() {
         if (abfQuery != null)
             abfQuery.cancel(true);
@@ -584,7 +608,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         super.onDestroy();
     }
 
-
+    // Download dialog
     public void showDownloadBinChooser() {
         final GitGetAbfFiles abfFiles = new GitGetAbfFiles(repo);
         if (abfFiles.execute()) {
@@ -622,7 +646,15 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
 
     }
 
+    // Starting upload task
+    private void uploadToFileStore(File binFile) {
+        gitCommand = new GitUpload(repo, this, binFile);
+        progressDialog.setTitle("Uploading...");
+        progressDialog.show();
+        gitCommand.execute();
+    }
 
+    // Starts download task
     private void startDownloadAbf(List<AbfFile> abfFiles, boolean[] checkList) {
         List<AbfFile> selectedAbf = new ArrayList<AbfFile>();
         for (int i = 0; i < checkList.length; ++i) {
@@ -634,21 +666,6 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         gitCommand.execute();
     }
 
-
-    @Override
-    protected void onActivityResult(int rcode, int rescode, Intent res_intent) {
-        if (res_intent != null) {
-            if (rescode == RESULT_OK && rcode == REQUEST_FILENAME) {
-                if (addbin_fileedit != null) {
-                    String filename = res_intent.getStringExtra("Filename");
-                    addbin_fileedit.setText(filename);
-                }
-            }
-            if (rescode == RESULT_OK && rcode == REQUEST_NEWBUILD) {
-                getBuilds();
-            }
-        }
-    }
 //  -------- tabs ---------
 
     @Override
@@ -657,7 +674,6 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         if (refreshBuildsButton != null)
             refreshBuildsButton.setVisible(tab.getPosition() == 2);
     }
-
 
     @Override
     public void onTabUnselected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {

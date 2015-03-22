@@ -37,40 +37,10 @@ public class MainActivity extends ActionBarActivity {
         startActivityForResult(login_intent, 1);
     }
 
-    public void onSettingsButtonClick(View v) {
-        Intent settings_intent = new Intent(MainActivity.this, SettingsActivity.class);
-        startActivity(settings_intent);
-    }
-
-    public void onProjectInfoButtonClick(View v) {
-        Intent project_intent = new Intent(MainActivity.this, ProjectInfoActivity.class);
-        startActivity(project_intent);
-    }
-
-    public void onProjectsButtonClick(View v) {
-        Intent projects_intent = new Intent(MainActivity.this, ProjectsActivity.class);
-        startActivity(projects_intent);
-    }
-
-    public void onBuildInfoButtonClick(View v) {
-        Intent buildinfo_intent = new Intent(MainActivity.this, NewBuildActivity.class);
-        startActivity(buildinfo_intent);
-    }
 
     @Override
     protected void onActivityResult(int rcode, int rescode, Intent res_intent) {
         this.finish(); // just exit
-        if (res_intent != null) {
-/*            String usr = res_intent.getStringExtra("Username");
-            String pwd = res_intent.getStringExtra("Password");
-            TextView usr_lab = (TextView)findViewById(R.id.username_label);
-            TextView pass_lab = (TextView)findViewById(R.id.password_label);
-            usr_lab.setText(usr);
-            pass_lab.setText(pwd);
-
-            // перейти к проектам
-            onProjectsButtonClick(null);*/
-        }
     }
 
 }

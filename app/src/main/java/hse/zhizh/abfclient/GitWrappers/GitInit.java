@@ -28,11 +28,11 @@ public class GitInit {
         try {
             JGitInit initcom = new JGitInit(mRepo);
             if (initcom.initRepo()) {
-                Log.d(Settings.TAG, COMMANDTAG + "git initialized");
+                Log.d(Settings.TAG, COMMANDTAG + " git initialized");
                 return true;
             } else {
                 errorMessage = initcom.errorMessage;
-                Log.e(Settings.TAG, COMMANDTAG + "git not initialized");
+                Log.e(Settings.TAG, COMMANDTAG + " git not initialized");
                 return false;
             }
         } catch (Exception e) {
