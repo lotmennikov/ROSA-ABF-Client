@@ -350,14 +350,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
 
     // Hard Reset
     public void onResetButtonClick(View v) {
-        GitReset resetCommand = new GitReset(repo);
-        if (resetCommand.execute()) {
-            ppAdapter.refreshContents();
-            getCommits();
-            Toast.makeText(getApplicationContext(), "Hard Reset", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(getApplicationContext(), "Reset Failed", Toast.LENGTH_SHORT).show();
-        }
+        showResetDialog();
     }
 
     // Shows new file dialog
@@ -454,8 +447,10 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
 
     // Starts NewBuildActivity
     public void onNewBuildButtonClick(View v) {
-        Toast.makeText(getApplicationContext(), "New Build", Toast.LENGTH_SHORT).show();
         Intent newbuildIntent = new Intent(ProjectInfoActivity.this, NewBuildActivity.class);
+        String[] parts = repo.getBranchName().split("/");
+        String branch = parts[parts.length-1];
+        newbuildIntent.putExtra("branchName", branch);
         startActivityForResult(newbuildIntent, REQUEST_NEWBUILD);
     }
 
@@ -644,6 +639,39 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
             downloadAbfDialog.show();
         }
 
+    }
+
+    public void showResetDialog() {
+        AlertDialog resetDialog;
+        AlertDialog.Builder blder = new AlertDialog.Builder(this);
+        blder.setTitle("Reset?");
+
+        // reset
+        blder.setPositiveButton("Reset", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                GitReset resetCommand = new GitReset(repo);
+                if (resetCommand.execute()) {
+                    ppAdapter.refreshContents();
+                    getCommits();
+                    Toast.makeText(getApplicationContext(), "Hard Reset", Toast.LENGTH_SHORT).show();
+                } else {
+                    String message = "Reset Failed" + (resetCommand.errorMessage != null ? ": " + resetCommand.errorMessage : "");
+                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                }
+                dialog.dismiss();
+            }
+        });
+
+        // cancel reset
+        blder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        resetDialog = blder.create();
+        resetDialog.show();
     }
 
     // Starting upload task

@@ -1,6 +1,7 @@
 package hse.zhizh.abfclient.Activities;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -45,6 +46,8 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
     private Architecture[] arches;
     private ProjectRef[] refs;
     private ProjectRepo[] repos;
+    private String defaultBranch;
+    private String[] buildprefs;
 
     private String[] updateTypes = new String[]{ "recommended", "bugfix", "security", "enhancement", "newpackage" };
 
@@ -87,6 +90,8 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
         setTitle("Start New Build");
 
         project = Settings.currentProject;
+        defaultBranch = getIntent().getStringExtra("branchName");
+        buildprefs = Settings.getBuildPrefs(project.getName());
 
         projectName = (EditText)findViewById(R.id.newb_projectname);
         refsSpinner = (Spinner)findViewById(R.id.newb_versionspinner);
@@ -104,6 +109,13 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.contents_list_element, updateTypes);
         arrayAdapter.setDropDownViewResource(R.layout.contents_list_element);
         updateSpinner.setAdapter(arrayAdapter);
+        if (buildprefs[5] != null) {
+            for (int i = 0; i < updateTypes.length; ++i)
+                if (updateTypes[i].equals(buildprefs[5])) {
+                    updateSpinner.setSelection(i);
+                    break;
+                }
+        }
 
         // empty spinners
         arrayAdapter = new ArrayAdapter<String>(this, R.layout.contents_list_element, new String[0]);
@@ -114,6 +126,25 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
         refsSpinner.setAdapter(arrayAdapter);
 
         sendAPIRequests();
+
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                if (countQueries > 0) {
+                    platformsQuery.cancel(true);
+                    archesQuery.cancel(true);
+                    refsQuery.cancel(true);
+                    reposQuery.cancel(true);
+
+                    Intent resultIntent = new Intent();
+                    setResult(RESULT_CANCELED, resultIntent);
+                    finish();
+                    dialog.dismiss();
+                } else {
+                    dialog.dismiss();
+                }
+            }
+        });
     }
 
     private void sendAPIRequests() {
@@ -138,12 +169,26 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
     }
 
     private void setArchesList() {
-        String[] archesNames = new String[arches.length];
-        for (int i = 0; i < arches.length; ++i)
-            archesNames[i] = arches[i].getName();
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.contents_list_element, archesNames);
-        arrayAdapter.setDropDownViewResource(R.layout.contents_list_element);
-        archesSpinner.setAdapter(arrayAdapter);
+        try {
+            String[] archesNames = new String[arches.length];
+            for (int i = 0; i < arches.length; ++i)
+                archesNames[i] = arches[i].getName();
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.contents_list_element, archesNames);
+            arrayAdapter.setDropDownViewResource(R.layout.contents_list_element);
+            archesSpinner.setAdapter(arrayAdapter);
+            if (buildprefs[4] != null) {
+                for (int i = 0; i < archesNames.length; ++i)
+                    if (archesNames[i].equals(buildprefs[4])) {
+                        archesSpinner.setSelection(i);
+                        break;
+                    }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.contents_list_element, new String[0]);
+            refsSpinner.setAdapter(arrayAdapter);
+            Toast.makeText(getApplicationContext(),"Internal error", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setRefsList() {
@@ -154,12 +199,20 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.contents_list_element, refsNames);
             arrayAdapter.setDropDownViewResource(R.layout.contents_list_element);
             refsSpinner.setAdapter(arrayAdapter);
+
+            if (defaultBranch != null) {
+                for (int i = 0; i < refsNames.length; ++i) {
+                    if (refsNames[i].equals(defaultBranch)) {
+                        refsSpinner.setSelection(i);
+                        break;
+                    }
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.contents_list_element, new String[0]);
             refsSpinner.setAdapter(arrayAdapter);
             Toast.makeText(getApplicationContext(),"Internal error", Toast.LENGTH_SHORT).show();
-//            this.finish();
         }
     }
 
@@ -171,14 +224,20 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.contents_list_element, reposNames);
             arrayAdapter.setDropDownViewResource(R.layout.contents_list_element);
             reposSpinner.setAdapter(arrayAdapter);
+            if (buildprefs[2] != null) {
+                for (int i = 0; i < reposNames.length; ++i)
+                    if (reposNames[i].equals(buildprefs[2])) {
+                        reposSpinner.setSelection(i);
+                        break;
+                    }
+            }
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(),"Internal error", Toast.LENGTH_SHORT).show();
-//            this.finish();
         }
     }
 
-    // setting platform and platform repositories spinners
+    // sets platform and platform repositories spinners
     private void setPlatformsList() {
         try {
             // setting platform spinner
@@ -209,8 +268,16 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
             });
             platformsSpinner.setAdapter(arrayAdapter);
 
-            // setting selected platform repositories spinner
             selectedPlatform = platforms[0];
+            if (buildprefs[0] != null) {
+                for (int i = 0; i < platformsNames.length; ++i)
+                    if (platformsNames[i].equals(buildprefs[0])) {
+                        platformsSpinner.setSelection(i);
+                        selectedPlatform = platforms[i];
+                        break;
+                    }
+            }
+            // setting selected platform repositories spinner
             String[] plReposNames = new String[selectedPlatform.getRepos().length];
             for (int i = 0; i < plReposNames.length; ++i)
                 plReposNames[i] = selectedPlatform.getRepos()[i].getName();
@@ -218,7 +285,13 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
             arrayAdapter = new ArrayAdapter<String>(this, R.layout.contents_list_element, plReposNames);
             arrayAdapter.setDropDownViewResource(R.layout.contents_list_element);
             plReposSpinner.setAdapter(arrayAdapter);
-
+            if (buildprefs[1] != null) {
+                for (int i = 0; i < plReposNames.length; ++i)
+                    if (plReposNames[i].equals(buildprefs[1])) {
+                        plReposSpinner.setSelection(i);
+                        break;
+                    }
+            }
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), "Internal error", Toast.LENGTH_SHORT).show();
@@ -282,8 +355,17 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
                               "\nPlatformRepo: " + selectedPlRepo.getName() +
                               "\nProjectRepo: " + selectedProjectRepo.getName() +
                               "\nProjectRef: " + selectedRef.getRef() +
-                              "\nUpdateType: " + selectedPlatform.getMessage()
+                              "\nUpdateType: " + updateType
             );
+
+            Settings.setBuildPrefs(project.getName(),
+                    new String[] {
+                    selectedPlatform.getMessage(),
+                    selectedPlRepo.getName(),
+                    selectedProjectRepo.getName(),
+                    selectedRef.getRef(),
+                    selectedArchitecture.getName(),
+                    updateType});
 
             newBuildQuery = new ABFNewBuild(this,
                                             project.getId(),
@@ -294,6 +376,13 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
                                             new int[] { selectedPlRepo.getId() },
                                             selectedArchitecture.getId());
             progressDialog.show();
+            progressDialog.setCancelable(false);
+            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    Toast.makeText(getApplicationContext(), "Waiting for server response", Toast.LENGTH_SHORT).show();
+                }
+            });
             // Sends build request
             newBuildQuery.execute();
 

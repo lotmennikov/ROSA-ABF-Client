@@ -70,7 +70,7 @@ public class Project {
 
     // Creating repository object. WITHOUT INITIALIZATION!
     public void createRepo() {
-        repository = new Repository(this.name, this.git_url);
+        repository = new Repository(this.name, this.fullname, this.git_url);
     }
 
     public void eraseRepo() {

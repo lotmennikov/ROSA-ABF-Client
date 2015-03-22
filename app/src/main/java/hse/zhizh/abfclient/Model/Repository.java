@@ -19,16 +19,18 @@ import hse.zhizh.abfclient.common.Settings;
 public class Repository {
 
     private String name;
+    private String fullname;
     private File path;
     private String url;
 
     public Git git;
 
     //repository from project info
-    public Repository(String name, String git_url) {
+    public Repository(String name, String fullname, String git_url) {
         this.name = name;
+        this.fullname = fullname;
         this.path = new File(Settings.repo_path);
-        File projdir = new File(this.path.getAbsolutePath() + "/" + this.name + "/");
+        File projdir = new File(this.path.getAbsolutePath() + "/" + this.fullname + "/");
         this.path = projdir;
         this.url = git_url;
 

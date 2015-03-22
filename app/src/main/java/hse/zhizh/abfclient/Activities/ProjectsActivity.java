@@ -376,15 +376,20 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
                         if (Settings.currentProject.getRepo() == null) {
                             Settings.currentProject.createRepo();
                         }
-                        // запуск клонирования
-                        cloneCommand = new GitClone(Settings.currentProject.getRepo(), ProjectsActivity.this);
-                        cloneCommand.execute();
-                        progressDialog.setTitle("Cloning project...");
-                        if (!progressDialog.isShowing()) progressDialog.show();
-
-
-                        Toast tst = Toast.makeText(this.getApplicationContext(), "Cloning ProjectID: " + Settings.currentProject.getId(), Toast.LENGTH_SHORT);
-                        tst.show();
+                        FeedProjectsDbHelper helper = new FeedProjectsDbHelper(getApplicationContext());
+                        if (!helper.checkIfExists(Settings.currentProject.getId())) {
+                            // запуск клонирования
+                            cloneCommand = new GitClone(Settings.currentProject.getRepo(), ProjectsActivity.this);
+                            cloneCommand.execute();
+                            progressDialog.setTitle("Cloning project...");
+                            if (!progressDialog.isShowing()) progressDialog.show();
+                            Toast tst = Toast.makeText(this.getApplicationContext(), "Cloning ProjectID: " + Settings.currentProject.getId(), Toast.LENGTH_SHORT);
+                            tst.show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Already cloned", Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
+                        }
+                        helper.close();
                     } else {
                         progressDialog.dismiss();
                         Toast tst = Toast.makeText(this.getApplicationContext(), "GetProjectID Failed", Toast.LENGTH_SHORT);

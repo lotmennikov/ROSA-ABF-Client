@@ -14,6 +14,7 @@
     <string name="title_activity_commits">CommitsActivity</string>
     <string name="title_activity_projects">ProjectsActivity</string>
     <string name="app_preferences_file">abfclientprefs</string>
+    <string name="build_preferences_file">buildprefs</string>
     <string name="prompt_password_no_o">Password</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_file_chooser">FileChooserActivity</string>

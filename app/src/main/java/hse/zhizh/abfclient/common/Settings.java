@@ -87,4 +87,27 @@ public class Settings {
         return username;
     }
 
+// настройки сборки
+
+    public static String[] getBuildPrefs(String projectname) {
+        SharedPreferences shp = appContext.getSharedPreferences(appContext.getString(R.string.build_preferences_file), Context.MODE_PRIVATE);
+        String platform = shp.getString(projectname + "_platform", "");
+        String plrepo = shp.getString(projectname + "_plrepo", "");
+        String repo = shp.getString(projectname + "_repo", "");
+        String ref = shp.getString(projectname + "_ref", "");
+        String arch = shp.getString(projectname + "_arch", "");
+        String update = shp.getString(projectname + "_update", "");
+        return new String[]{platform, plrepo, repo, ref, arch, update };
+    }
+
+    public static void setBuildPrefs(String projectname, String[] prefs) {
+        SharedPreferences shp = appContext.getSharedPreferences(appContext.getString(R.string.build_preferences_file), Context.MODE_PRIVATE);
+        shp.edit().putString(projectname + "_platform", prefs[0])
+                  .putString(projectname + "_plrepo", prefs[1])
+                  .putString(projectname + "_repo", prefs[2])
+                  .putString(projectname + "_ref", prefs[3])
+                  .putString(projectname + "_arch", prefs[4])
+                  .putString(projectname + "_update", prefs[5]).apply();
+    }
+
 }
