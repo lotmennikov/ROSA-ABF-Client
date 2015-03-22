@@ -43,7 +43,7 @@ public class JGitClone {
                 .setProgressMonitor(new RepoCloneMonitor())
                 .setDirectory(localRepo);
 
-//            cloneCommand.setCredentialsProvider(auth);
+            cloneCommand.setCredentialsProvider(auth);
 
         try {
             // execution of cloneCommand

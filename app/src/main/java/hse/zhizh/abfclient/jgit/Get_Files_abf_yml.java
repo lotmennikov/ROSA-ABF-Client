@@ -32,6 +32,10 @@ public class Get_Files_abf_yml {
             int flag = 0;
             String line = br.readLine();
             while (line != null) {
+                if (line.isEmpty()) {
+                    line = br.readLine();
+                    continue;
+                }
                 if (line.contains("removed_sources:"))
                     flag = 1;
                 else if (line.contains("sources:"))
