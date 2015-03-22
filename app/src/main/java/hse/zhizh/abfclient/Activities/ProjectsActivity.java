@@ -185,9 +185,9 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
                     progressDialog.setTitle("Retrieving project info...");
                     if (!progressDialog.isShowing()) progressDialog.show();
                 } else
-                    Toast.makeText(getApplicationContext(), "AbfQuery not finished", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "AbfQuery is not finished", Toast.LENGTH_SHORT).show();
 
-                Toast.makeText(getApplicationContext(), "Clone Project:" + groupName + "/" + projectName, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), "Clone Project:" + groupName + "/" + projectName, Toast.LENGTH_SHORT).show();
                 addProjectDialog.dismiss();
             }
         });
@@ -383,7 +383,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
                             cloneCommand.execute();
                             progressDialog.setTitle("Cloning project...");
                             if (!progressDialog.isShowing()) progressDialog.show();
-                            Toast tst = Toast.makeText(this.getApplicationContext(), "Cloning ProjectID: " + Settings.currentProject.getId(), Toast.LENGTH_SHORT);
+                            Toast tst = Toast.makeText(this.getApplicationContext(), "Cloning Project: " + Settings.currentProject.getId(), Toast.LENGTH_SHORT);
                             tst.show();
                         } else {
                             Toast.makeText(getApplicationContext(), "Already cloned", Toast.LENGTH_SHORT).show();
