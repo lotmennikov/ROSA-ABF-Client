@@ -55,7 +55,6 @@ public class Upload_abf_yml {
         String encoding = Base64.encodeToString(new String(Settings.repo_username + ":" + Settings.repo_password).getBytes(), Base64.NO_WRAP);
         request.setHeader("Authorization", encoding);
         CloseableHttpResponse response2 = null;
-        Header[] headers = request.getAllHeaders();
         try {
             response2 = httpclient.execute(request);
         } catch (IOException e) {
@@ -81,6 +80,7 @@ public class Upload_abf_yml {
                 System.out.println("This file has already been uploaded!");
                 hash = ((JSONArray)json.get("sha1_hash")).getString(0);
                 hash = hash.substring(1, hash.indexOf('\'', 1));
+                writeToAbfYmlFile(fileToUpload, hash);
             } else if (response2.getStatusLine().getStatusCode() == 201) {
                 statusMessage = response2.getStatusLine().getReasonPhrase();
                 System.out.println("File uploaded successfully!");
@@ -90,33 +90,7 @@ public class Upload_abf_yml {
                     abf_yml_file.getParentFile().mkdirs();
                     abf_yml_file.createNewFile();
                 }
-               /* FileWriter fw = new FileWriter (abf_yml_file);
-                BufferedWriter bw = new BufferedWriter(fw);
-                if (abf_yml_file.length() == 0 || !FileUtils.readFileToString(abf_yml_file).contains("sources:")) {
-                    bw.write("sources:");
-                    bw.newLine();
-                }
-                bw.write("  \"" + fileToUpload.getName() + "\": " + hash);
-                bw.close();*/
-                String s = FileUtils.readFileToString(abf_yml_file);
-                s.replaceAll("(?m)^[ \t]*\r?\n", "");
-                String fileString = "  \"" + fileToUpload.getName() + "\": " + hash;
-                if (s.isEmpty()) {
-                    s = "sources:\n" + fileString + s;
-                } else if (s.startsWith("sources:\n")) {
-                    s = s.substring(0, "sources:\n".length()) + fileString + s.substring("sources\n".length());
-                } else if (s.startsWith("sources:")) {
-                    s = s.substring(0, "sources:".length()) + "\n" + fileString + s.substring("sources".length());
-                } else if (s.contains("\nsources:\n")) {
-                    s = s.substring(0, s.indexOf("\nsources:\n") + "\nsources:\n".length()) + fileString + "\n" + s.substring(s.indexOf("\nsources:\n") + "\nsources:\n".length());
-                }  else if (s.contains("\nsources:")) {
-                    s = s.substring(0, s.indexOf("\nsources:") + "\nsources:".length()) + "\n" + fileString + "\n" + s.substring(s.indexOf("\nsources:") + "\nsources:".length());
-                } else if (!s.contains("\nsources:")) {
-                    s = "sources:\n" + fileString + s;
-                }
-                BufferedWriter bw = new BufferedWriter(new FileWriter(abf_yml_file,false));
-                bw.write(s);
-                bw.close();
+                writeToAbfYmlFile(fileToUpload, hash);
             } else {
                 statusMessage = response2.getStatusLine().getReasonPhrase();
                 System.out.println("Unknown response code!");
@@ -142,5 +116,48 @@ public class Upload_abf_yml {
         }
     }
         return true;
+    }
+
+    private void writeToAbfYmlFile(File fileToUpload, String hash) {
+        File abf_yml_file = new File(repository.getDir().toString() +"/.abf.yml");
+        if (!abf_yml_file.exists()) {
+            abf_yml_file.getParentFile().mkdirs();
+            try {
+                abf_yml_file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        String s = null;
+        try {
+            s = FileUtils.readFileToString(abf_yml_file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        s.replaceAll("(?m)^[ \t]*\r?\n", "");
+        String fileString = "  \"" + fileToUpload.getName() + "\": " + hash;
+        if (!s.contains(fileToUpload.getName() + "\": " + hash)) {
+            if (s.isEmpty()) {
+                s = "sources:\n" + fileString + s;
+            } else if (s.startsWith("sources:\n")) {
+                s = s.substring(0, "sources:\n".length()) + fileString + s.substring("sources\n".length());
+            } else if (s.startsWith("sources:")) {
+                s = s.substring(0, "sources:".length()) + "\n" + fileString + s.substring("sources".length());
+            } else if (s.contains("\nsources:\n")) {
+                s = s.substring(0, s.indexOf("\nsources:\n") + "\nsources:\n".length()) + fileString + "\n" + s.substring(s.indexOf("\nsources:\n") + "\nsources:\n".length());
+            } else if (s.contains("\nsources:")) {
+                s = s.substring(0, s.indexOf("\nsources:") + "\nsources:".length()) + "\n" + fileString + "\n" + s.substring(s.indexOf("\nsources:") + "\nsources:".length());
+            } else if (!s.contains("\nsources:")) {
+                s = "sources:\n" + fileString + s;
+            }
+            BufferedWriter bw = null;
+            try {
+                bw = new BufferedWriter(new FileWriter(abf_yml_file, false));
+                bw.write(s);
+                bw.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
