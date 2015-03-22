@@ -21,15 +21,14 @@ public class JGitCommit {
 
     public boolean commitChanges(String commitMessage) {
         Git git = repository.getGit();
-        AddCommand add_all = git.add().addFilepattern("."); // add all files to stage
         CommitCommand cc = git.commit().setMessage(commitMessage);
         //  CommitCommand cc = git.commit().setAll(stageAll).setMessage(commitMessage);
 
         try {
-            add_all.call();
             cc.call();
         } catch (Exception e) {
             errorMessage = e.getMessage();
+            e.printStackTrace();
             return false;
         }
         return true;
