@@ -447,7 +447,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
             case R.id.action_addproject:
                 addProjectDialog.show();
                 return true;
-            case R.id.test_cleardbButton:
+/*            case R.id.test_cleardbButton:
                 onClearDBButtonClick(null);
                 break;
             case R.id.test_getdbprojects:
@@ -455,7 +455,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
                 break;
             case R.id.test_getprojects:
                 onGetProjectsButtonClick(null);
-                break;
+                break;*/
             default:
                 break;
         }

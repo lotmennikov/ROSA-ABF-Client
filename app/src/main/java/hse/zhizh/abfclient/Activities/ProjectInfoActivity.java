@@ -303,7 +303,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         final TextView statusView = (TextView)commitDialog.findViewById(R.id.commit_status);
         final CheckBox stageCheck = (CheckBox)commitDialog.findViewById(R.id.commit_stage);
         final CheckBox amendCheck = (CheckBox)commitDialog.findViewById(R.id.commit_amend);
-        stageCheck.setChecked(false);
+        stageCheck.setChecked(true);
         amendCheck.setChecked(false);
         GitStatus statuscom = new GitStatus(repo);
         String status = "Status: \n";
