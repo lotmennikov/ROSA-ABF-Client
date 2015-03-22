@@ -283,8 +283,6 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 gitCommand = new GitSetBranch(repo, ProjectInfoActivity.this, branches[which]);
-                String[] nameparts = branches[which].split("/");
-                branchButton.setText(nameparts[nameparts.length-1]);
                 gitCommand.execute();
             }
         });
@@ -376,7 +374,7 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
                             if (newFile.createNewFile()) {
                                 Toast.makeText(getApplicationContext(), "New File", Toast.LENGTH_SHORT).show();
                             }
-                        }
+                        } else Toast.makeText(getApplicationContext(), "File exists", Toast.LENGTH_SHORT).show();
                         ppAdapter.refreshContents();
                         newFileDialog.dismiss();
                     }
@@ -508,7 +506,8 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
                 break;
             case GitCommand.UPLOAD_COMMAND:
                 if (success) {
-                    String message = ((GitUpload)gitCommand).result;
+                    ppAdapter.refreshContents();
+                    String message = "Uploading file: " + (((GitUpload)gitCommand).result != null ? ((GitUpload)gitCommand).result : "");
                     Toast tst = Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_SHORT);
                     tst.show();
                 } else {
@@ -535,6 +534,8 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
                 break;
             case GitCommand.SETBRANCH_COMMAND:
                 if (success) {
+                    String[] nameparts = repo.getBranchName().split("/");
+                    branchButton.setText(nameparts[nameparts.length-1]);
                     ppAdapter.refreshContents();
                     getCommits();
                     Toast tst = Toast.makeText(this.getApplicationContext(), "Checkout", Toast.LENGTH_SHORT);
@@ -608,35 +609,37 @@ public class ProjectInfoActivity extends ActionBarActivity implements CommandRes
         final GitGetAbfFiles abfFiles = new GitGetAbfFiles(repo);
         if (abfFiles.execute()) {
             final List<AbfFile> abfFileList = abfFiles.result;
+            if (abfFileList != null && abfFileList.size() > 0) {
+                // настройка окошка
+                downloadAbfDialog = new Dialog(this);
+                downloadAbfDialog.setContentView(R.layout.dialog_listabfyml);
+                downloadAbfDialog.setTitle("Download files");
 
-            // настройка окошка
-            downloadAbfDialog = new Dialog(this);
-            downloadAbfDialog.setContentView(R.layout.dialog_listabfyml);
-            downloadAbfDialog.setTitle("Download files");
+                // настройка списка
+                final AbfFileListAdapter abfAdapter = new AbfFileListAdapter(this,
+                        R.layout.item_abfymllist, abfFileList);
+                ListView listView = (ListView) downloadAbfDialog.findViewById(R.id.abffiles_list);
+                // настройка кнопки
+                View footer = this.getLayoutInflater().inflate(R.layout.item_abfllistfooter, null);
+                Button downloadButton = (Button) footer.findViewById(R.id.abffiles_downloadbutton);
+                downloadButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        boolean[] checkList = abfAdapter.getChecklist();
+                        startDownloadAbf(abfFileList, checkList);
+                        downloadAbfDialog.dismiss();
 
-            // настройка списка
-            final AbfFileListAdapter abfAdapter = new AbfFileListAdapter(this,
-                    R.layout.item_abfymllist, abfFileList);
-            ListView listView = (ListView)downloadAbfDialog.findViewById(R.id.abffiles_list);
-            // настройка кнопки
-            View footer = this.getLayoutInflater().inflate(R.layout.item_abfllistfooter, null);
-            Button downloadButton = (Button)footer.findViewById(R.id.abffiles_downloadbutton);
-            downloadButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    boolean[] checkList = abfAdapter.getChecklist();
-                    startDownloadAbf(abfFileList, checkList);
-                    downloadAbfDialog.dismiss();
+                    }
+                });
 
-                }
-            });
-
-            listView.addFooterView(footer);
-            listView.setAdapter(abfAdapter);
+                listView.addFooterView(footer);
+                listView.setAdapter(abfAdapter);
 
 
-            // показ
-            downloadAbfDialog.show();
+                // показ
+                downloadAbfDialog.show();
+            } else
+                Toast.makeText(getApplicationContext(), "No .abf.yml files were found", Toast.LENGTH_SHORT).show();
         }
 
     }

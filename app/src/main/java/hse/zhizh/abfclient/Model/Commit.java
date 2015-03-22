@@ -15,6 +15,9 @@ public class Commit {
 
     public Commit(String name, String hash, String committer, Date date, boolean pushed) {
         this.name = name;
+        if (name.endsWith("\n") && name.length() > 1) {
+            this.name = name.substring(0, name.length() - 2);
+        }
         this.hash = hash;
         this.committer = committer;
         this.date = date;

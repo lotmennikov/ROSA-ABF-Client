@@ -90,7 +90,6 @@ public class FileChooserActivity extends ActionBarActivity {
                     setFileList();
                 }
                 else {
-                    // TODO вернуть файл
                     Intent intent = new Intent();
                     intent.putExtra("Filename", files[position].getAbsolutePath());
                     setResult(RESULT_OK, intent);

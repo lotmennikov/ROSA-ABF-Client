@@ -63,12 +63,10 @@ public class SettingsActivity extends ActionBarActivity {
 
 
     public void onSaveSettingsButtonClick(View v) {
-        // TODO check values
         dgroup = groupText.getText().toString();
         dproject = projectText.getText().toString();
         dbranch =  branchText.getText().toString();
 
-        // TODO replace keys with string IDs
         SharedPreferences shp = this.getApplicationContext().getSharedPreferences(getString(R.string.app_preferences_file), Context.MODE_PRIVATE);
         shp.edit()
                 .putString("DefaultGroup", dgroup)

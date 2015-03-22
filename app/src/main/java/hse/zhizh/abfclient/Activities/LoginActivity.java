@@ -54,8 +54,6 @@ import hse.zhizh.abfclient.common.Settings;
 /**
  * A login screen that offers login via username/password.
  *
- *
- * TODO Нужно приделать Account Manager
  */
 public class LoginActivity extends ActionBarActivity {
 

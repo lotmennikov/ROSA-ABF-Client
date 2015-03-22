@@ -9,7 +9,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/newfile_filename"
         android:layout_gravity="center_horizontal"
-        android:hint="Filename" />
+        android:hint="Filename"
+        android:singleLine="true" />
 
     <Button
         android:layout_width="match_parent"

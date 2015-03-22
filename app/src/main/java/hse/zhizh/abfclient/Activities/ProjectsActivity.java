@@ -174,7 +174,7 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
         addpClone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO Clone только здесь
+
                 String groupName = addpGroup.getText().toString();
                 String projectName = addpProject.getText().toString();
                 if (abfQuery == null) {
