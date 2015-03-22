@@ -94,7 +94,7 @@ public class FeedProjectsDbHelper extends SQLiteOpenHelper {
      */
     public boolean checkIfExists(int id)
     {
-        String sql = "SELECT * FROM mash WHERE projectd_id = '" + id + "'";
+        String sql = "SELECT * FROM projects WHERE projectd_id = '" + id + "'";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor data = db.rawQuery(sql, null);
         if (data.moveToFirst()) {
