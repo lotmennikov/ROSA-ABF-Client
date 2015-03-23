@@ -109,7 +109,7 @@ public class SessionImpl implements Session {
     public HttpsURLConnection createConnection() throws Exception {
         String https_url = "https://abf.rosalinux.ru/api/v1/groups.json";
         URL url;
-        trustAllHosts();
+//        trustAllHosts();
         HttpsURLConnection con=null;
         try {
           /*  String encoding = Base64.encodeToString(new String(username + ":" + userpass).getBytes(), Base64.NO_WRAP);

@@ -2,19 +2,21 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:background="@color/dialog_background">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="5dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Group"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/addp_grouplabel" />
+            android:id="@+id/addp_grouplabel"
+            android:textColor="@color/dialog_text" />
 
         <EditText
             android:layout_width="match_parent"
@@ -28,7 +30,8 @@
             android:layout_height="wrap_content"
             android:text="Project"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/addp_projectlabel" />
+            android:id="@+id/addp_projectlabel"
+            android:textColor="@color/dialog_text" />
 
         <EditText
             android:layout_width="match_parent"

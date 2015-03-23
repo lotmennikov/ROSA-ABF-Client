@@ -7,5 +7,6 @@
 
     <color name="common_frontbackground">#ffe5ffe7</color>
     <color name="common_deepbackground">#ffbeeacf</color>
-
+    <color name="dialog_background">#ffffffff</color>
+    <color name="dialog_text">#ff000000</color>
 </resources>
