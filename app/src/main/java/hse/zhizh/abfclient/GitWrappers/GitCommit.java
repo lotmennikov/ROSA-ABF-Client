@@ -37,7 +37,7 @@ public class GitCommit extends GitCommand {
         try {
             JGitCommit pull = new JGitCommit(mRepo);
 
-            if (pull.commitChanges(commitMessage, Settings.repo_username, "" ,stageAll, isAmend)) {
+            if (pull.commitChanges(commitMessage, Settings.repo_username, Settings.repo_email ,stageAll, isAmend)) {
 
                 Log.d(Settings.TAG, COMMANDTAG + " procedure ends with no exception...");
                 return true;

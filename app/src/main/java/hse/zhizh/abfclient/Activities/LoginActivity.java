@@ -33,6 +33,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -117,12 +119,14 @@ public class LoginActivity extends ActionBarActivity {
 
         private final String mUsername;
         private final String mPassword;
+        private String mEmail;
 
         private int f_code;
 
         UserLoginTask(String username, String password) {
             mUsername = username;
             mPassword = password;
+            mEmail = null;
             f_code = -1;
         }
 
@@ -141,6 +145,8 @@ public class LoginActivity extends ActionBarActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
+            mEmail = null;
+
             int code=0;
             try {
                 //создание сессии и получение кода ответа при попытке создать соединение
@@ -148,7 +154,12 @@ public class LoginActivity extends ActionBarActivity {
 
                 //код ответа, если 200 то ОК
                 code = s.createConnection().getResponseCode();
-                //s.requestContent(s.createConnection());
+                if (code == 200) {
+                    String response = s.requestContent(s.createConnection());
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONObject user = jsonObject.getJSONObject("user");
+                    mEmail = user.getString("email");
+                }
             } catch(Exception e){
                 e.printStackTrace();
             }
@@ -163,10 +174,13 @@ public class LoginActivity extends ActionBarActivity {
             mAuthTask = null;
             Context context = getApplicationContext();
             int duration = Toast.LENGTH_SHORT;
-            if (!success) Toast.makeText(context, "code:" + f_code, duration).show();
             if (success) {
-                Log.d(Settings.TAG," LoginActivity" + " Login Success");
+                if (mEmail == null || mEmail.equals(""))
+                    mEmail = "https://abf.io/" + mUsername; // just webpage
+
+                Log.d(Settings.TAG, "LoginActivity" + " Login Success " + mEmail);
                 Settings.authSuccess(getApplicationContext(), mUsername, mPassword, true);
+                Settings.repo_email = mEmail;
 
                 Intent projects_intent = new Intent(LoginActivity.this, ProjectsActivity.class);
                 startActivityForResult(projects_intent, 1);
@@ -175,6 +189,7 @@ public class LoginActivity extends ActionBarActivity {
                 mPasswordView.setError(getString(R.string.error_invalid_credentials));
                 mPasswordView.requestFocus();
 
+                Toast.makeText(context, "code:" + f_code, duration).show();
                 Log.d(Settings.TAG, "LoginActivity" + " Login Fail");
             }
         }

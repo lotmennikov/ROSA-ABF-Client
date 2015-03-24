@@ -37,6 +37,7 @@ public class Settings {
     // current user credentials
     public static String repo_username = null;
     public static String repo_password = null;
+    public static String repo_email = null;
 
     // selected project
     public static Project currentProject;

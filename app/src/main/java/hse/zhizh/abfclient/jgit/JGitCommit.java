@@ -24,7 +24,8 @@ public class JGitCommit {
         Git git = repository.getGit();
 
         CommitCommand cc = git.commit()
-                .setCommitter(committerName, committerEmail).setAll(stageAll)
+                .setCommitter(committerName, committerEmail)
+                .setAll(stageAll)
                 .setAmend(isAmend).setMessage(commitMessage);
         try {
             cc.call();
