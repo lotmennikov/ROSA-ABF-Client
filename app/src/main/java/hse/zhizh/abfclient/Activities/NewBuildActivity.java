@@ -428,6 +428,36 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
                         plReposId[c++] = selectedPlatform.getPlatformRepos()[i].getId();
                     }
                 }
+            } else {
+                if (platformInd < 0) {
+                    Toast.makeText(this, "Platform is not selected", Toast.LENGTH_SHORT).show();
+                    platformsSpinner.requestFocus();
+                    return;
+                }
+                if (archesInd < 0) {
+                    Toast.makeText(this, "Architecture is not selected", Toast.LENGTH_SHORT).show();
+                    archesSpinner.requestFocus();
+                    return;
+                }
+                if (updateInd < 0) {
+                    Toast.makeText(this, "Update type is not selected", Toast.LENGTH_SHORT).show();
+                    updateSpinner.requestFocus();
+                    return;
+                }
+                if (plReposCount <= 0) {
+                    Toast.makeText(this, "Platform repositories are not selected", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (refsInd < 0) {
+                    Toast.makeText(this, "Version is not selected", Toast.LENGTH_SHORT).show();
+                    refsSpinner.requestFocus();
+                    return;
+                }
+                if (reposInd < 0) {
+                    Toast.makeText(this, "Repository is not selected", Toast.LENGTH_SHORT).show();
+                    reposSpinner.requestFocus();
+                    return;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
