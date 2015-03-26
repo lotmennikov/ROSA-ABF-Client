@@ -8,8 +8,11 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import hse.zhizh.abfclient.Model.BuildPreference;
 import hse.zhizh.abfclient.Model.Project;
 import hse.zhizh.abfclient.Model.Repository;
 import hse.zhizh.abfclient.Model.User;
@@ -90,25 +93,31 @@ public class Settings {
 
 // настройки сборки
 
-    public static String[] getBuildPrefs(String projectname) {
+    public static BuildPreference getBuildPrefs(String projectname) {
         SharedPreferences shp = appContext.getSharedPreferences(appContext.getString(R.string.build_preferences_file), Context.MODE_PRIVATE);
         String platform = shp.getString(projectname + "_platform", "");
-        String plrepo = shp.getString(projectname + "_plrepo", "");
+        Set<String> plReposSet = shp.getStringSet(projectname + "_plrepos", new HashSet<String>());
         String repo = shp.getString(projectname + "_repo", "");
         String ref = shp.getString(projectname + "_ref", "");
         String arch = shp.getString(projectname + "_arch", "");
         String update = shp.getString(projectname + "_update", "");
-        return new String[]{platform, plrepo, repo, ref, arch, update };
+
+        List<String> plRepos = new ArrayList<String>(plReposSet);
+
+        return new BuildPreference(platform, plRepos, arch, repo, ref, update);
+
     }
 
-    public static void setBuildPrefs(String projectname, String[] prefs) {
+    public static void setBuildPrefs(String projectname, BuildPreference prefs) {
+        Set<String> plrepos = new HashSet<String>();
+        plrepos.addAll(prefs.getPlRepos());
         SharedPreferences shp = appContext.getSharedPreferences(appContext.getString(R.string.build_preferences_file), Context.MODE_PRIVATE);
-        shp.edit().putString(projectname + "_platform", prefs[0])
-                  .putString(projectname + "_plrepo", prefs[1])
-                  .putString(projectname + "_repo", prefs[2])
-                  .putString(projectname + "_ref", prefs[3])
-                  .putString(projectname + "_arch", prefs[4])
-                  .putString(projectname + "_update", prefs[5]).apply();
+        shp.edit().putString(projectname + "_platform", prefs.getPlatform())
+                  .putStringSet(projectname + "_plrepos", plrepos)
+                  .putString(projectname + "_repo", prefs.getRepository())
+                  .putString(projectname + "_ref", prefs.getRef())
+                  .putString(projectname + "_arch", prefs.getArchitecture())
+                  .putString(projectname + "_update", prefs.getUpdateType()).apply();
     }
 
 }

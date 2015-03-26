@@ -10,8 +10,7 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
 import hse.zhizh.abfclient.Model.Platform;
-import hse.zhizh.abfclient.Model.Project;
-import hse.zhizh.abfclient.Model.Repo;
+import hse.zhizh.abfclient.Model.PlatformRepo;
 import hse.zhizh.abfclient.Session.SessionImpl;
 
 import static hse.zhizh.abfclient.Session.SessionImpl.requestContent;
@@ -95,14 +94,14 @@ public class PlatformsRequest implements ApiRequest {
                 id = proj.getInt("id");
                 name = proj.getString("name");
                 JSONArray json_repos = proj.getJSONArray("repositories");
-                Repo[] repos = new Repo[json_repos.length()];
+                PlatformRepo[] platformRepos = new PlatformRepo[json_repos.length()];
                 for(int j = 0;j <json_repos.length();j++){
                   JSONObject json_repo =json_repos.getJSONObject(j);
                   String repo_name = json_repo.getString("name");
                   int repo_id = json_repo.getInt("id");
-                  repos[j]=new Repo(repo_id,repo_name);
+                  platformRepos[j]=new PlatformRepo(repo_id,repo_name);
                 }
-                platforms[i] = new Platform(id,name,repos);
+                platforms[i] = new Platform(id,name, platformRepos);
             }
             return platforms;
         } catch (Exception e) {
@@ -120,14 +119,14 @@ public class PlatformsRequest implements ApiRequest {
             int id = proj.getInt("id");
             String name = proj.getString("name");
             JSONArray json_repos = proj.getJSONArray("repositories");
-            Repo[] repos = new Repo[json_repos.length()];
+            PlatformRepo[] platformRepos = new PlatformRepo[json_repos.length()];
             for(int j = 0;j <json_repos.length();j++){
                 JSONObject json_repo =json_repos.getJSONObject(j);
                 String repo_name = json_repo.getString("name");
                 int repo_id = json_repo.getInt("id");
-                repos[j]=new Repo(repo_id,repo_name);
+                platformRepos[j]=new PlatformRepo(repo_id,repo_name);
             }
-            platform = new Platform(id,name,repos);
+            platform = new Platform(id,name, platformRepos);
             return platform;
         } catch (Exception e) {
             e.printStackTrace();

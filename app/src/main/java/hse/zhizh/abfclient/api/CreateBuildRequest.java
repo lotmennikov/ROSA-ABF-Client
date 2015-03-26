@@ -1,6 +1,5 @@
 package hse.zhizh.abfclient.api;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.DataOutputStream;
@@ -10,10 +9,7 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import hse.zhizh.abfclient.Model.Build;
 import hse.zhizh.abfclient.Model.BuildResponse;
-import hse.zhizh.abfclient.Model.Platform;
-import hse.zhizh.abfclient.Model.Repo;
 import hse.zhizh.abfclient.Session.SessionImpl;
 
 /**

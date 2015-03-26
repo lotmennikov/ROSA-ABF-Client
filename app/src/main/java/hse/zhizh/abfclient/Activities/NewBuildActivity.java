@@ -1,5 +1,6 @@
 package hse.zhizh.abfclient.Activities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,10 +12,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EdgeEffect;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import hse.zhizh.abfclient.ABFQueries.ABFArches;
 import hse.zhizh.abfclient.ABFQueries.ABFNewBuild;
@@ -23,12 +27,13 @@ import hse.zhizh.abfclient.ABFQueries.ABFProjectRefs;
 import hse.zhizh.abfclient.ABFQueries.ABFProjectRepos;
 import hse.zhizh.abfclient.ABFQueries.ABFQuery;
 import hse.zhizh.abfclient.Model.Architecture;
+import hse.zhizh.abfclient.Model.BuildPreference;
 import hse.zhizh.abfclient.Model.BuildResponse;
 import hse.zhizh.abfclient.Model.Platform;
+import hse.zhizh.abfclient.Model.PlatformRepo;
 import hse.zhizh.abfclient.Model.Project;
 import hse.zhizh.abfclient.Model.ProjectRef;
 import hse.zhizh.abfclient.Model.ProjectRepo;
-import hse.zhizh.abfclient.Model.Repo;
 import hse.zhizh.abfclient.R;
 import hse.zhizh.abfclient.common.Settings;
 
@@ -47,14 +52,15 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
     private ProjectRef[] refs;
     private ProjectRepo[] repos;
     private String defaultBranch;
-    private String[] buildprefs;
+    private BuildPreference buildprefs;
 
     private String[] updateTypes = new String[]{ "recommended", "bugfix", "security", "enhancement", "newpackage" };
 
     // selection results
     private Platform selectedPlatform;
     private Architecture selectedArchitecture;
-    private Repo selectedPlRepo;
+    private boolean[] checkedPlRepos;
+    private String[] plReposNames;
     private ProjectRepo selectedProjectRepo;
     private ProjectRef selectedRef;
     private String updateType;
@@ -75,7 +81,7 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
     Spinner refsSpinner;
     Spinner reposSpinner;
     Spinner platformsSpinner;
-    Spinner plReposSpinner;
+    TextView plReposView;
     Spinner updateSpinner;
     Spinner archesSpinner;
     ProgressDialog progressDialog;
@@ -99,7 +105,7 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
         platformsSpinner = (Spinner)findViewById(R.id.newb_platfspinner);
         archesSpinner = (Spinner)findViewById(R.id.newb_archspinner);
         updateSpinner = (Spinner)findViewById(R.id.newb_updatespinner);
-        plReposSpinner = (Spinner)findViewById(R.id.newb_platfrepospinner);
+        plReposView = (TextView)findViewById(R.id.newb_platfreposelector);
         progressDialog = new ProgressDialog(this);
 
         progressDialog.setTitle("Loading...");
@@ -109,9 +115,9 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.contents_list_element, updateTypes);
         arrayAdapter.setDropDownViewResource(R.layout.contents_list_element);
         updateSpinner.setAdapter(arrayAdapter);
-        if (buildprefs[5] != null) {
+        if (buildprefs.getUpdateType() != null) {
             for (int i = 0; i < updateTypes.length; ++i)
-                if (updateTypes[i].equals(buildprefs[5])) {
+                if (updateTypes[i].equals(buildprefs.getUpdateType())) {
                     updateSpinner.setSelection(i);
                     break;
                 }
@@ -122,8 +128,14 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
         archesSpinner.setAdapter(arrayAdapter);
         reposSpinner.setAdapter(arrayAdapter);
         platformsSpinner.setAdapter(arrayAdapter);
-        plReposSpinner.setAdapter(arrayAdapter);
         refsSpinner.setAdapter(arrayAdapter);
+
+        plReposView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPlReposDialog();
+            }
+        });
 
         sendAPIRequests();
 
@@ -176,9 +188,9 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.contents_list_element, archesNames);
             arrayAdapter.setDropDownViewResource(R.layout.contents_list_element);
             archesSpinner.setAdapter(arrayAdapter);
-            if (buildprefs[4] != null) {
+            if (buildprefs.getArchitecture() != null) {
                 for (int i = 0; i < archesNames.length; ++i)
-                    if (archesNames[i].equals(buildprefs[4])) {
+                    if (archesNames[i].equals(buildprefs.getArchitecture())) {
                         archesSpinner.setSelection(i);
                         break;
                     }
@@ -224,9 +236,9 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.contents_list_element, reposNames);
             arrayAdapter.setDropDownViewResource(R.layout.contents_list_element);
             reposSpinner.setAdapter(arrayAdapter);
-            if (buildprefs[2] != null) {
+            if (buildprefs.getRepository() != null) {
                 for (int i = 0; i < reposNames.length; ++i)
-                    if (reposNames[i].equals(buildprefs[2])) {
+                    if (reposNames[i].equals(buildprefs.getRepository())) {
                         reposSpinner.setSelection(i);
                         break;
                     }
@@ -237,7 +249,7 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
         }
     }
 
-    // sets platform and platform repositories spinners
+    // sets platform spinner
     private void setPlatformsList() {
         try {
             // setting platform spinner
@@ -263,9 +275,9 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
             platformsSpinner.setAdapter(arrayAdapter);
 
             selectedPlatform = platforms[0];
-            if (buildprefs[0] != null) {
+            if (buildprefs.getPlatform() != null) {
                 for (int i = 0; i < platformsNames.length; ++i)
-                    if (platformsNames[i].equals(buildprefs[0])) {
+                    if (platformsNames[i].equals(buildprefs.getPlatform())) {
                         platformsSpinner.setSelection(i);
                         selectedPlatform = platforms[i];
                         break;
@@ -282,25 +294,78 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
     public void setPlReposList() {
         try {
             if (selectedPlatform != null) {
-                String[] plReposNames = new String[selectedPlatform.getRepos().length];
-                for (int i = 0; i < plReposNames.length; ++i)
-                    plReposNames[i] = selectedPlatform.getRepos()[i].getName();
-
-                ArrayAdapter<String> aAdapter = new ArrayAdapter<String>(this, R.layout.contents_list_element, plReposNames);
-                aAdapter.setDropDownViewResource(R.layout.contents_list_element);
-                plReposSpinner.setAdapter(aAdapter);
-                if (buildprefs[1] != null) {
-                    for (int i = 0; i < plReposNames.length; ++i)
-                        if (plReposNames[i].equals(buildprefs[1])) {
-                            plReposSpinner.setSelection(i);
-                            break;
-                        }
+                int len = selectedPlatform.getPlatformRepos().length;
+                plReposNames = new String[len];
+                checkedPlRepos = new boolean[len];
+                for (int i = 0; i < len; ++i) {
+                    checkedPlRepos[i] = false;
+                    plReposNames[i] = selectedPlatform.getPlatformRepos()[i].getName();
                 }
             }
+
+            if (buildprefs.getPlRepos() != null) {
+                for (int i = 0; i < plReposNames.length; ++i) {
+                    if (buildprefs.getPlRepos().contains(plReposNames[i]))
+                        checkedPlRepos[i] = true;
+                }
+            }
+            setPlReposView();
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), "Internal error", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void setPlReposView() {
+        String text = "";
+        if (checkedPlRepos.length == 0) plReposView.setText("No repositories");
+
+        for (int i = 0; i < checkedPlRepos.length; ++i) {
+            if (checkedPlRepos[i]) {
+                if (!text.equals("")) text += "; ";
+                text += plReposNames[i];
+            }
+        }
+        if (text.equals("")) plReposView.setText("Select repositories...");
+        else plReposView.setText(text);
+    }
+
+    public void showPlReposDialog() {
+        AlertDialog plReposDialog;
+
+        final boolean[] checkedPlReposCopy = checkedPlRepos.clone();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Set the dialog title
+        builder.setTitle("Select repositories")
+                .setMultiChoiceItems(plReposNames, checkedPlReposCopy,
+                        new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which,
+                                                boolean isChecked) {
+                                if (isChecked)
+                                    checkedPlReposCopy[which] = true;
+                                else
+                                    checkedPlReposCopy[which] = false;
+                            }
+                        })
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        checkedPlRepos = checkedPlReposCopy.clone();
+                        setPlReposView();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+
+        plReposDialog = builder.create();
+        plReposDialog.show();
     }
 
     @Override
@@ -325,29 +390,55 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
         return super.onOptionsItemSelected(item);
     }
 
+    public int countSelectedPlRepos() {
+        int s = 0;
+        for (boolean checkedPlRepo : checkedPlRepos) {
+            s += (checkedPlRepo ? 1 : 0);
+        }
+        return s;
+    }
 
     public void onStartNewBuildClick(View v) {
+        List<String> plReposList = null;
+        int[] plReposId = null;
+        boolean selectionException = false;
         try {
             int platformInd = platformsSpinner.getSelectedItemPosition();
-            int plreposInd = plReposSpinner.getSelectedItemPosition();
+            int plReposCount = countSelectedPlRepos();
             int refsInd = refsSpinner.getSelectedItemPosition();
             int reposInd = reposSpinner.getSelectedItemPosition();
             int archesInd = archesSpinner.getSelectedItemPosition();
             int updateInd = updateSpinner.getSelectedItemPosition();
-            if (platformInd >= 0 && plreposInd>=0 && refsInd>=0 && reposInd >=0 && archesInd >=0 && updateInd >= 0) {
+
+            // checking
+            if (platformInd >= 0 && plReposCount>0 && refsInd>=0 && reposInd >=0 && archesInd >=0 && updateInd >= 0) {
                 selectedPlatform = platforms[platformInd];
                 selectedArchitecture = arches[archesInd];
                 selectedProjectRepo = repos[reposInd];
                 selectedRef = refs[refsInd];
-                selectedPlRepo = selectedPlatform.getRepos()[plreposInd];
                 updateType = updateTypes[updateInd];
+
+                plReposList = new ArrayList<>();
+                plReposId = new int[plReposCount];
+
+                int c = 0;
+                for (int i = 0; i < checkedPlRepos.length; ++i) {
+                    if (checkedPlRepos[i]) {
+                        plReposList.add(plReposNames[i]);
+                        plReposId[c++] = selectedPlatform.getPlatformRepos()[i].getId();
+                    }
+                }
             }
         } catch (Exception e) {
+            e.printStackTrace();
             Log.d(Settings.TAG, "Something is not selected");
+            Toast.makeText(this, "Something is not selected", Toast.LENGTH_SHORT).show();
+            selectionException = true;
         }
-        if (selectedArchitecture != null &&
+        if (!selectionException &&
+            selectedArchitecture != null &&
             selectedPlatform != null &&
-            selectedPlRepo != null &&
+            plReposList != null &&
             selectedProjectRepo != null &&
             selectedRef != null &&
             project != null &&
@@ -356,28 +447,29 @@ public class NewBuildActivity extends ActionBarActivity implements CommandResult
             Log.d(Settings.TAG, "New Build:" +
                               "\nArchitecture:" + selectedArchitecture.getName() +
                               "\nPlatform: " + selectedPlatform.getMessage() +
-                              "\nPlatformRepo: " + selectedPlRepo.getName() +
+                              "\nPlatformRepos: " + plReposView.getText().toString() +
                               "\nProjectRepo: " + selectedProjectRepo.getName() +
                               "\nProjectRef: " + selectedRef.getRef() +
                               "\nUpdateType: " + updateType
             );
-
-            Settings.setBuildPrefs(project.getName(),
-                    new String[] {
+            // saving preferences
+            BuildPreference newbuild = new BuildPreference(
                     selectedPlatform.getMessage(),
-                    selectedPlRepo.getName(),
+                    plReposList,
+                    selectedArchitecture.getName(),
                     selectedProjectRepo.getName(),
                     selectedRef.getRef(),
-                    selectedArchitecture.getName(),
-                    updateType});
+                    updateType);
+            Settings.setBuildPrefs(project.getName(), newbuild);
 
+            // Sending query
             newBuildQuery = new ABFNewBuild(this,
                                             project.getId(),
                                             selectedRef.getSha(),
                                             updateType,
                                             selectedProjectRepo.getId(),
                                             selectedPlatform.getId(),
-                                            new int[] { selectedPlRepo.getId() },
+                                            plReposId,
                                             selectedArchitecture.getId());
             progressDialog.show();
             progressDialog.setCancelable(false);

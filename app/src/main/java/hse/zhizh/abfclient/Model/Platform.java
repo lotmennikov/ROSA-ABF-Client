@@ -6,15 +6,15 @@ package hse.zhizh.abfclient.Model;
 public class Platform {
     private int id;
     private String name;
-    private Repo[] repos;
+    private PlatformRepo[] platformRepos;
 
-    public Platform(int id, String message,Repo[] repos){
+    public Platform(int id, String message,PlatformRepo[] platformRepos){
         this.id = id;
         this.name=message;
-        this.repos = repos;
+        this.platformRepos = platformRepos;
     }
 
     public String getMessage(){ return name; }
     public int getId(){ return id; }
-    public Repo[] getRepos() { return repos;}
+    public PlatformRepo[] getPlatformRepos() { return platformRepos;}
 }

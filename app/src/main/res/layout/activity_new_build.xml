@@ -48,11 +48,15 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/newb_platfspinner" />
 
-            <Spinner
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/newb_platfrepospinner"
-                android:layout_marginLeft="20dp" />
+                android:id="@+id/newb_platfreposelector"
+                android:layout_marginLeft="20dp"
+                android:text="Select repositories..."
+                android:textStyle="bold"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp" />
 
             <TextView
                 android:layout_width="wrap_content"
