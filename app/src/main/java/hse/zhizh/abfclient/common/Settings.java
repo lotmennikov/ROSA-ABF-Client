@@ -8,6 +8,7 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -45,13 +46,55 @@ public class Settings {
     // selected project
     public static Project currentProject;
 
+    public static HashMap<Integer, String> buildCodes;
+
+    public static boolean showBuildMessage = true;
+
     // getApplicationContext()
     public static Context appContext;
 
     static {
         currentProject = null;
         downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        buildCodes = new HashMap<>();
+        buildCodes.put(0, "Build complete");
+        buildCodes.put(1, "Platform not found");
+        buildCodes.put(2, "Platform pending");
+        buildCodes.put(3, "Project not found");
+        buildCodes.put(4, "Project version not found");
+        buildCodes.put(666, "Build error");
+        buildCodes.put(2000, "Build pending");
+        buildCodes.put(2500, "Rerun tests");
+        buildCodes.put(2550, "Build is being rerun tests");
+        buildCodes.put(3000, "Build started");
+        buildCodes.put(4000, "Waiting for response");
+        buildCodes.put(5000, "Build canceled");
+        buildCodes.put(6000, "Build has been published");
+        buildCodes.put(7000, "Build is being published");
+        buildCodes.put(8000, "Publishing error");
+        buildCodes.put(9000, "Publishing rejected");
+        buildCodes.put(10000, "Build is canceling");
+        buildCodes.put(11000, "Tests failed");
+        buildCodes.put(12000, "Build has been published into testing");
+        buildCodes.put(13000, "Build is being published into testing");
+        buildCodes.put(14000, "Publishing error into testing");
     }
+
+    // loading user preferences
+    public static void loadPrefs() {
+        SharedPreferences shp = appContext.getSharedPreferences("userprefs_" + repo_username, Context.MODE_PRIVATE);
+
+        showBuildMessage = shp.getBoolean("showBuildMessage", false);
+    }
+
+    // saves user preferences
+    public static void saveUserPrefs() {
+        SharedPreferences shp = appContext.getSharedPreferences("userprefs_" + repo_username, Context.MODE_PRIVATE);
+        shp.edit()
+                .putBoolean("showBuildMessage", showBuildMessage)
+                .apply();
+    }
+
 
 // заглушечный тупейший менеджер паролей (но для других приложений недоступен)
 

@@ -74,6 +74,8 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
         getSupportActionBar().setLogo(R.drawable.giticonabf1);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
+        Settings.loadPrefs();
+
         projectsList = (ListView)findViewById(R.id.projectsList);
         projectsList.setEmptyView(findViewById(R.id.projects_empty));
 
@@ -442,6 +444,8 @@ public class ProjectsActivity extends ActionBarActivity implements CommandResult
             //noinspection SimplifiableIfStatement
             case R.id.action_settings:
             {
+                Intent settings = new Intent(ProjectsActivity.this, SettingsActivity.class);
+                startActivity(settings);
                 return true;
             }
             case R.id.action_addproject:

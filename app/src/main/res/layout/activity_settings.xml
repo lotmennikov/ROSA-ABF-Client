@@ -1,60 +1,71 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:orientation="vertical"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="hse.zhizh.abfclient.Settings">
+    android:layout_height="match_parent"
+    tools:context="hse.zhizh.abfclient.Settings"
+    android:background="@color/common_deepbackground">
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Default Group"
-        android:id="@+id/textView" />
-
-    <EditText
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/defaultGroupText"
-        android:hint="Group"
-        android:text="import" />
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView3"
+        android:layout_margin="10dp"
+        android:background="@color/common_frontbackground">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Default project"
-        android:id="@+id/textView2" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/common_frontbackground"
+            android:padding="10dp">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/defaultProjectText"
-        android:layout_gravity="center_horizontal"
-        android:hint="Project"
-        android:text="emacs" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Build information:"
+                android:id="@+id/textView"
+                android:layout_marginBottom="10dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Branch"
-        android:id="@+id/textView3" />
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/radiogroup_buildstatus">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/defaultBranchText"
-        android:hint="Branch"
-        android:text="master" />
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Status code only"
+                    android:id="@+id/radio_showcode" />
 
-    <Button
-        android:layout_width="122dp"
-        android:layout_height="wrap_content"
-        android:text="Save"
-        android:id="@+id/button5"
-        android:onClick="onSaveSettingsButtonClick" />
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Build message"
+                    android:id="@+id/radio_showmessage" />
+
+            </RadioGroup>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+
+                <Button
+                    android:layout_width="122dp"
+                    android:layout_height="wrap_content"
+                    android:text="Save"
+                    android:id="@+id/button5"
+                    android:onClick="onSaveSettingsButtonClick"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
 </LinearLayout>

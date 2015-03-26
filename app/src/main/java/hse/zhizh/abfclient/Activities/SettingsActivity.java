@@ -8,34 +8,35 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 
 import hse.zhizh.abfclient.R;
+import hse.zhizh.abfclient.common.Settings;
 
 
 public class SettingsActivity extends ActionBarActivity {
 
-    EditText groupText;
-    EditText projectText;
-    EditText branchText;
-    String dgroup, dproject, dbranch;
+    boolean showBuild;
+    private RadioGroup radioGroupBuild;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        SharedPreferences shp = getApplicationContext().getSharedPreferences(getString(R.string.app_preferences_file), Context.MODE_PRIVATE);
-        dgroup = shp.getString("DefaultGroup", "");
-        dproject = shp.getString("DefaultProject", "");
-        dbranch = shp.getString("DefaultBranch", "");
+        setTitle("Settings");
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.giticonabf1);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
 
-        groupText = (EditText)findViewById(R.id.defaultGroupText);
-        projectText = (EditText)findViewById(R.id.defaultProjectText);
-        branchText = (EditText)findViewById(R.id.defaultBranchText);
+        showBuild = Settings.showBuildMessage;
 
-        groupText.setText(dgroup);
-        projectText.setText(dproject);
-        branchText.setText(dbranch);
+        radioGroupBuild = (RadioGroup)findViewById(R.id.radiogroup_buildstatus);
+
+        if (showBuild)
+            radioGroupBuild.check(R.id.radio_showmessage);
+        else
+            radioGroupBuild.check(R.id.radio_showcode);
     }
 
 
@@ -63,16 +64,14 @@ public class SettingsActivity extends ActionBarActivity {
 
 
     public void onSaveSettingsButtonClick(View v) {
-        dgroup = groupText.getText().toString();
-        dproject = projectText.getText().toString();
-        dbranch =  branchText.getText().toString();
+        if (radioGroupBuild.getCheckedRadioButtonId() == R.id.radio_showcode)
+            showBuild = false;
+        else
+            showBuild = true;
+        Settings.showBuildMessage = showBuild;
 
-        SharedPreferences shp = this.getApplicationContext().getSharedPreferences(getString(R.string.app_preferences_file), Context.MODE_PRIVATE);
-        shp.edit()
-                .putString("DefaultGroup", dgroup)
-                .putString("DefaultProject", dproject)
-                .putString("DefaultBranch", dbranch)
-                .commit();
+        Settings.saveUserPrefs();
+
         this.finish();
     }
 }

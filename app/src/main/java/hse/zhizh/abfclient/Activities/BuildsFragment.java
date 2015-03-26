@@ -49,8 +49,18 @@ public class BuildsFragment extends Fragment implements ProjectActivityEventList
                 blds = new String[builds.length];
                 String newtext;
                 for (int i = 0; i < blds.length; ++i) {
-                    newtext = builds[i].getBuildId() + " - status: " + builds[i].getStatusCode() + "\n"
-                            + builds[i].getUrl();
+                    if (Settings.showBuildMessage) {
+                        String build_message = Settings.buildCodes.get(builds[i].getStatusCode());
+                        if (build_message == null)
+                            build_message = "status: " + builds[i].getStatusCode();
+
+                        newtext = builds[i].getBuildId() + "\n"
+                                + build_message + "\n"
+                                + builds[i].getUrl();
+                    } else {
+                        newtext = builds[i].getBuildId() + " - status: " + builds[i].getStatusCode() + "\n"
+                                + builds[i].getUrl();
+                    }
                     blds[i] = newtext;
                 }
 
